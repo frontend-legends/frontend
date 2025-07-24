@@ -10,6 +10,10 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.4",
+    "@nhost/apollo": "^7.1.4",
+    "@nhost/vue": "^2.6.4",
+    "@vue/apollo-composable": "^4.0.2",
     "@nuxt/content": "3.6.3",
     "@nuxt/eslint": "1.6.0",
     "@nuxt/icon": "1.15.0",
