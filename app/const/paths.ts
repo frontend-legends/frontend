@@ -2,7 +2,11 @@
 
 const PATHS = {
   // auth side:
-  auth: "/auth",
+  signin: "/auth/sign-in",
+  signup: "/auth/sign-up",
+  verifyemail: "/auth/verify-email",
+  resetpassword: "/auth/reset-password",
+  redirecting: "/auth/redirecting",
 
   // app side:
   home: "/",

@@ -2,13 +2,14 @@
 import PATHS from '~/const/paths';
 
 definePageMeta({
-  name: "auth",
-  path: PATHS.auth,
+  name: "signup",
+  path: PATHS.signup,
+  layout: "auth",
 });
 </script>
 <template>
   <div>
-    <AuthForm />
+    <AuthSignUpForm />
   </div>
 </template>
 <style scoped></style>
