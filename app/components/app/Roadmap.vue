@@ -14,7 +14,7 @@ const grouped = computed(() => groupContent(home.value as ContentItem[]))
 
 <template>
   <div class="mt-8">
-    <h4>Map</h4>
+    <h4>Roadmap</h4>
     <div v-for="section in grouped" :key="section.order" class="my-4">
       <NuxtLink :to="`/content${section.path}`">
         <h4 class="text-xl font-bold">{{ section.order }}. {{ section.title.toLowerCase() }}</h4>

@@ -53,7 +53,11 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         highlight: {
-          theme: "one-light",
+          theme: {
+            light: "one-light",
+            dark: "one-dark-pro",
+            default: "one-light",
+          },
         },
         toc: {
           depth: 3,

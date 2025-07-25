@@ -1,5 +1,5 @@
 <template>
-  <code class="inline-block font-main font-bold bg-on-dark text-on-light bg-op-20 px-1 rounded">
+  <code class="inline-block font-main font-bold bg-semi-light px-1 rounded">
     <slot />
   </code>
 </template>

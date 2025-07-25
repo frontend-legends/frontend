@@ -20,7 +20,9 @@ const { data: page } = await useAsyncData(route.path, () => {
     <div class="flex flex-col flex-1">
       <ContentRenderer :value="page" class="prose font-sans" />
     </div>
-    <AppToc v-if="!isChapter" />
+    <div v-if="!isChapter" class="flex flex-col gap-4 sticky right-0 top-[100px] h-fit">
+      <AppToc />
+    </div>
     <ChapterMap v-else />
   </div>
   <AppNotFound v-else />

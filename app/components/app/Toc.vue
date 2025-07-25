@@ -16,9 +16,11 @@ const cats = await useAsyncData(route.path, () => {
 const author = computed(() => cats.data.value?.author);
 const date = computed(() => cats.data.value?.date);
 
+const isFinished = ref(false);
+
 </script>
 <template>
-  <div class="sticky right-0 top-[100px] h-fit">
+  <div>
     <div class="toc-container">
       <h6 class="text-lg mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
@@ -34,6 +36,9 @@ const date = computed(() => cats.data.value?.date);
           </li>
         </ul>
       </div>
+      <q-btn color="primary" :outline="!isFinished" class="w-full mt-4">
+        <span>{{ isFinished ? "Unfinish" : "Finish" }}</span>
+      </q-btn>
     </div>
     <div class="flex flex-col mt-4 text-sm">
       <small v-if="author">Author: {{ author }}</small>
@@ -45,7 +50,7 @@ const date = computed(() => cats.data.value?.date);
 .toc-container {
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: 4px;
   border: 1px solid var(--semi-gray);
   padding: 32px;
   width: 320px;

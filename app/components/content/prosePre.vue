@@ -27,7 +27,7 @@ defineProps({
 })
 </script>
 <template>
-  <pre :class="$props.class"><slot /></pre>
+  <pre :class="$props.class" class="bg-semi-light"><slot /></pre>
 </template>
 <style>
 pre code .line {
