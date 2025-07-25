@@ -1,29 +1,7 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import { useQuasar } from "quasar";
-import { useSignOut } from '@nhost/vue';
 
-const $q = useQuasar();
 const { switchMode, isDark } = useDarkMode();
-const { error, isSuccess, signOut } = useSignOut();
-
-async function signOutFn() {
-  await signOut();
-
-  if (error.value) {
-    console.log(
-      error.value
-        ? `sign-up error (${error.value?.status}): ${error.value?.message}`
-        : `sign-up error`,
-    );
-  }
-
-  if (isSuccess.value) {
-    localStorage.clear();
-
-    await navigateTo({ path: PATHS.signin });
-  }
-}
 </script>
 <template>
   <nav class="flex items-center w-full h-full justify-between max-width mx-auto px-8 bg-op-60">
@@ -36,8 +14,11 @@ async function signOutFn() {
       <q-btn @click="switchMode">
         <Icon :name="isDark ? 'ph:sun-bold' : 'ph:moon-bold'" />
       </q-btn>
-      <q-btn color="primary" @click="signOutFn">
-        <span>Sign Out</span>
+      <q-btn color="primary" :to="PATHS.signin">
+        <span>Sign In</span>
+      </q-btn>
+      <q-btn outline :to="PATHS.signup">
+        <span>Sign Up</span>
       </q-btn>
     </div>
   </nav>

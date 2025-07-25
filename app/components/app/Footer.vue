@@ -18,8 +18,8 @@ footer {
   width: 100%;
 
   padding: 24px;
-  color: var(--light);
-  background-color: var(--dark);
+  color: var(--on-light);
+  background-color: var(--on-dark);
 
   border-top: 1px solid var(--gray);
 }

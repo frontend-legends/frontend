@@ -130,6 +130,7 @@ export default defineNuxtConfig({
     lang: "en-US",
   },
 
+  ssr: false,
   spaLoadingTemplate: true,
 
   css: ["~/styles/reset.css", "~/styles/app.css"],

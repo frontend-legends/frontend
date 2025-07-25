@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { NuxtError } from '#app'
+import PATHS from './const/paths';
 
 const props = defineProps({
   error: Object as () => NuxtError
@@ -13,12 +14,16 @@ const handleError = () => clearError({ redirect: '/' })
     <header>
       <AppNav />
     </header>
-    <main>
+    <main class="flex flex-col items-center justify-center">
       <section>
-        <div class="mt-8">
+        <div class="flex flex-col items-center mt-8">
           <h2>{{ error?.statusCode }}</h2>
-          <p class="text-sm mt-2">{{ error?.message }}</p>
-          <q-btn color="primary" @click="handleError">Go back</q-btn>
+          <p class="text-sm">{{ error?.message }}</p>
+          <div class="flex gap-4 mt-4">
+            <q-btn color="primary" :to="PATHS.home">Go home</q-btn>
+
+            <q-btn outline @click="handleError">Go back</q-btn>
+          </div>
 
         </div>
         <!-- <AppNotFound /> -->
