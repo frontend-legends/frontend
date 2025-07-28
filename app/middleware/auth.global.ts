@@ -3,6 +3,7 @@ import { nhost } from "../../nhost.config";
 
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) return;
+  if (to.path === PATHS.redirecting) return;
 
   const auth = await nhost.auth.isAuthenticatedAsync();
 
@@ -10,9 +11,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const isToken = Boolean(
     localStorage.getItem("nhostRefreshToken") ? true : false
   );
-
-  console.log("auth", auth);
-  console.log("isToken", isToken);
 
   if (auth && isToken) {
     // AUTO AUTH REDIRECT
