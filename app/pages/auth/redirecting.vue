@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useNhostClient, useSignInIdToken } from '@nhost/vue';
+import { useNhostClient } from '@nhost/vue';
 import PATHS from '~/const/paths';
 import { useNotificationStore } from '~/store/notification.store';
 
