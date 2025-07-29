@@ -7,13 +7,15 @@ const { data: page } = await useAsyncData("/", () => {
   return queryCollection('content')
     .where("order", "=", "0")
     .first()
-})
+});
+
+const now = useNow();
 
 </script>
 <template>
   <div>
-    <h6>Hello, {{ user?.displayName }}</h6>
-    <p>Time to learn something new</p>
+    <h6>{{ getGreeting(String(new Date(now))) }}, {{ user?.displayName }}</h6>
+    <p>You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
     <div v-if="page" class="flex flex-col gap-8 lg:flex-row">
       <div class="flex flex-col flex-1">
         <ContentRenderer :value="page" class="prose font-sans" />

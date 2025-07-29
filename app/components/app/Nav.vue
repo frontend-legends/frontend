@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import { useQuasar } from "quasar";
 import { useSignOut } from '@nhost/vue';
 
-const $q = useQuasar();
 const { switchMode, isDark } = useDarkMode();
 const { error, isSuccess, signOut } = useSignOut();
 

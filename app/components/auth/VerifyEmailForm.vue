@@ -10,7 +10,7 @@ const { add } = useNotificationStore();
 const { error, isError, isLoading, isSent, sendEmail } =
   useSendVerificationEmail();
 
-const email = computed(() => String(authStore.getEmail));
+const email = computed(() => String(authStore.getEmail || ""));
 
 async function sendVerification() {
   await sendEmail(email.value);

@@ -17,7 +17,7 @@ const { switchMode, isDark } = useDarkMode();
       <q-btn color="primary" :to="PATHS.signin">
         <span>Sign In</span>
       </q-btn>
-      <q-btn outline :to="PATHS.signup">
+      <q-btn outline :to="PATHS.signup" class="hidden md:block">
         <span>Sign Up</span>
       </q-btn>
     </div>

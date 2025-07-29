@@ -16,23 +16,25 @@ export interface GroupedContent {
 export function groupContent(items: ContentItem[]): GroupedContent[] {
   const grouped = new Map<number, GroupedContent>();
 
-  for (const item of items) {
-    const isTopLevel = Number.isInteger(item.order);
+  for (const rawItem of items) {
+    const order = Number(rawItem.order); // 👈 безопасно, даже если строка
+    const item = { ...rawItem, order }; // перезаписываем с числовым order
+
+    const isTopLevel = Number.isInteger(order);
 
     if (isTopLevel) {
-      grouped.set(item.order, {
-        order: item.order,
+      grouped.set(order, {
+        order,
         title: item.title,
         path: item.path,
         children: [],
       });
     } else {
-      const parentOrder = Math.floor(item.order);
+      const parentOrder = Math.floor(order);
       const parent = grouped.get(parentOrder);
       if (parent) {
         parent.children.push(item);
       } else {
-        // Optional: handle missing parent case
         grouped.set(parentOrder, {
           order: parentOrder,
           title: "Untitled",
