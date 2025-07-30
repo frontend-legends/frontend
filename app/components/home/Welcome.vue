@@ -18,7 +18,7 @@ const now = useNow();
     <p>You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
     <div v-if="page" class="flex flex-col gap-8 lg:flex-row">
       <div class="flex flex-col flex-1">
-        <ContentRenderer :value="page" class="prose font-sans" />
+        <ContentRenderer :value="page" class="prose" />
       </div>
       <!-- <div class="bg-gray p-8 rounded-lg">
       <h2 class="text-2xl font-bold mb-4">Welcome to Frontend Legends</h2>

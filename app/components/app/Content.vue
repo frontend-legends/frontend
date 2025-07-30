@@ -18,7 +18,7 @@ const { data: page } = await useAsyncData(route.path, () => {
   <div v-if="page" class="flex flex-col gap-32 lg:flex-row">
 
     <div class="flex flex-col flex-1">
-      <ContentRenderer :value="page" class="prose font-sans" />
+      <ContentRenderer :value="page" class="prose" />
     </div>
     <div v-if="!isChapter" class="flex flex-col gap-4 sticky right-0 top-[100px] h-fit">
       <AppToc />

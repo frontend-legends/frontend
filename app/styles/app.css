@@ -152,7 +152,10 @@ h6 {
 input,
 label,
 textarea,
-select {
+select,
+.q-btn,
+span,
+p {
   font-family: var(--font-main);
 }
 
@@ -160,15 +163,11 @@ a {
   text-decoration-color: var(--primary, inherit);
 }
 
-.q-btn span {
-  font-family: var(--font-main);
-}
-
 .prose {
   width: 100%;
   max-width: 768px !important;
 
-  font-family: var(--font-main), var(--font-sans);
+  font-family: var(--font-sans);
 }
 
 .prose a,
