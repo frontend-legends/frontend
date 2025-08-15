@@ -43,18 +43,18 @@ async function sendVerification() {
 <template>
   <div>
     <div class="flex flex-col items-center w-[340px]">
-      <div class="flex flex-col items-center w-full border-2px border-solid border-semi-light p-8 rounded">
+      <div class="flex flex-col items-center w-full border-1px border-solid border-semi-light p-8">
         <h5 class="text-lg font-bold mb-4">Verify your account</h5>
-        <p class="op-60">
+        <p class="text-center text-on-semi-light">
           Please check your mailbox and follow the verification link to verify
           your email. After verification go to
-          <NuxtLink :to="{ path: PATHS.signin }" class="font-bold underline">Sign In</NuxtLink>.
+          <NuxtLink :to="{ path: PATHS.signin }" class="text-sm font-bold text-on-light underline">Sign In</NuxtLink>.
         </p>
       </div>
       <div class="flex flex-col mt-4" v-if="!isLoading">
         <div class="flex flex-col text-center mt-4">
-          <span class="font-main text-base text-paragraph">Don't see email?</span>
-          <span class="text-base font-bold font-main underline cursor-pointer" @click="sendVerification">Send
+          <span class="text-sm text-on-semi-light">Don't see email?</span>
+          <span class="text-sm font-bold underline cursor-pointer" @click="sendVerification">Send
             verification email again</span>
         </div>
       </div>

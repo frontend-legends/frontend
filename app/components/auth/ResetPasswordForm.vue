@@ -54,12 +54,12 @@ async function resetPasswordFn() {
     </div>
     <div class="flex flex-col mt-4">
       <div class="flex flex-col text-center mt-4">
-        <span class="font-main text-base text-paragraph">Don't have an account?</span>
-        <NuxtLink class="text-base font-bold underline" :to="{ path: PATHS.signup }">Sign Up</NuxtLink>
+        <span class="text-gray text-sm">Don't have an account?</span>
+        <NuxtLink class="text-sm font-bold text-on-light underline" :to="{ path: PATHS.signup }">Sign Up</NuxtLink>
       </div>
       <div class="flex flex-col text-center mt-4">
-        <span class="font-main text-base text-paragraph">Remember the password?</span>
-        <NuxtLink class="text-base font-bold font-main cursor-pointer underline" :to="{ path: PATHS.signin }">Sign In
+        <span class="text-sm">Remember the password?</span>
+        <NuxtLink class="text-sm font-bold text-on-light underline" :to="{ path: PATHS.signin }">Sign In
         </NuxtLink>
       </div>
     </div>

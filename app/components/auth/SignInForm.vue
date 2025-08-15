@@ -80,7 +80,7 @@ function signInGithub() {
 </script>
 <template>
   <div class="flex flex-col items-center w-[340px]">
-    <div class="flex flex-col items-center w-full border-2px border-solid border-semi-light p-8 rounded">
+    <div class="flex flex-col items-center w-full border-1px border-solid border-semi-gray p-8">
       <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
       <div class="mt-4 w-full">
         <q-input v-model="form.email" color="primary" type="email" label="Email" :error="!!errors.email"
@@ -96,8 +96,8 @@ function signInGithub() {
         </q-btn>
       </div>
     </div>
-    <div class="flex gap-x-4 w-full mt-4">
-      <q-btn outline class="flex-1" @click="signInGoogle" :disable="true">
+    <div class="flex gap-x-8 w-full mt-8">
+      <q-btn outline class="flex-1" :disable="true" @click="signInGoogle">
         <Icon name="ph:google-logo-bold" class="mr-2" />
         <span>Google</span>
       </q-btn>
@@ -108,12 +108,13 @@ function signInGithub() {
     </div>
     <div class="flex flex-col mt-4">
       <div class="flex flex-col text-center mt-4">
-        <span class="font-main text-base text-paragraph">Don't have an account?</span>
-        <NuxtLink class="text-base font-bold underline" :to="{ path: PATHS.signup }">Sign Up</NuxtLink>
+        <span class="font-main text-gray text-sm text-paragraph">Don't have an account?</span>
+        <NuxtLink class="text-sm font-bold text-on-light underline" :to="{ path: PATHS.signup }">Sign Up</NuxtLink>
       </div>
       <div class="flex flex-col text-center mt-4">
-        <span class="font-main text-base text-paragraph">Forgot the password?</span>
-        <NuxtLink class="text-base font-bold underline" :to="{ path: PATHS.resetpassword }">Reset password</NuxtLink>
+        <span class="font-main text-gray text-sm text-paragraph">Forgot the password?</span>
+        <NuxtLink class="text-sm font-bold text-on-light underline" :to="{ path: PATHS.resetpassword }">Reset password
+        </NuxtLink>
       </div>
     </div>
   </div>
