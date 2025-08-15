@@ -13,23 +13,25 @@
   --semi-primary: #4277f3;
 
   --secondary: #8cf424;
-  --semi-secondary: #a0f050;
+  --semi-secondary: #36610c;
 
   --light: #f1f2f5;
-  --semi-light: #d7d9dd;
+  --semi-light: #d5d5d5;
 
   --dark: #131313;
   --semi-dark: #292929;
 
   --gray: #464646;
-  --semi-gray: #3c3c3c;
+  --semi-gray: #8a8a8a;
 
   --negative: #ee3e3e;
   --positive: #1be67f;
   --warning: #e6b01b;
 
   --on-light: var(--dark);
+  --on-semi-light: var(--semi-dark);
   --on-dark: var(--light);
+  --on-semi-dark: var(--semi-light);
 
   /* --info:  */
   /* --accent:  */
@@ -44,15 +46,15 @@
   --semi-primary: #4277f3;
 
   --secondary: #8cf424;
-  --semi-secondary: #a0f050;
+  --semi-secondary: #36610c;
 
   --light: #f1f2f5;
-  --semi-light: #2b2d31;
+  --semi-light: #d5d5d5;
 
-  --dark: #141414;
-  --semi-dark: #222222;
+  --dark: #131313;
+  --semi-dark: #292929;
 
-  --gray: #a3a3a3;
+  --gray: #464646;
   --semi-gray: #3c3c3c;
 
   --negative: #ee3e3e;
@@ -60,7 +62,9 @@
   --warning: #e6b01b;
 
   --on-light: var(--light);
+  --on-semi-light: var(--semi-light);
   --on-dark: var(--dark);
+  --on-semi-dark: var(--semi-dark);
 
   --q-primary: var(--primary);
   --q-secondary: var(--secondary);
@@ -110,7 +114,7 @@ main {
   padding: 0;
   margin: 0;
 
-  padding-top: 60px;
+  padding-top: 48px;
 }
 
 section {
@@ -121,21 +125,42 @@ section {
 }
 
 header {
-  height: 63px;
+  height: 48px;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   position: fixed;
-  top: 0;
+  top: 3px;
   left: 0;
   right: 0;
 
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--gray);
+  border-bottom: 1px solid var(--semi-gray);
 
   z-index: 1000;
+}
+
+footer {
+  position: fixed;
+
+  left: 0;
+  bottom: 0;
+  right: 0;
+
+  height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--dark);
+  background-color: var(--light);
+
+  z-index: 1000;
+
+  font-size: 8px;
 }
 
 h1,
@@ -188,4 +213,12 @@ pre {
 
 .body--dark pre {
   background-color: var(--semi-dark);
+}
+
+.q-notify-class {
+  border-radius: 0;
+}
+
+.router-link-exact-active {
+  opacity: 1;
 }
