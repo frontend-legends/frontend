@@ -34,10 +34,12 @@ export default defineConfig({
       "semi-gray": "var(--semi-gray)",
 
       "on-dark": "var(--on-dark)",
+      "on-semi-dark": "var(--on-semi-dark)",
       "on-light": "var(--on-light)",
+      "on-semi-light": "var(--on-semi-light)",
 
       negative: "var(--negative)",
-      positive: "var(--positive",
+      positive: "var(--positive)",
       warning: "var(--warning)",
     },
 
@@ -56,5 +58,9 @@ export default defineConfig({
   shortcuts: {
     "max-width": "max-w-[var(--max-width)]",
     "text-ellipsis": "overflow-hidden text-ellipsis whitespace-nowrap",
+    "border-x": "border-l-1px border-r-1px border-solid border-t-0 border-b-0",
+    "border-left": "border-l-1px border-solid border-r-0 border-t-0 border-b-0",
+    "border-right":
+      "border-r-1px border-solid border-l-0 border-t-0 border-b-0",
   },
 });

@@ -101,6 +101,7 @@ export default defineNuxtConfig({
           unelevated: true,
           noCaps: true,
           noWrap: true,
+          square: true,
         },
         QLinearProgress: {
           color: "secondary",
@@ -114,9 +115,11 @@ export default defineNuxtConfig({
         QSelect: {
           outlined: true,
           dense: false,
+          square: true,
         },
         QInput: {
           outlined: true,
+          square: true,
         },
         QToggle: {
           color: "primary",
