@@ -11,7 +11,7 @@ nuxtApp.hook("page:loading:end", () => {
 
 <template>
   <div class="loading-line">
-    <div v-if="loading" class="loading-bar"></div>
+    <div v-if="loading" class="loading-bar" />
   </div>
 </template>
 
@@ -22,7 +22,7 @@ nuxtApp.hook("page:loading:end", () => {
   left: 0;
   width: 100%;
   height: 3px;
-  background-color: var(--gray, #525252);
+  background-color: var(--semi-gray, #525252);
   z-index: 9998;
 }
 
