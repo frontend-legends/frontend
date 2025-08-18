@@ -22,7 +22,7 @@ const isFinished = ref(false);
 <template>
   <div>
     <div class="toc-container">
-      <h6 class="text-lg mb-2">Table of contents</h6>
+      <h6 class="text-sm mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
         <NuxtLink :to="`#${cat.id}`">
           {{ cat.text }}
@@ -50,9 +50,8 @@ const isFinished = ref(false);
 .toc-container {
   display: flex;
   flex-direction: column;
-  border-radius: 4px;
   border: 1px solid var(--semi-gray);
-  padding: 32px;
+  padding: 16px;
   width: 320px;
 
   height: fit-content;
