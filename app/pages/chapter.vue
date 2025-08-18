@@ -5,17 +5,9 @@ definePageMeta({
   name: "chapter",
   path: PATHS.chapter,
 });
-
-const route = useRoute();
-
-const chapter = computed(() => route.params.chapter as string);
 </script>
 <template>
   <div>
-    <q-breadcrumbs gutter="md" class="text-base font-main lowercase">
-      <q-breadcrumbs-el label="Home" to="/" />
-      <q-breadcrumbs-el :label="chapter" :to="chapter" />
-    </q-breadcrumbs>
     <AppContent />
   </div>
 </template>
