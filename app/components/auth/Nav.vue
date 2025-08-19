@@ -16,7 +16,7 @@ const route = useRoute();
       <div
         class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
     </NuxtLink>
-    <div class="flex items-center">
+    <div class="flex items-center s:hidden lg:flex">
       <div
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="switchMode">
@@ -53,6 +53,17 @@ const route = useRoute();
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
           :class="{ 'w-full bg-on-light!': route.name === 'signup' }" />
       </NuxtLink>
+    </div>
+
+    <div class="flex items-center lg:hidden">
+      <div
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
+        @click="toggleMenu">
+        <Icon name="ph:list-bold" />
+
+        <div
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+      </div>
     </div>
   </nav>
 </template>

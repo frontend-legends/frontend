@@ -14,8 +14,8 @@ const now = useNow();
 </script>
 <template>
   <div>
-    <h6>{{ getGreeting(String(new Date(now))) }}, {{ user?.displayName }}</h6>
-    <p>You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
+    <h6 class="text-sm">{{ getGreeting(String(new Date(now))) }}, {{ user?.displayName }}</h6>
+    <p class="text-xs">You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
     <div v-if="page" class="flex flex-col gap-8 lg:flex-row">
       <div class="flex flex-col flex-1">
         <ContentRenderer :value="page" class="prose" />
