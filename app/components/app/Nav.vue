@@ -42,8 +42,8 @@ async function signOutFn() {
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
           :class="{ 'w-full bg-on-light!': route.name === 'home' }" />
       </NuxtLink>
-      <div v-if="route.name === 'chapter' || route.name === 'story'" class="hidden smx:flex ml-4">
-        <q-breadcrumbs gutter="sm" class="text-xs text-semi-light lowercase" separator="-">
+      <div v-if="route.name === 'chapter' || route.name === 'story'" class="s:hidden lg:flex ml-4">
+        <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs lowercase" separator-color="gray" separator="-">
           <q-breadcrumbs-el label="home" to="/" />
           <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`" />
           <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`" />
