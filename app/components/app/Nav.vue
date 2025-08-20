@@ -2,7 +2,9 @@
 import PATHS from '~/const/paths';
 import { useSignOut } from '@nhost/vue';
 import LINKS from '~/const/links';
+import useScrollPage from "~/composables/usePageProgress";
 
+const { scrollProgress } = useScrollPage();
 const { switchMode, isDark } = useDarkMode();
 const { error, isSuccess, signOut } = useSignOut();
 
@@ -32,22 +34,27 @@ async function signOutFn() {
 <template>
   <nav
     class="flex no-wrap items-center w-full h-full justify-between max-width border-x border-semi-gray mx-auto bg-op-60">
-    <div class="flex items-center">
-      <NuxtLink :to="PATHS.home"
-        class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:lightning-bold" />
-        <h1 class="text-sm font-semibold">frontend legends</h1>
+    <div class="flex items-center justify-between flex-1">
+      <div class="flex items-center">
+        <NuxtLink :to="PATHS.home"
+          class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
+          <Icon name="ph:lightning-bold" />
+          <h1 class="text-sm font-semibold">frontend legends</h1>
 
-        <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
-          :class="{ 'w-full bg-on-light!': route.name === 'home' }" />
-      </NuxtLink>
-      <div v-if="route.name === 'chapter' || route.name === 'story'" class="s:hidden lg:flex ml-4">
-        <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs lowercase" separator-color="gray" separator="-">
-          <q-breadcrumbs-el label="home" to="/" />
-          <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`" />
-          <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`" />
-        </q-breadcrumbs>
+          <div
+            class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+            :class="{ 'w-full bg-on-light!': route.name === 'home' }" />
+        </NuxtLink>
+        <div v-if="route.name === 'chapter' || route.name === 'story'" class="s:hidden lg:flex ml-4">
+          <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs lowercase" separator-color="gray" separator="-">
+            <q-breadcrumbs-el label="home" to="/" class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`" class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`" class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+          </q-breadcrumbs>
+        </div>
+      </div>
+      <div class="mr-4">
+        <span class="text-xs">{{ Number(scrollProgress || 0).toFixed(2) }}%</span>
       </div>
     </div>
     <div class="flex items-center s:hidden lg:flex">
