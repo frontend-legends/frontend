@@ -21,14 +21,45 @@ const date = computed(() => page.value?.date);
 
 </script>
 <template>
-  <div v-if="map.length > 0 && page" class="sticky right-0 top-[100px] h-fit">
-    <div class="toc-container">
-      <h6 class="text-lg mb-2">{{ page.title }}</h6>
-      <NuxtLink v-for="item in map" :key="item.id" :to="`/content${item.path}`">
-        {{ item.order }}.
-        {{ item.title }}
-      </NuxtLink>
+  <div v-if="map.length > 0 && page">
+    <div class="toc-container s:hidden xl:flex">
+      <h6 class="text-sm mb-2">{{ page.title }}</h6>
+
+      <div v-for="item in map" :key="item.id">
+        <NuxtLink :to="`/content${item.path}`" class="text-gray">
+          {{ item.order }}. {{ item.title }}
+        </NuxtLink>
+
+        <ul v-if="item.children">
+          <li v-for="child in item.children" :key="child.id">
+            <NuxtLink :to="`/content${child.path}`" class="text-gray">
+              {{ child.order }}. {{ child.title }}
+            </NuxtLink>
+          </li>
+        </ul>
+      </div>
     </div>
+
+    <div class="s:flex justify-between xl:hidden">
+      <div class="flex flex-col">
+        <h6 class="text-base capitalize mb-2">{{ page.title }}</h6>
+
+        <div v-for="item in map" :key="item.id">
+          <NuxtLink :to="`/content${item.path}`" class="text-gray">
+            {{ item.order }}. {{ item.title }}
+          </NuxtLink>
+
+          <ul v-if="item.children">
+            <li v-for="child in item.children" :key="child.id">
+              <NuxtLink :to="`/content${child.path}`" class="text-gray">
+                {{ child.order }}. {{ child.title }}
+              </NuxtLink>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <div class="flex flex-col mt-4 text-sm">
       <small v-if="author">Author: {{ author }}</small>
       <small v-if="date">Last edited: {{ useDateFormat(date, "DD MMM YYYY - HH:MM") }}</small>
@@ -37,12 +68,11 @@ const date = computed(() => page.value?.date);
 </template>
 <style scoped>
 .toc-container {
-  display: flex;
   flex-direction: column;
-  border-radius: 8px;
   border: 1px solid var(--semi-gray);
-  padding: 32px;
+  padding: 16px;
   width: 320px;
+  max-width: 320px;
 
   height: fit-content;
 }

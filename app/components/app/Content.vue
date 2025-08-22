@@ -15,15 +15,14 @@ const { data: page } = await useAsyncData(route.path, () => {
 
 </script>
 <template>
-  <div v-if="page" class="flex flex-col gap-32 lg:flex-row">
+  <div v-if="page" class="flex flex-col flex-col-reverse justify-between gap-x-8 xl:flex-row">
 
-    <div class="flex flex-col flex-1">
+    <div class="w-full max-w-[768px]">
       <ContentRenderer :value="page" class="prose" />
     </div>
-    <div v-if="!isChapter" class="flex flex-col gap-4 sticky right-0 top-[100px] h-fit">
-      <AppToc />
-    </div>
-    <ChapterMap v-else />
+    <hr class="s:block xl:hidden w-full text-semi-gray">
+    <AppToc class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit" v-if="!isChapter" />
+    <ChapterMap class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit" v-else />
   </div>
   <AppNotFound v-else />
 </template>
