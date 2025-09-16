@@ -12,6 +12,9 @@ const { data } = await useAsyncData(() =>
     .all()
 )
 
+const chapter = computed(() => route.params.chapter as string);
+const story = computed(() => route.params?.story as string | undefined);
+
 const map = computed(() => data.value?.filter((item) => item.path !== `/${link.value}`) || []);
 const page = computed(() => data.value?.filter((item) => item.path === `/${link.value}`)[0])!;
 
@@ -32,7 +35,17 @@ const date = computed(() => page.value?.date);
 
     <div class="s:flex justify-between xl:hidden">
       <div class="flex flex-col">
-        <h6 class="text-base capitalize mb-2">{{ page.title }}</h6>
+        <div class="flex flex-col mb-4">
+          <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs font-main lowercase" separator-color="gray"
+            separator="-">
+            <q-breadcrumbs-el label="home" to="/"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+          </q-breadcrumbs>
+        </div>
 
         <div v-for="item in map" :key="item.id">
           <NuxtLink :to="`/content${item.path}`" class="text-gray">

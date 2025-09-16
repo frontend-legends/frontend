@@ -14,7 +14,7 @@ const now = useNow();
 </script>
 <template>
   <div>
-    <pre class="overflow-x-auto text-center bg-transparent">
+    <pre class="overflow-x-auto max-w-[640px] mx-auto my-8 text-center text-[1.5vw] bg-transparent lg:text-1rem">
       
     ______                 __                 __               
    / ____/________  ____  / /____  ____  ____/ /               

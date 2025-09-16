@@ -8,19 +8,16 @@ const link = computed(() => {
   return route.name === 'chapter'
     ? `/${route.params.chapter}`
     : `/${route.params.chapter}/${route.params.story}` as string
-})
+});
 
-const name = computed(() => {
-  return route.name === 'chapter'
-    ? route.params.chapter
-    : route.params.story
-})
+const chapter = computed(() => route.params.chapter as string);
+const story = computed(() => route.params?.story as string | undefined);
 
 const cats = await useAsyncData(route.path, () => {
   return queryCollection('content')
     .path(link.value)
     .first()
-})
+});
 
 const author = computed(() => cats.data.value?.author)
 const date = computed(() => cats.data.value?.date)
@@ -90,20 +87,14 @@ onBeforeUnmount(() => {
     <div class="toc-container s:hidden xl:flex xl:flex-col">
       <h6 class="text-sm mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-        <NuxtLink
-          :to="`#${cat.id}`"
-          class="text-gray underline-light"
-          :class="{ 'text-light underline-primary': activeId === cat.id }"
-        >
+        <NuxtLink :to="`#${cat.id}`" class="text-gray underline-light"
+          :class="{ 'text-light underline-primary': activeId === cat.id }">
           {{ cat.text }}
         </NuxtLink>
         <ul v-if="cat.children">
           <li v-for="item in cat.children" :key="item.id">
-            <NuxtLink
-              :to="`#${item.id}`"
-              class="text-gray underline-light"
-              :class="{ 'text-light underline-primary': activeId === item.id }"
-            >
+            <NuxtLink :to="`#${item.id}`" class="text-gray underline-light"
+              :class="{ 'text-light underline-primary': activeId === item.id }">
               {{ item.text }}
             </NuxtLink>
           </li>
@@ -115,26 +106,29 @@ onBeforeUnmount(() => {
     </div>
 
     <!-- Mobile TOC -->
-    <div class="s:flex justify-between xl:hidden">
+    <div class="s:flex justify-between gap-4 xl:hidden">
       <div class="flex flex-col">
-        <h6 class="text-base capitalize mb-2">{{ name }}</h6>
+        <div class="flex flex-col mb-4">
+          <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs font-main lowercase" separator-color="gray"
+            separator="-">
+            <q-breadcrumbs-el label="home" to="/"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+          </q-breadcrumbs>
+        </div>
 
         <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-          <NuxtLink
-            :to="`#${cat.id}`"
-            class="text-gray"
-            :class="{ 'text-primary font-bold': activeId === cat.id }"
-          >
+          <NuxtLink :to="`#${cat.id}`" class="text-gray" :class="{ 'text-primary font-bold': activeId === cat.id }">
             {{ cat.text }}
           </NuxtLink>
 
           <ul v-if="cat.children">
             <li v-for="item in cat.children" :key="item.id">
-              <NuxtLink
-                :to="`#${item.id}`"
-                class="text-gray"
-                :class="{ 'text-primary font-bold': activeId === item.id }"
-              >
+              <NuxtLink :to="`#${item.id}`" class="text-gray"
+                :class="{ 'text-primary font-bold': activeId === item.id }">
                 {{ item.text }}
               </NuxtLink>
             </li>
