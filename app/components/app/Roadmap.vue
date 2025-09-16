@@ -20,7 +20,7 @@ const grouped = computed(() => groupContent(home.value as ContentItem[]))
       </NuxtLink>
       <ul class="ml-4 list-disc">
         <li v-for="child in section.children" :key="child.id">
-          <NuxtLink class="text-on-semi-light font-main" :to="`/content${child.path}`">
+          <NuxtLink class="text-on-semi-light text-sm font-main" :to="`/content${child.path}`">
             {{ child.order.toFixed(2) }}. {{ child.title.toLowerCase() }}
           </NuxtLink>
         </li>
