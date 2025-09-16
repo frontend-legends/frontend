@@ -24,15 +24,15 @@ const isFinished = ref(false);
 </script>
 <template>
   <div>
-    <div class="toc-container s:hidden xl:flex">
+    <div class="toc-container s:hidden xl:flex xl:flex-col">
       <h6 class="text-sm mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-        <NuxtLink :to="`#${cat.id}`" class="text-gray">
+        <NuxtLink :to="`#${cat.id}`" class="text-gray underline-light">
           {{ cat.text }}
         </NuxtLink>
         <ul v-if="cat.children">
           <li v-for="item in cat.children" :key="item.id">
-            <NuxtLink :to="`#${item.id}`" class="text-gray">
+            <NuxtLink :to="`#${item.id}`" class="text-gray underline-light">
               {{ item.text }}
             </NuxtLink>
           </li>
@@ -65,8 +65,9 @@ const isFinished = ref(false);
         <span>{{ isFinished ? "Unfinish" : "Finish" }}</span>
       </q-btn>
     </div>
-    <div class="flex flex-col text-sm">
+    <div class="flex flex-col text-sm text-gray">
       <small v-if="author">Author: {{ author }}</small>
+      <!-- <small >Нашли ошибку? исправьте в Github</small> -->
       <small v-if="date">Last edited: {{ useDateFormat(date, "DD MMM YYYY - HH:MM") }}</small>
     </div>
   </div>

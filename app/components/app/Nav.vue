@@ -48,8 +48,8 @@ async function signOutFn() {
         <div v-if="route.name === 'chapter' || route.name === 'story'" class="s:hidden lg:flex ml-4">
           <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs font-main lowercase" separator-color="gray"
             separator="-">
-            <q-breadcrumbs-el label="home" to="/"
-              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+            <!-- <q-breadcrumbs-el label="home" to="/"
+              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" /> -->
             <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`"
               class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
             <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`"

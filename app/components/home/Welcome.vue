@@ -14,8 +14,24 @@ const now = useNow();
 </script>
 <template>
   <div>
-    <h6 class="text-sm">{{ getGreeting(String(new Date(now))) }}, {{ user?.displayName }}</h6>
-    <p class="text-xs">You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
+    <pre class="overflow-x-auto text-center bg-transparent">
+      
+    ______                 __                 __               
+   / ____/________  ____  / /____  ____  ____/ /               
+  / /_  / ___/ __ \/ __ \/ __/ _ \/ __ \/ __  /                
+ / __/ / /  / /_/ / / / / /_/  __/ / / / /_/ /                 
+/_/   /_/   \____/_/ /_/\__/\___/_/ /_/\__,_/            __    
+                        / /   ___  ____ ____  ____  ____/ /____
+                       / /   / _ \/ __ `/ _ \/ __ \/ __  / ___/
+                      / /___/  __/ /_/ /  __/ / / / /_/ (__  ) 
+                     /_____/\___/\__, /\___/_/ /_/\__,_/____/  
+                                /____/                         
+    </pre>
+    <div class="flex items-center gap-x-2">
+      <Icon :name="getGreeting(String(new Date(now))).icon" />
+      <h6 class="text-sm">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName }}</h6>
+    </div>
+    <p class="text-xs text-gray">You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p>
     <div v-if="page" class="flex flex-col gap-8 lg:flex-row">
       <div class="flex flex-col flex-1">
         <ContentRenderer :value="page" class="prose" />
