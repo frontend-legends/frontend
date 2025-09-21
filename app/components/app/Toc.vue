@@ -88,13 +88,13 @@ onBeforeUnmount(() => {
       <h6 class="text-sm mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
         <NuxtLink :to="`#${cat.id}`" class="text-gray underline-light"
-          :class="{ 'text-light underline-primary': activeId === cat.id }">
+          :class="{ 'text-on-light underline-primary': activeId === cat.id }">
           {{ cat.text }}
         </NuxtLink>
         <ul v-if="cat.children">
           <li v-for="item in cat.children" :key="item.id">
             <NuxtLink :to="`#${item.id}`" class="text-gray underline-light"
-              :class="{ 'text-light underline-primary': activeId === item.id }">
+              :class="{ 'text-on-light underline-primary': activeId === item.id }">
               {{ item.text }}
             </NuxtLink>
           </li>

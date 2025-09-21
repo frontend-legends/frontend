@@ -245,6 +245,34 @@ pre {
   background-color: var(--semi-dark);
 }
 
+.prose pre code {
+  font-weight: bold;
+
+  counter-reset: line-number;
+}
+
+.prose pre code .line::selection {
+  color: var(--semi-light);
+
+  background-color: var(--primary) !important;
+} 
+
+.prose pre code .line {
+  counter-increment: line-number;
+  position: relative;
+  padding-left: 2rem;
+}
+
+.prose pre code .line::before {
+  font-weight: 900;
+  content: counter(line-number) ". ";
+  position: absolute;
+  left: 0;
+  color: var(--gray);
+
+  opacity: 0.4;
+}
+
 .q-notify-class {
   border-radius: 0;
 }
