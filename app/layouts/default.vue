@@ -5,6 +5,7 @@ import type { IAuthStoreUser } from '~/types/user.type';
 
 const user = useUserData();
 const authStore = useAuthStore();
+const { isMenuVisible } = useMenu();
 
 onMounted(async () => {
   // auth store
@@ -16,6 +17,7 @@ onMounted(async () => {
     <header>
       <AppNav />
     </header>
+    <AppMenu v-if="isMenuVisible" />
     <main>
       <section>
         <slot />

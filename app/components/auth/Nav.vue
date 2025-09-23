@@ -2,6 +2,7 @@
 import LINKS from '~/const/links';
 import PATHS from '~/const/paths';
 
+const { toggleMenu } = useMenu();
 const { switchMode, isDark } = useDarkMode();
 
 const route = useRoute();
@@ -58,7 +59,7 @@ const route = useRoute();
     <div class="flex items-center lg:hidden">
       <div
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
-        @click="toggleMenu">
+        @click="toggleMenu()">
         <Icon name="ph:list-bold" />
 
         <div

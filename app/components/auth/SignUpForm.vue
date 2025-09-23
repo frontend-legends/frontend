@@ -88,7 +88,7 @@ function signInGithub() {
 </script>
 <template>
   <div class="flex flex-col items-center w-[340px]">
-    <div class="flex flex-col items-center w-full border-1px border-solid border-semi-gray p-8">
+    <div class="flex flex-col items-center w-full">
       <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
       <div class="mt-6 w-full">
         <q-input color="primary" outlined type="text" label="Login" v-model="form.login"
@@ -111,8 +111,8 @@ function signInGithub() {
         </q-btn>
       </div>
     </div>
-
-    <div class="flex gap-x-8 w-full mt-8">
+    <hr class="w-full border-0 bg-semi-gray text-semi-gray h-px my-8" />
+    <div class="flex gap-x-8 w-full">
       <q-btn outline class="flex-1" @click="signInGoogle" :disable="true">
         <Icon name="ph:google-logo-bold" class="mr-2" />
         <span>Google</span>
@@ -123,8 +123,9 @@ function signInGithub() {
       </q-btn>
     </div>
     <div class="flex flex-col text-center mt-4">
-      <span class="font-main text-gray text-sm text-paragraph">Already have an account?</span>
-      <NuxtLink class="text-sm font-bold text-on-light underline" :to="{ path: PATHS.signin }">Sign In</NuxtLink>
+      <span class="font-sans text-gray text-sm text-paragraph">Already have an account?</span>
+      <NuxtLink class="font-main text-sm font-bold text-on-light underline" :to="{ path: PATHS.signin }">Sign In
+      </NuxtLink>
     </div>
   </div>
 </template>

@@ -36,14 +36,14 @@ const date = computed(() => page.value?.date);
     <div class="s:flex justify-between xl:hidden">
       <div class="flex flex-col">
         <div class="flex flex-col mb-4">
-          <q-breadcrumbs active-color="gray" gutter="sm" class="text-xs font-main lowercase" separator-color="gray"
+          <q-breadcrumbs active-color="gray" gutter="sm" class="text-base font-main lowercase" separator-color="gray"
             separator="-">
             <q-breadcrumbs-el label="home" to="/"
-              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+              class="font-main underline underline-transparent transition hover:text-on-light hover:underline-primary" />
             <q-breadcrumbs-el :label="chapter" :to="`/content/${chapter}`"
-              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+              class="font-main underline underline-transparent transition hover:text-on-light hover:underline-primary" />
             <q-breadcrumbs-el v-if="story" :label="story" :to="`/content/${chapter}/${story}`"
-              class="underline underline-transparent transition hover:text-on-light hover:underline-primary" />
+              class="font-main underline underline-transparent transition hover:text-on-light hover:underline-primary" />
           </q-breadcrumbs>
         </div>
 

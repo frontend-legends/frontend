@@ -262,12 +262,6 @@ pre {
   counter-reset: line-number;
 }
 
-.prose pre code .line::selection {
-  color: var(--semi-light);
-
-  background-color: var(--primary) !important;
-} 
-
 .prose pre code .line {
   counter-increment: line-number;
   position: relative;
