@@ -54,9 +54,8 @@ export default defineNuxtConfig({
       markdown: {
         highlight: {
           theme: {
-            light: "one-light",
-            dark: "one-dark-pro",
             default: "one-light",
+            dark: "one-dark-pro",
           },
         },
         toc: {
@@ -137,4 +136,16 @@ export default defineNuxtConfig({
   spaLoadingTemplate: true,
 
   css: ["~/styles/reset.css", "~/styles/app.css"],
+
+  experimental: {
+    viewTransition: true,
+    writeEarlyHints: true,
+    defaults: {
+      useAsyncData: {
+        deep: false,
+      },
+    },
+  },
+
+  dev: true,
 });

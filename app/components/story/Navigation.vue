@@ -20,10 +20,10 @@ async function fetchNav() {
 watch(() => order, fetchNav, { immediate: true });
 </script>
 <template>
-  <p>{{ order }}</p>
   <div v-if="nav" class="flex items-center gap-16 mt-32">
     <NuxtLink v-for="item in nav" :key="item.id"
-      class="flex-1 flex flex-col gap-1 bg-semi-dark p-8 text-inherit no-underline" :to="`/content${item.path}`">
+      class="flex-1 flex flex-col gap-1 border border-solid border-transparent bg-on-semi-dark p-8 text-inherit no-underline hover:bg-transparent hover:border-on-semi-dark"
+      :class="order === item.order ? '' : ''" :to="`/content${item.path}`">
       <div class="flex items-center gap-x-2">
         <Icon
           :name="item.order < order ? 'ph:arrow-left-bold' : item.order === order ? 'ph:github-logo-bold' : 'ph:arrow-right-bold'" />
