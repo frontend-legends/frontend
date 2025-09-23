@@ -13,15 +13,14 @@
     "@apollo/client": "^3.11.4",
     "@nhost/apollo": "^7.1.4",
     "@nhost/vue": "^2.6.4",
-    "@vue/apollo-composable": "^4.0.2",
     "@nuxt/content": "3.6.3",
     "@nuxt/eslint": "1.6.0",
     "@nuxt/icon": "1.15.0",
     "@nuxtjs/mdc": "0.17.2",
     "@pinia/nuxt": "0.11.2",
     "@quasar/extras": "^1.17.0",
+    "@vue/apollo-composable": "^4.0.2",
     "@vueuse/nuxt": "13.5.0",
-    "better-sqlite3": "^12.2.0",
     "eslint": "^9.0.0",
     "nuxt": "^4.0.1",
     "nuxt-quasar-ui": "2.1.12",
@@ -32,6 +31,7 @@
   },
   "devDependencies": {
     "@unocss/nuxt": "^66.3.3",
-    "unocss": "^66.3.3"
+    "unocss": "^66.3.3",
+    "vite-plugin-inspect": "^11.3.3"
   }
 }

@@ -15,7 +15,7 @@ const now = useNow();
 <template>
   <div>
     <pre class="overflow-x-auto max-w-[640px] mx-auto my-8 text-center text-[1.5vw] bg-transparent lg:text-1rem">
-      
+
     ______                 __                 __               
    / ____/________  ____  / /____  ____  ____/ /               
   / /_  / ___/ __ \/ __ \/ __/ _ \/ __ \/ __  /                
@@ -36,13 +36,6 @@ const now = useNow();
       <div class="flex flex-col flex-1">
         <ContentRenderer :value="page" class="prose" />
       </div>
-      <!-- <div class="bg-gray p-8 rounded-lg">
-      <h2 class="text-2xl font-bold mb-4">Welcome to Frontend Legends</h2>
-      <p class="mb-4">This is a collection of resources and articles to help you become a better frontend developer.</p>
-      <p class="mb-4">Explore the chapters and start your journey!</p>
-      <NuxtLink to="/content" class="btn btn-primary">Start Exploring</NuxtLink>
-      <p class="mt-4 text-sm text-gray-600">If you have any questions or suggestions, feel free to reach out!</p>
-    </div> -->
     </div>
     <AppNotFound v-else />
   </div>

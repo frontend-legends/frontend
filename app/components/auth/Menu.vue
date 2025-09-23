@@ -2,7 +2,6 @@
 import PATHS from '~/const/paths';
 import LINKS from '~/const/links';
 
-const route = useRoute();
 const { switchMode, isDark } = useDarkMode();
 </script>
 <template>
