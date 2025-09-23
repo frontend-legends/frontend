@@ -4,8 +4,8 @@ html {
 }
 
 *,
-*:before,
-*:after {
+*::after,
+*::before {
   box-sizing: inherit;
 
   font-family: inherit;
