@@ -27,11 +27,11 @@
     "pinia": "^3.0.3",
     "quasar": "^2.18.2",
     "vue": "^3.5.17",
-    "vue-router": "^4.5.1"
+    "vue-router": "^4.5.1",
+    "@unocss/nuxt": "^66.5.2",
+    "unocss": "^66.5.2"
   },
   "devDependencies": {
-    "@unocss/nuxt": "^66.3.3",
-    "unocss": "^66.3.3",
     "vite-plugin-inspect": "^11.3.3"
   }
 }
