@@ -16,7 +16,7 @@
   --semi-secondary: #36610c;
 
   --light: #f1f2f5;
-  --semi-light: #d5d5d5;
+  --semi-light: #ddd;
 
   --dark: #131313;
   --semi-dark: #292929;
@@ -51,7 +51,7 @@
   --semi-secondary: #36610c;
 
   --light: #f1f2f5;
-  --semi-light: #d5d5d5;
+  --semi-light: #ddd;
 
   --dark: #131313;
   --semi-dark: #292929;
@@ -216,6 +216,12 @@ a {
   font-family: var(--font-sans);
 }
 
+html *::selection {
+  color: var(--semi-secondary);
+
+  background-color: var(--secondary);
+}
+
 .prose a,
 .prose a p {
   position: relative;
@@ -252,12 +258,18 @@ a {
   scroll-margin-top: 80px !important;
 }
 
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-size: inherit;
+}
+
 pre {
   background-color: var(--on-semi-dark);
 }
 
 .prose pre code {
-  /* font-weight: bold; */
+  font-weight: 500;
 
   counter-reset: line-number;
 }

@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <!-- Desktop TOC -->
-    <div class="toc-container s:hidden xl:flex xl:flex-col">
+    <div class="toc-container w-[320px] max-h-[calc(100vh-140px)] overflow-auto s:hidden xl:flex xl:flex-col">
       <h6 class="text-sm mb-2">Table of contents</h6>
       <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
         <NuxtLink :to="`#${cat.id}`" class="text-gray underline-light"
@@ -144,12 +144,18 @@ onBeforeUnmount(() => {
     <!-- Author & date -->
     <div class="flex flex-col text-sm text-gray">
       <small v-if="author">Author: {{ author }}</small>
-      <small v-if="date">Last edited: {{ useDateFormat(date, 'DD MMM YYYY - HH:MM') }}</small>
+      <small v-if="date">Last edited: {{ useDateFormat(date, 'DD MMM YYYY - HH:mm') }}</small>
     </div>
   </div>
 </template>
 
 <style scoped>
+.toc-container {
+  scrollbar-width: thin;
+
+  transition: all .2s;
+}
+
 .toc-container a {
   transition: all .2s;
 }

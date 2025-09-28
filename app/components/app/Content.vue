@@ -12,9 +12,13 @@ const { data: page } = await useAsyncData(route.path, () => {
     .path(link.value)
     .first()
 });
+
+useHead({
+  title: page.value?.title ? `${page.value.order}. ${page.value.title}` : "Frontend Legends",
+});
 </script>
 <template>
-  <div v-if="page" class="flex flex-col">
+  <div v-if="page" class="flex flex-col pb-4">
     <div class="flex flex-col flex-col-reverse justify-between gap-8 xl:flex-row">
       <div class="w-[calc(100vw-64px)] lg:w-full max-w-[768px]">
         <ContentRenderer :value="page" class="prose" />

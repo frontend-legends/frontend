@@ -21,8 +21,9 @@
 
 ---
 
-01. computer-science:
-- 1.01 — introduction: Введение в алгоритмы и сложность
+1.  computer-science:
+
+- 1.01 — introduction: Введение в CS
 - 1.02 — data-structures: Базовые структуры данных (обзорно)
 - 1.03 — computer-architecture: Архитектура компьютера
 - 1.04 — languages-and-compiler: Компиляция и интерпретация (+обзор Python, Java, C)
@@ -38,7 +39,8 @@
 - 1.14 — os-architecture: Архитектура ОС
 - 1.15 — intro-to-db: Введение в базы данных
 
-02. algorithms-data-structure:
+2.  algorithms-data-structure:
+
 - 2.01 — Введение (подход к задачам + повтор Big-O)
 - 2.02 — Массивы и строки
 - 2.03 — Хэш-таблицы и множества
@@ -56,74 +58,75 @@
 - 2.15 — Math & Geometry
 - 2.16 — Шаблоны решения задач (Patterns)
 
-03. web:
-3.01 — Как работает браузер (Rendering pipeline, Critical Rendering Path)
-3.02 — Rendering lifecycle: URL → DOM (high-level, без сетевых деталей)
-3.03 — HTML, CSS, JS парсинг и оптимизация загрузки
-3.04 — DOM, BOM и Event Loop
-3.05 — Storage в браузере: Cookies, LocalStorage, SessionStorage, IndexedDB
-3.06 — Кэширование на клиенте (memory cache, disk cache, service workers)
-3.07 — DevTools для веб-разработчика: network, performance, lighthouse
-3.08 — Progressive Enhancement vs Graceful Degradation
-3.09 — Progressive Web Apps (PWA) основы
-3.10 — Web Workers и OffscreenCanvas
-3.11 — WebAssembly: зачем и где встраивать
-3.12 — Безопасность в вебе (обзор XSS/CSRF/CSP — базово, без глубины)
-3.13 — Accessibility (a11y) основы
-3.14 — SEO основы для фронтенд-разработчика
-3.15 — Rendering performance pitfalls (layout thrashing, reflows, repaints)
+3.  web:
+    3.01 — Как работает браузер (Rendering pipeline, Critical Rendering Path)
+    3.02 — Rendering lifecycle: URL → DOM (high-level, без сетевых деталей)
+    3.03 — HTML, CSS, JS парсинг и оптимизация загрузки
+    3.04 — DOM, BOM и Event Loop
+    3.05 — Storage в браузере: Cookies, LocalStorage, SessionStorage, IndexedDB
+    3.06 — Кэширование на клиенте (memory cache, disk cache, service workers)
+    3.07 — DevTools для веб-разработчика: network, performance, lighthouse
+    3.08 — Progressive Enhancement vs Graceful Degradation
+    3.09 — Progressive Web Apps (PWA) основы
+    3.10 — Web Workers и OffscreenCanvas
+    3.11 — WebAssembly: зачем и где встраивать
+    3.12 — Безопасность в вебе (обзор XSS/CSRF/CSP — базово, без глубины)
+    3.13 — Accessibility (a11y) основы
+    3.14 — SEO основы для фронтенд-разработчика
+    3.15 — Rendering performance pitfalls (layout thrashing, reflows, repaints)
 
-04. network-and-api:
-4.01 — Основы компьютерных сетей (IP, TCP/UDP, порты, пакеты)
-4.02 — Модель OSI и где работает веб
-4.03 — HTTP 1.1 vs HTTP/2 vs HTTP/3
-4.04 — TLS/SSL: как работает HTTPS
-4.05 — DNS и CDN (как ускоряется доставка контента)
-4.06 — CORS и SOP (Same-Origin Policy)
-4.07 — REST API: принципы и best practices
-4.08 — GraphQL: основы и отличие от REST
-4.09 — gRPC и бинарные протоколы
-4.10 — WebSockets, SSE и сравнение с polling
-4.11 — API Authentication: OAuth 2.0, OpenID Connect, API keys
-4.12 — API Rate Limiting и Throttling
-4.13 — API Security: HMAC, JWT, подписи запросов
-4.14 — API тестирование (Postman, Insomnia, автоматизация)
-4.15 — API versioning и документация (OpenAPI/Swagger)
+4.  network-and-api:
+    4.01 — Основы компьютерных сетей (IP, TCP/UDP, порты, пакеты)
+    4.02 — Модель OSI и где работает веб
+    4.03 — HTTP 1.1 vs HTTP/2 vs HTTP/3
+    4.04 — TLS/SSL: как работает HTTPS
+    4.05 — DNS и CDN (как ускоряется доставка контента)
+    4.06 — CORS и SOP (Same-Origin Policy)
+    4.07 — REST API: принципы и best practices
+    4.08 — GraphQL: основы и отличие от REST
+    4.09 — gRPC и бинарные протоколы
+    4.10 — WebSockets, SSE и сравнение с polling
+    4.11 — API Authentication: OAuth 2.0, OpenID Connect, API keys
+    4.12 — API Rate Limiting и Throttling
+    4.13 — API Security: HMAC, JWT, подписи запросов
+    4.14 — API тестирование (Postman, Insomnia, автоматизация)
+    4.15 — API versioning и документация (OpenAPI/Swagger)
 
-05. html:
-5.01 — Основы структуры HTML-документа (doctype, html, head, body)
-5.02 — Семантическая разметка (header, main, article, section, nav, footer)
-5.03 — Теги для текста и форматирования (p, span, strong, em, pre, code)
-5.04 — Формы и элементы ввода (input types, textarea, select, datalist)
-5.05 — Accessibility в HTML (aria-labels, roles, alt, tabindex)
-5.06 — Мультимедиа (img, picture, video, audio, source, track)
-5.07 — Таблицы и списки (ul, ol, table, thead, tbody, caption)
-5.08 — Ссылки и навигация (a, target, rel, hash-links, fragment navigation)
-5.09 — Мета-теги и SEO (title, meta description, viewport, social preview)
-5.10 — Custom data-* атрибуты
-5.11 — Shadow DOM и Web Components (overview)
-5.12 — Best practices: валидность, вложенность, минимизация div/span soup
+5.  html:
+    5.01 — Основы структуры HTML-документа (doctype, html, head, body)
+    5.02 — Семантическая разметка (header, main, article, section, nav, footer)
+    5.03 — Теги для текста и форматирования (p, span, strong, em, pre, code)
+    5.04 — Формы и элементы ввода (input types, textarea, select, datalist)
+    5.05 — Accessibility в HTML (aria-labels, roles, alt, tabindex)
+    5.06 — Мультимедиа (img, picture, video, audio, source, track)
+    5.07 — Таблицы и списки (ul, ol, table, thead, tbody, caption)
+    5.08 — Ссылки и навигация (a, target, rel, hash-links, fragment navigation)
+    5.09 — Мета-теги и SEO (title, meta description, viewport, social preview)
+    5.10 — Custom data-\* атрибуты
+    5.11 — Shadow DOM и Web Components (overview)
+    5.12 — Best practices: валидность, вложенность, минимизация div/span soup
 
-06. css:
-6.01 — Основы CSS: каскад, наследование, специфичность
-6.02 — Единицы измерения (px, em, rem, %, vw, vh, fr)
-6.03 — Box Model (content, padding, border, margin)
-6.04 — Positioning (static, relative, absolute, fixed, sticky)
-6.05 — Display и visibility (block, inline, inline-block, flex, grid, none)
-6.06 — Flexbox: основные концепции и практические паттерны
-6.07 — Grid Layout: основы, авторазмещение, шаблоны сеток
-6.08 — Responsive Design: media queries, fluid layouts, clamp()
-6.09 — Цвета, шрифты и типографика (font-face, variable fonts)
-6.10 — Анимации и переходы (transition, keyframes, will-change)
-6.11 — CSS Variables (custom properties) и их использование
-6.12 — Pseudo-классы и pseudo-элементы (:hover, :nth-child, ::before, ::after)
-6.13 — Z-index и stacking context
-6.14 — Modern CSS: container queries, subgrid, nesting
-6.15 — Архитектура CSS: BEM, OOCSS, ITCSS, CSS Modules
-6.16 — CSS-in-JS и современные подходы (emotion, styled-components, vanilla-extract)
-6.17 — Оптимизация CSS (Critical CSS, tree-shaking, минимизация)
+6.  css:
+    6.01 — Основы CSS: каскад, наследование, специфичность
+    6.02 — Единицы измерения (px, em, rem, %, vw, vh, fr)
+    6.03 — Box Model (content, padding, border, margin)
+    6.04 — Positioning (static, relative, absolute, fixed, sticky)
+    6.05 — Display и visibility (block, inline, inline-block, flex, grid, none)
+    6.06 — Flexbox: основные концепции и практические паттерны
+    6.07 — Grid Layout: основы, авторазмещение, шаблоны сеток
+    6.08 — Responsive Design: media queries, fluid layouts, clamp()
+    6.09 — Цвета, шрифты и типографика (font-face, variable fonts)
+    6.10 — Анимации и переходы (transition, keyframes, will-change)
+    6.11 — CSS Variables (custom properties) и их использование
+    6.12 — Pseudo-классы и pseudo-элементы (:hover, :nth-child, ::before, ::after)
+    6.13 — Z-index и stacking context
+    6.14 — Modern CSS: container queries, subgrid, nesting
+    6.15 — Архитектура CSS: BEM, OOCSS, ITCSS, CSS Modules
+    6.16 — CSS-in-JS и современные подходы (emotion, styled-components, vanilla-extract)
+    6.17 — Оптимизация CSS (Critical CSS, tree-shaking, минимизация)
 
 07.javascript:
+
 - 7.01 — История и стандарты (ECMAScript, ES5 → ESNext)
 - 7.02 — Переменные и области видимости (var, let, const, TDZ)
 - 7.03 — Типы данных (primitive vs reference, typeof, instanceof)
@@ -155,8 +158,8 @@
 - 7.29 — Современные фичи ES2020+ (optional chaining, nullish coalescing, pipeline, records/tuples proposal)
 - 7.30 — Лучшие практики: чистый код, модульность, антипаттерны в JS
 
+8.  TypeScript
 
-08. TypeScript
 - 8.01 — Зачем нужен TypeScript (плюсы и минусы по сравнению с JS)
 - 8.02 — Базовые типы: string, number, boolean, null, undefined, any, unknown, never
 - 8.03 — Объекты, массивы и кортежи
@@ -182,8 +185,8 @@
 - 8.23 — TS + Vue: defineProps, defineEmits, типизация компонентов
 - 8.24 — Advanced Patterns: Infer, Distributive Conditional Types
 
+9.  ReactJS
 
-09. ReactJS
 - 9.01 — Основы React: что это, Virtual DOM и reconciliation
 - 9.02 — JSX: как работает под капотом
 - 9.03 — Компоненты: функциональные и классовые

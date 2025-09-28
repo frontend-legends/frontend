@@ -1,5 +1,5 @@
 // release.ts
 
-const RELEASE = "Latest update v.0.16 from 15 Aug" as const;
+const RELEASE = "Latest update v0.06 from 28 Sep" as const;
 
 export default RELEASE;

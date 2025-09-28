@@ -5,7 +5,8 @@
     <div v-if="(filename || language) && !isHovered"
       class="absolute top-1 right-1 text-xs text-gray select-none pointer-events-none transition z-10">
       <span v-if="filename">{{ filename }}</span>
-      <span v-else-if="language">.{{ language }}</span>
+      <span v-else-if="language !== 'text'">.{{ language }}</span>
+      <span v-else>{{ language }}</span>
     </div>
 
     <div v-if="isHovered" class="absolute top-1 right-1 flex gap-1 transition z-20">

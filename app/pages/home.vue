@@ -5,6 +5,10 @@ definePageMeta({
   name: "home",
   path: PATHS.home,
 });
+
+useHead({
+  title: "Frontend Legends"
+})
 </script>
 <template>
   <div>
