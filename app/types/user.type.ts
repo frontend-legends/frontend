@@ -12,12 +12,22 @@ export interface IAuthStoreUser {
   id: string | null;
   isAnonymous: boolean | null;
   locale: string | null;
-  metadata: unknown | null;
+  metadata: IUserMetadata | null;
   phoneNumber: string | null;
   phoneNumberVerified: boolean | null;
   roles: string[] | null;
 }
 
-// export interface IAuthStoreGetters {
+export interface IUserRoles {
+  role: string;
+}
 
-// }
+export interface IUserMetadataItem {
+  title: string;
+  is_finished: boolean;
+  last_updated: string;
+}
+
+export interface IUserMetadata {
+  stories: IUserMetadataItem[];
+}

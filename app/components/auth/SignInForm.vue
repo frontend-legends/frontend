@@ -81,7 +81,7 @@ function signInGithub() {
 <template>
   <div class="flex flex-col items-center w-[340px]">
     <div class="flex flex-col items-center w-full">
-      <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
+      <h5 class="text-lg font-bold mb-4">frontend legends</h5>
       <div class="mt-4 w-full">
         <q-input v-model="form.email" color="primary" type="email" label="Email" :error="!!errors.email"
           :error-message="errors.email" class="text-light" />

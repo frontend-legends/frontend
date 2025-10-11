@@ -298,6 +298,11 @@ pre {
   border-radius: 0;
 }
 
+.q-field__label,
+.q-field__messages > div {
+  font-family: var(--font-main);
+}
+
 .router-link-exact-active {
   opacity: 1;
 }

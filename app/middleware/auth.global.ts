@@ -7,7 +7,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   const auth = await nhost.auth.isAuthenticatedAsync();
 
-  // const isAdmin = user?.roles.includes("admin") ? true : false;
   const isToken = Boolean(
     localStorage.getItem("nhostRefreshToken") ? true : false
   );

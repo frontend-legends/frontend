@@ -22,8 +22,6 @@ const cats = await useAsyncData(route.path, () => {
 const author = computed(() => cats.data.value?.author)
 const date = computed(() => cats.data.value?.date)
 
-const isFinished = ref(false)
-
 const activeId = ref<string | null>(null)
 
 function getSectionElements(): HTMLElement[] {
@@ -84,25 +82,23 @@ onBeforeUnmount(() => {
 <template>
   <div>
     <!-- Desktop TOC -->
-    <div class="toc-container w-[320px] max-h-[calc(100vh-140px)] overflow-auto s:hidden xl:flex xl:flex-col">
-      <h6 class="text-sm mb-2">Table of contents</h6>
-      <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-        <NuxtLink :to="`#${cat.id}`" class="text-gray underline-light"
-          :class="{ 'text-on-light underline-primary': activeId === cat.id }">
+    <div
+      class="toc-container w-[320px] min-h-[320px] max-h-[calc(100vh-320px)] overflow-auto s:hidden xl:flex xl:flex-col">
+      <h6 class="text-xs font-bold uppercase mb-2">Содержание</h6>
+      <div class="toc-el" v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
+        <NuxtLink :to="`#${cat.id}`" class="text-on-light underline-gray op-60"
+          :class="{ 'underline-primary op-100!': activeId === cat.id }">
           {{ cat.text }}
         </NuxtLink>
-        <ul v-if="cat.children">
+        <ul class="toc-el" v-if="cat.children">
           <li v-for="item in cat.children" :key="item.id">
-            <NuxtLink :to="`#${item.id}`" class="text-gray underline-light"
-              :class="{ 'text-on-light underline-primary': activeId === item.id }">
+            <NuxtLink :to="`#${item.id}`" class="text-on-light underline-gray op-60"
+              :class="{ 'underline-primary op-100!': activeId === item.id }">
               {{ item.text }}
             </NuxtLink>
           </li>
         </ul>
       </div>
-      <q-btn color="primary" :outline="!isFinished" class="w-full mt-4">
-        <span>{{ isFinished ? 'Unfinish' : 'Finish' }}</span>
-      </q-btn>
     </div>
 
     <!-- Mobile TOC -->
@@ -135,16 +131,13 @@ onBeforeUnmount(() => {
           </ul>
         </div>
       </div>
-
-      <q-btn color="primary" :outline="!isFinished" class="h-fit">
-        <span>{{ isFinished ? 'Unfinish' : 'Finish' }}</span>
-      </q-btn>
     </div>
 
-    <!-- Author & date -->
+    <AppFinish />
+
     <div class="flex flex-col text-sm text-gray">
-      <small v-if="author">Author: {{ author }}</small>
-      <small v-if="date">Last edited: {{ useDateFormat(date, 'DD MMM YYYY - HH:mm') }}</small>
+      <small v-if="author">Автор: {{ author }}</small>
+      <small v-if="date">Последнее изменения: {{ useDateFormat(date, 'DD MMM YYYY') }}</small>
     </div>
   </div>
 </template>

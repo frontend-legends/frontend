@@ -14,7 +14,7 @@ const { data: page } = await useAsyncData(route.path, () => {
 });
 
 useHead({
-  title: page.value?.title ? `${page.value.order}. ${page.value.title}` : "Frontend Legends",
+  title: page.value?.title ? `${page.value.order}. ${page.value.title}` : "frontend legends",
 });
 </script>
 <template>

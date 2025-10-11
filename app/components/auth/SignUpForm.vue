@@ -89,10 +89,10 @@ function signInGithub() {
 <template>
   <div class="flex flex-col items-center w-[340px]">
     <div class="flex flex-col items-center w-full">
-      <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
+      <h5 class="text-lg font-bold mb-4">frontend legends</h5>
       <div class="mt-6 w-full">
         <q-input color="primary" outlined type="text" label="Login" v-model="form.login"
-          hint="At least 5 characters long" :error="!!errors.login" :error-message="errors.login" />
+          hint="at least 5 characters long" :error="!!errors.login" :error-message="errors.login" />
       </div>
 
       <div class="mt-6 w-full">
@@ -102,7 +102,7 @@ function signInGithub() {
 
       <div class="mt-6 w-full">
         <q-input color="primary" outlined type="password" label="Password" v-model="form.password"
-          hint="At least 6 characters long" :error="!!errors.password" :error-message="errors.password" />
+          hint="at least 6 characters long" :error="!!errors.password" :error-message="errors.password" />
       </div>
 
       <div class="mt-6 w-full">
