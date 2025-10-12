@@ -7,9 +7,11 @@ import { useAuthStore } from "~/store/auth.store";
 import { useNotificationStore } from "~/store/notification.store";
 
 const route = useRoute();
-const storyTitle = computed(
-  () => (route.params.story as string) || (route.params.chapter as string)
-);
+const storyPath = computed(() => {
+  const chapter = route.params.chapter as string;
+  const story = route.params.story as string | undefined;
+  return story ? `${chapter}/${story}` : chapter;
+});
 
 const authStore = useAuthStore();
 const { add } = useNotificationStore();
@@ -18,8 +20,9 @@ const userId = computed(() => authStore.getUserId);
 const userMetadata = computed(() => authStore.getUserMetadata);
 
 const currentStory = computed(() =>
-  userMetadata.value?.stories?.find((s) => s.title === storyTitle.value)
+  userMetadata.value?.stories?.find((s) => s.title === storyPath.value)
 );
+
 const isFinished = computed(() => currentStory.value?.is_finished ?? false);
 
 const { loading: muLoading, error: muError, mutate: muFn } =
@@ -27,8 +30,7 @@ const { loading: muLoading, error: muError, mutate: muFn } =
 
 async function handleBtn() {
   const newState = !isFinished.value;
-
-  authStore.updateStoryProgress(storyTitle.value, newState);
+  authStore.updateStoryProgress(storyPath.value, newState);
 
   try {
     await muFn({
@@ -38,16 +40,14 @@ async function handleBtn() {
 
     add({
       type: "positive",
-      message: `История ${newState ? "завершена" : "возобновлена"}`,
+      message: `Updated status: ${newState ? "finished" : "restarted"}`,
     });
   } catch {
-    authStore.updateStoryProgress(storyTitle.value, !newState);
-
+    authStore.updateStoryProgress(storyPath.value, !newState);
     console.error(muError);
-
     add({
       type: "negative",
-      message: "Ошибка: не удалось обновить статус истории",
+      message: "Error: unable to update status",
     });
   }
 }
@@ -55,10 +55,8 @@ async function handleBtn() {
 
 <template>
   <div>
-    <q-btn class="w-full" color="positive" :outline="!isFinished" :loading="muLoading" @click="handleBtn">
-      <span>{{ isFinished ? "Возобновить" : "Завершить" }}</span>
+    <q-btn class="w-full font-bold" color="positive" :outline="!isFinished" :loading="muLoading" @click="handleBtn">
+      <span>{{ isFinished ? "Restart" : "Finish" }}</span>
     </q-btn>
   </div>
 </template>
-
-<style scoped></style>

@@ -6,33 +6,40 @@ const route = useRoute();
 const authStore = useAuthStore();
 
 const userMetadata = computed(() => authStore.getUserMetadata);
-const link = computed(() => route.params.chapter as string);
+const chapter = computed(() => route.params.chapter as string);
+const story = computed(() => route.params?.story as string | undefined);
+
+const link = computed(() =>
+  story.value ? `${chapter.value}/${story.value}` : chapter.value
+);
 
 const { data } = await useAsyncData(() =>
   queryCollection("content")
-    .where("path", "LIKE", `%${link.value}%`)
+    .where("path", "LIKE", `%${chapter.value}%`)
     .where("order", ">", "0")
     .order("order", "ASC")
     .all()
 );
 
-const chapter = computed(() => route.params.chapter as string);
-const story = computed(() => route.params?.story as string | undefined);
-
-const map = computed(() =>
-  data.value?.filter((item) => item.path !== `/${link.value}`) || []
+const map = computed(
+  () => data.value?.filter((item) => item.path !== `/${chapter.value}`) || []
 );
 const page = computed(
-  () => data.value?.filter((item) => item.path === `/${link.value}`)[0]
+  () => data.value?.find((item) => item.path === `/${chapter.value}`) || null
 );
 
 const author = computed(() => page.value?.author);
 const date = computed(() => page.value?.date);
 
 function isCompleted(path: string) {
-  const storyId = path.split("/").pop();
-  return userMetadata.value?.stories.some(
-    (s) => s.title === storyId && s.is_finished
+  if (!userMetadata.value?.stories) return false;
+
+  const normalized = path
+    .replace(/^\/?content\//, "") // remove leading /content/
+    .replace(/^\/+/, ""); // remove extra slashes
+
+  return userMetadata.value.stories.some(
+    (s) => s.title === normalized && s.is_finished
   );
 }
 </script>
@@ -81,10 +88,8 @@ function isCompleted(path: string) {
 
     <!-- Meta info -->
     <div class="flex flex-col mt-4 text-sm">
-      <small v-if="author">Автор: {{ author }}</small>
-      <small v-if="date">
-        Последнее изменения: {{ useDateFormat(date, "DD MMM YYYY") }}
-      </small>
+      <small v-if="author">Author: {{ author }}</small>
+      <small v-if="date">Last edited: {{ useDateFormat(date, "DD MMM YYYY") }}</small>
     </div>
   </div>
 </template>

@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
     <!-- Desktop TOC -->
     <div
       class="toc-container w-[320px] min-h-[320px] max-h-[calc(100vh-320px)] overflow-auto s:hidden xl:flex xl:flex-col">
-      <h6 class="text-xs font-bold uppercase mb-2">Содержание</h6>
+      <h6 class="text-xs font-bold uppercase mb-2">Content</h6>
       <div class="toc-el" v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
         <NuxtLink :to="`#${cat.id}`" class="text-on-light underline-gray op-60"
           :class="{ 'underline-primary op-100!': activeId === cat.id }">
@@ -136,8 +136,8 @@ onBeforeUnmount(() => {
     <AppFinish />
 
     <div class="flex flex-col text-sm text-gray">
-      <small v-if="author">Автор: {{ author }}</small>
-      <small v-if="date">Последнее изменения: {{ useDateFormat(date, 'DD MMM YYYY') }}</small>
+      <small v-if="author">Author: {{ author }}</small>
+      <small v-if="date">Last edited: {{ useDateFormat(date, 'DD MMM YYYY') }}</small>
     </div>
   </div>
 </template>

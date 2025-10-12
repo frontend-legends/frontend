@@ -16,8 +16,15 @@ const { data: home } = await useAsyncData(() =>
 const grouped = computed(() => groupContent(home.value as ContentItem[]));
 
 function isCompleted(path: string) {
-  const storyId = path.split("/").pop();
-  return userMetadata.value?.stories.some((s) => s.title === storyId && s.is_finished);
+  if (!userMetadata.value?.stories) return false;
+
+  const normalized = path
+    .replace(/^\/?content\//, "")
+    .replace(/^\/+/, "");
+
+  return userMetadata.value.stories.some(
+    (s) => s.title === normalized && s.is_finished
+  );
 }
 </script>
 
