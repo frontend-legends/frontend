@@ -21,9 +21,9 @@
 
 ---
 
-0. [~] introduction
+0. [x] introduction
 
-1. [~] computer-science:
+1. [x] computer-science:
    - [~] 1.01 — introduction: Введение в CS
    - [x] 1.02 — data representation
    - [~] 1.03 — computer-architecture: Архитектура компьютера
@@ -70,26 +70,26 @@
    - [ ] 2.27 - other algorithms
 
 3. [ ] web:
-   - [ ] 3.01 — Как работает браузер (Rendering pipeline, Critical Rendering Path)
-   - [ ] 3.02 — Rendering lifecycle: URL → DOM (high-level, без сетевых деталей)
-   - [ ] 3.03 — HTML, CSS, JS парсинг и оптимизация загрузки
-   - [ ] 3.04 — DOM, BOM и Event Loop
-   - [ ] 3.05 — Storage в браузере: Cookies, LocalStorage, SessionStorage, IndexedDB
-   - [ ] 3.06 — Кэширование на клиенте (memory cache, disk cache, service workers)
-   - [ ] 3.07 — DevTools для веб-разработчика: network, performance, lighthouse
+   - [ ] 3.01 — browser Как работает браузер (Rendering pipeline, Critical Rendering Path)
+   - [ ] 3.02 — rendering Rendering lifecycle: URL → DOM (high-level, без сетевых деталей)
+   - [ ] 3.03 — parsing HTML, CSS, JS парсинг и оптимизация загрузки
+   - [ ] 3.04 — dom DOM, BOM и Event Loop
+   - [ ] 3.05 — storage-in-web Storage в браузере: Cookies, LocalStorage, SessionStorage, IndexedDB
+   - [ ] 3.06 — caching-in-web Кэширование на клиенте (memory cache, disk cache, service workers)
+   - [ ] 3.07 — devtools DevTools для веб-разработчика: network, performance, lighthouse
    - [ ] 3.08 — Progressive Enhancement vs Graceful Degradation
-   - [ ] 3.09 — Progressive Web Apps (PWA) основы
-   - [ ] 3.10 — Web Workers и OffscreenCanvas
-   - [ ] 3.11 — WebAssembly: зачем и где встраивать
-   - [ ] 3.12 — Безопасность в вебе (обзор XSS/CSRF/CSP — базово, без глубины)
-   - [ ] 3.13 — Accessibility (a11y) основы
-   - [ ] 3.14 — SEO основы для фронтенд-разработчика
-   - [ ] 3.15 — Rendering performance pitfalls (layout thrashing, reflows, repaints)
+   - [ ] 3.09 — pwa-and-mobile Progressive Web Apps (PWA) основы
+   - [ ] 3.10 — web-workers Web Workers и OffscreenCanvas
+   - [ ] 3.11 — wasm WebAssembly: зачем и где встраивать
+   - [ ] 3.12 — security Безопасность в вебе (обзор XSS/CSRF/CSP — базово, без глубины)
+   - [ ] 3.13 — accessibility Accessibility (a11y) основы
+   - [ ] 3.14 — seo SEO основы для фронтенд-разработчика
+   - [ ] 3.15 — future-of-web Современные и будущие веб-технологии (Web3, decentralization, metaverse overview)
 
 4. [ ] network-and-api:
-   - [ ] 4.01 — Основы компьютерных сетей (IP, TCP/UDP, порты, пакеты)
-   - [ ] 4.02 — Модель OSI и где работает веб
-   - [ ] 4.03 — HTTP 1.1 vs HTTP/2 vs HTTP/3
+   - [ ] 4.01 — packets Основы компьютерных сетей (IP, TCP/UDP, порты, пакеты)
+   - [ ] 4.02 — osi-layers Модель OSI и где работает веб
+   - [ ] 4.03 — http HTTP 1.1 vs HTTP/2 vs HTTP/3
    - [ ] 4.04 — TLS/SSL: как работает HTTPS
    - [ ] 4.05 — DNS и CDN (как ускоряется доставка контента)
    - [ ] 4.06 — CORS и SOP (Same-Origin Policy)
@@ -241,3 +241,36 @@
     - [ ] 10.18 — Vue 3 Features: Fragments, Emits, <script setup>
     - [ ] 10.19 — SSR и Nuxt (обзорно)
     - [ ] 10.20 — Оптимизация Vue-приложений: lazy-loading, code-splitting, devtools
+
+11. [ ] advanced-tooling
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+    - [ ] 10.02 — Основы: шаблоны, реактивность, Virtual DOM
+
+12. [ ] ecosystem-and-libs
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+    - [ ] 10.02 — Основы: шаблоны, реактивность, Virtual DOM
+
+13. [ ] additional-topics
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+    - [ ] 10.02 — Основы: шаблоны, реактивность, Virtual DOM
+
+14. [ ] testing-and-deploying
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+15. [ ] modern-dev
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+16. [ ] architecture-and-system-design
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+17. [ ] security-and-perfomance
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+18. [ ] preparing-for-interview
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+19. [ ] common-coding-questions
+    - [ ] 10.01 — История Vue и отличие от React/Angular
+
+20. [ ] final-steps
+    - [ ] 10.01 — История Vue и отличие от React/Angular

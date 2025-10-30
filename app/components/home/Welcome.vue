@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { useUserData } from '@nhost/vue';
+import { useQuery } from '@vue/apollo-composable';
+import { usersGql } from '~/api/app';
 import { useAuthStore } from '~/store/auth.store';
 
 const $q = useQuasar();
@@ -10,6 +12,10 @@ const { data: page } = await useAsyncData("/", () => {
     .where("order", "=", "0")
     .first()
 });
+
+const { result, loading, error } = useQuery(usersGql.RANKING);
+
+const users = computed(() => result.value?.users_monthly_activity || []);
 
 const now = useNow();
 
@@ -39,28 +45,48 @@ const storiesLen = computed(() => authStore.getUserStoriesLen);
         </div>
       </div>
 
-      <div
-        class="flex flex-col gap-4 flex-1 lg:sticky right-0 top-[100px] min-w-[280px] h-fit border border-solid border-on-semi-dark p-8">
-        <div class="flex flex-col">
-          <div class="flex items-center gap-x-2">
-            <Icon :name="getGreeting(String(new Date(now))).icon" />
-            <h6 class="text-sm text-gray">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName
-              }}
-            </h6>
+      <div class="flex flex-col gap-4 flex-1 lg:sticky right-0 top-[100px] min-w-[280px] h-fit">
+        <div class="flex flex-col gap-4 border border-solid border-on-semi-dark p-8">
+          <div class="flex flex-col">
+            <div class="flex items-center gap-x-2">
+              <Icon :name="getGreeting(String(new Date(now))).icon" />
+              <h6 class="text-sm text-gray">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName
+                }}
+              </h6>
+            </div>
+            <p class="text-xs text-gray">Вы начали свой путь {{ useDateFormat(String(user?.createdAt), "YYYY-MM-DD") }}
+            </p>
           </div>
-          <!-- <p class="text-xs text-gray">You started learning {{ useTimeAgo(String(user?.createdAt)) }}</p> -->
+
+          <p class="text-lg">Завершено глав: {{ storiesLen || 0 }}</p>
+
+          <hr class="h-px w-full text-semi-gray bg-semi-gray border-0 my-2" />
+          <div>
+            <h5 class="text-base text-gray mb-4">
+              Топ активных за {{ useDateFormat(now, "MMMM", { locales: "ru" }) }}
+            </h5>
+
+            <div v-if="loading" class="text-xs text-gray">Загрузка...</div>
+            <div v-else-if="error" class="text-xs text-red">Ошибка загрузки</div>
+            <div v-else class="flex flex-col gap-3">
+              <div v-for="(u, idx) in users" :key="u.id" class="flex items-center gap-3">
+                <div class="w-6 text-gray">#{{ idx + 1 }}</div>
+                <img :src="u.avatar_url" alt=""
+                  class="w-8 h-8 rounded-full border border-solid border-gray object-cover" />
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold">{{ u.display_name }}</span>
+                  <span class="text-xs text-gray">{{ u.story_finished }} завершено</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <p class="text-lg">Завершено глав: {{ storiesLen || 0 }}</p>
-
-        <hr class="h-px w-full text-semi-gray bg-semi-gray border-0 my-2" />
-
-        <q-btn :color="$q.dark.isActive ? 'white' : 'black'" :text-color="$q.dark.isActive ? 'black' : 'white'">
-          <Icon name="ph:arrow-right-bold" class="mr-2" />
+        <q-btn color="semi-gray">
+          <Icon name="mynaui:brand-telegram" class="mr-2" />
           <span>telegram</span>
         </q-btn>
         <q-btn color="semi-gray">
-          <Icon name="ph:arrow-right-bold" class="mr-2" />
+          <Icon name="mynaui:brand-github" class="mr-2" />
           <span>github</span>
         </q-btn>
       </div>

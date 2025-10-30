@@ -48,7 +48,7 @@ function isCompleted(path: string) {
   <div v-if="map.length > 0 && page">
     <!-- Desktop TOC -->
     <div class="toc-container w-[320px] max-h-[calc(100vh-140px)] overflow-auto s:hidden xl:flex xl:flex-col">
-      <h6 class="text-xs font-bold mb-2">
+      <h6 class="text-xs font-bold uppercase mb-2">
         {{ Number(page.order).toFixed(2) }}. {{ page.title.toLowerCase() }}
       </h6>
 
