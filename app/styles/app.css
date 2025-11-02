@@ -228,22 +228,15 @@ html *::selection {
 
   color: var(--on-semi-light);
 
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-color: var(--primary);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .prose a::after,
 .prose a p::after {
   content: "";
-
-  position: absolute;
-
-  left: 0;
-  bottom: 0;
-
-  width: 100%;
-  height: 1px;
-
-  background-color: var(--primary);
 }
 
 .prose a,
@@ -292,6 +285,10 @@ pre {
   color: var(--gray);
 
   opacity: 0.4;
+}
+
+.prose blockquote {
+  color: var(--on-semi-light);
 }
 
 .q-notify-class {

@@ -51,7 +51,7 @@ const storiesLen = computed(() => authStore.getUserStoriesLen);
             <div class="flex items-center gap-x-2">
               <Icon :name="getGreeting(String(new Date(now))).icon" />
               <h6 class="text-sm text-gray">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName
-                }}
+              }}
               </h6>
             </div>
             <p class="text-xs text-gray">Вы начали свой путь {{ useDateFormat(String(user?.createdAt), "YYYY-MM-DD") }}
@@ -70,11 +70,11 @@ const storiesLen = computed(() => authStore.getUserStoriesLen);
             <div v-else-if="error" class="text-xs text-red">Ошибка загрузки</div>
             <div v-else class="flex flex-col gap-3">
               <div v-for="(u, idx) in users" :key="u.id" class="flex items-center gap-3">
-                <div class="w-6 text-gray">#{{ idx + 1 }}</div>
+                <div class="text-gray">#{{ idx + 1 }}</div>
                 <img :src="u.avatar_url" alt=""
-                  class="w-8 h-8 rounded-full border border-solid border-gray object-cover" />
+                  class="w-10 h-10 rounded-full border border-solid border-gray object-cover" />
                 <div class="flex flex-col">
-                  <span class="text-sm font-bold">{{ u.display_name }}</span>
+                  <span class="text-base font-bold">{{ u.display_name }}</span>
                   <span class="text-xs text-gray">{{ u.story_finished }} завершено</span>
                 </div>
               </div>

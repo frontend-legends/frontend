@@ -1,4 +1,5 @@
 import Inspect from "vite-plugin-inspect";
+import { NUXT_LANGS } from "./LANGS";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -61,6 +62,7 @@ export default defineNuxtConfig({
     build: {
       markdown: {
         highlight: {
+          langs: [...NUXT_LANGS],
           theme: {
             default: "one-light",
             dark: "one-dark-pro",
