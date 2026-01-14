@@ -10,7 +10,7 @@ const route = useRoute();
 const storyId = computed(() => {
   const chapter = route.params.chapter as string;
   const story = route.params.story as string | undefined;
-  return story ? `${chapter}/${story}` : chapter;
+  return story ? `/${chapter}/${story}` : `/${chapter}`;
 });
 
 const authStore = useAuthStore();
