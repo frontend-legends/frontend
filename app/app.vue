@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { useAuthenticationStatus } from "@nhost/vue";
-
 const { isLoading } = useLoadingIndicator({
   duration: 2000,
   throttle: 200,
 });
-
-const { isLoading: nhostLoading } = useAuthenticationStatus();
 
 onMounted(async () => {
   // dark mode
@@ -16,7 +12,7 @@ onMounted(async () => {
 <template>
   <AppLoadingLine />
   <Transition name="loading">
-    <AppLoading v-if="isLoading || nhostLoading" />
+    <AppLoading v-if="isLoading" />
   </Transition>
   <NuxtLayout>
     <NuxtPage />

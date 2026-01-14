@@ -1,18 +1,15 @@
 import { gql } from "@apollo/client/core";
 
 export const usersGql = {
-  RANKING: gql`
-    query {
-      users_monthly_activity(
-        where: { story_finished: { _gt: 0 } }
-        order_by: { story_finished: desc }
-        limit: 10
-      ) {
-        id
-        avatar_url
-        display_name
-        last_seen
-        story_finished
+  MONTHLY_LEADERBOARD: gql`
+    query MonthlyLeaderboard($year: Int!, $month: Int!, $limit: Int) {
+      monthly_leaderboard(year: $year, month: $month, limit: $limit) {
+        rank
+        user {
+          id
+          name
+        }
+        stories_finished
       }
     }
   `,
@@ -20,10 +17,13 @@ export const usersGql = {
 
 export const storyGql = {
   FINISH: gql`
-    mutation ($user_id: uuid!, $metadata: jsonb!) {
-      updateUser(pk_columns: { id: $user_id }, _set: { metadata: $metadata }) {
-        id
-      }
+    mutation FinishStory($story_id: ID!) {
+      finish_story(story_id: $story_id)
+    }
+  `,
+  UNFINISH: gql`
+    mutation UnfinishStory($story_id: ID!) {
+      unfinish_story(story_id: $story_id)
     }
   `,
 };

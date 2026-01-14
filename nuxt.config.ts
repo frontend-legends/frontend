@@ -23,6 +23,11 @@ export default defineNuxtConfig({
   },
 
   app: {
+    pageTransition: {
+      name: "page-fade",
+      mode: "out-in",
+    },
+
     baseURL: "/",
 
     head: {
@@ -40,12 +45,16 @@ export default defineNuxtConfig({
     },
   },
 
-  // runtimeConfig: {
-  //   nhostGraphqlUrl: process.env.NHOST_GRAPHQL_URL,
-  //   nhostAdminSecret: process.env.NHOST_ADMIN_SECRET,
-  // },
-
-  // plugins: [{ src: "~/plugins/nhost-apollo.js", mode: "client" }],
+  runtimeConfig: {
+    public: {
+      graphqlUrl:
+        process.env.NUXT_PUBLIC_GRAPHQL_URL ||
+        "https://api.frontend-legends.com/graphql",
+      backendUrl:
+        process.env.NUXT_PUBLIC_BACKEND_URL ||
+        "https://api.frontend-legends.com",
+    },
+  },
 
   router: {
     options: {

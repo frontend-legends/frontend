@@ -1,8 +1,8 @@
 // links.ts
 
 const LINKS = {
-  github: "https://github.com/mixdevtools/frontend-lengends-content/",
-  telegram: "t.me/",
+  github: "https://github.com/frontend-legends/",
+  telegram: "https://t.me/frontend-legends",
 } as const;
 
 export default LINKS;

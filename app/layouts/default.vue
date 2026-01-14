@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { useUserData } from '@nhost/vue';
 import { useAuthStore } from '~/store/auth.store';
-import type { IAuthStoreUser } from '~/types/user.type';
 
-const user = useUserData();
 const authStore = useAuthStore();
 const { isMenuVisible } = useMenu();
+const { user } = useCurrentUser();
 
-onMounted(async () => {
-  // auth store
-  authStore.setUser(user.value as IAuthStoreUser);
-});
+// Update auth store when user data is loaded
+watch(user, (newUser) => {
+  if (newUser) {
+    // User is already set in the auth store by useCurrentUser composable
+  }
+}, { immediate: true });
 </script>
 <template>
   <div>

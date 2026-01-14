@@ -1,13 +1,12 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import { useSignOut } from '@nhost/vue';
 import LINKS from '~/const/links';
 import useScrollPage from "~/composables/usePageProgress";
 
 const { toggleMenu } = useMenu();
 const { scrollProgress } = useScrollPage();
 const { switchMode, isDark } = useDarkMode();
-const { error, isSuccess, signOut } = useSignOut();
+const { signOut } = useSignOut();
 
 const route = useRoute();
 
@@ -15,21 +14,8 @@ const chapter = computed(() => route.params.chapter as string);
 const story = computed(() => route.params?.story as string | undefined);
 
 async function signOutFn() {
-  await signOut();
-
-  if (error.value) {
-    console.log(
-      error.value
-        ? `sign-up error (${error.value?.status}): ${error.value?.message}`
-        : `sign-up error`,
-    );
-  }
-
-  if (isSuccess.value) {
-    localStorage.clear();
-
-    await navigateTo({ path: PATHS.signin });
-  }
+  signOut();
+  await navigateTo({ path: PATHS.signin });
 };
 </script>
 <template>
@@ -39,8 +25,10 @@ async function signOutFn() {
       <div class="flex items-center">
         <NuxtLink :to="PATHS.home"
           class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-          <Icon name="ph:lightning-bold" />
-          <h1 class="text-sm font-semibold">frontend legends</h1>
+          <img src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" v-show="isDark" />
+          <img src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" v-show="!isDark" />
+
+          <h1 class="text-sm font-semibold">Frontend Legends</h1>
 
           <div
             class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
@@ -70,7 +58,13 @@ async function signOutFn() {
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
+      <NuxtLink :href="LINKS.telegram"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
+        <Icon name="ph:telegram-logo-bold" />
 
+        <div
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+      </NuxtLink>
       <NuxtLink :href="LINKS.github"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
         <Icon name="ph:github-logo-bold" />
@@ -78,15 +72,6 @@ async function signOutFn() {
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </NuxtLink>
-
-      <NuxtLink :href="LINKS.telegram"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:paper-plane-tilt-bold" />
-
-        <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
-      </NuxtLink>
-
       <div
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="signOutFn">

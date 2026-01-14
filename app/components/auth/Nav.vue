@@ -11,8 +11,10 @@ const route = useRoute();
   <nav class="flex items-center w-full h-full justify-between max-width border-x border-semi-gray mx-auto bg-op-60">
     <NuxtLink :to="PATHS.home"
       class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-      <Icon name="ph:lightning-bold" />
-      <h1 class="text-sm font-semibold">frontend legends</h1>
+      <img src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" v-show="isDark" />
+      <img src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" v-show="!isDark" />
+
+      <h1 class="text-sm font-semibold">Frontend Legends</h1>
 
       <div
         class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
@@ -26,7 +28,13 @@ const route = useRoute();
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
+      <NuxtLink :href="LINKS.telegram"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
+        <Icon name="ph:telegram-logo-bold" />
 
+        <div
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+      </NuxtLink>
       <NuxtLink :href="LINKS.github"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
         <Icon name="ph:github-logo-bold" />

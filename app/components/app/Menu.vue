@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import { useSignOut } from '@nhost/vue';
 import LINKS from '~/const/links';
 
 const { switchMode, isDark } = useDarkMode();
-const { error, isSuccess, signOut } = useSignOut();
+const { signOut } = useSignOut();
 
 const route = useRoute();
 
@@ -12,21 +11,8 @@ const chapter = computed(() => route.params.chapter as string);
 const story = computed(() => route.params?.story as string | undefined);
 
 async function signOutFn() {
-  await signOut();
-
-  if (error.value) {
-    console.log(
-      error.value
-        ? `sign-up error (${error.value?.status}): ${error.value?.message}`
-        : `sign-up error`,
-    );
-  }
-
-  if (isSuccess.value) {
-    localStorage.clear();
-
-    await navigateTo({ path: PATHS.signin });
-  }
+  signOut();
+  await navigateTo({ path: PATHS.signin });
 };
 </script>
 <template>
@@ -42,27 +28,27 @@ async function signOutFn() {
       </q-breadcrumbs>
     </div>
     <div class="flex flex-col mt-8 space-y-4">
-      <div class="flex items-center gap-4 text-on-semi-dark bg-on-semi-light p-4 underline underline-on-dark rounded"
+      <div class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
         @click="switchMode">
         <Icon :name="isDark ? 'ph:sun-bold' : 'ph:moon-bold'" />
         <span>switch theme</span>
       </div>
 
       <NuxtLink
-        class="flex items-center gap-4 text-on-semi-dark bg-on-semi-light p-4 underline underline-on-dark rounded"
+        class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
         :href="LINKS.github">
         <Icon name="ph:github-logo-bold" />
         <span>github</span>
       </NuxtLink>
 
       <NuxtLink
-        class="flex items-center gap-4 text-on-semi-dark bg-on-semi-light p-4 underline underline-on-dark rounded"
+        class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
         :href="LINKS.telegram">
         <Icon name="ph:paper-plane-tilt-bold" />
         <span>telegram</span>
       </NuxtLink>
 
-      <div class="flex items-center gap-4 text-on-semi-dark bg-on-semi-light p-4 underline underline-on-dark rounded"
+      <div class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
         @click="signOutFn">
         <Icon name="ph:sign-out-bold" />
         <span>sign out</span>

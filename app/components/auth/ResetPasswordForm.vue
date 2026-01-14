@@ -1,42 +1,31 @@
 <script setup lang="ts">
-import { useResetPassword } from "@nhost/vue";
 import PATHS from "~/const/paths";
 import { useNotificationStore } from "~/store/notification.store";
 
 const { add } = useNotificationStore();
-
-const { error, isError, isLoading, isSent, resetPassword } = useResetPassword();
+const { requestPasswordReset, isLoading } = useRequestPasswordReset();
 
 const form = ref({
   email: "",
 });
 
 async function resetPasswordFn() {
-  await resetPassword(form.value.email);
+  const result = await requestPasswordReset(form.value.email);
 
-  if (isError) {
-    console.log(
-      error.value
-        ? `reset-password error (${error.value?.status}): ${error.value?.message}`
-        : `reset-password error`,
-    );
+  if (!result.success) {
+    console.log(`reset-password error: ${result.error}`);
 
     add({
       type: "negative",
-      message: String(
-        error.value
-          ? `reset-password error: ${error.value?.message}`
-          : `reset-password error`,
-      ),
+      message: String(result.error || 'Password reset request failed'),
     });
+    return;
   }
 
-  if (isSent) {
-    add({
-      type: "positive",
-      message: "Reset password was sent, please check your email",
-    });
-  }
+  add({
+    type: "positive",
+    message: "Reset password email was sent, please check your email",
+  });
 }
 </script>
 <template>

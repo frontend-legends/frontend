@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useNhostClient } from '@nhost/vue';
 import PATHS from '~/const/paths';
 import { useNotificationStore } from '~/store/notification.store';
 
@@ -10,33 +9,23 @@ definePageMeta({
 });
 
 const route = useRoute();
-const { nhost } = useNhostClient();
 const { add } = useNotificationStore();
 
 onMounted(async () => {
-  const token = route.query.refreshToken;
+  // Get token from OAuth callback URL
+  const token = route.query.token;
 
   if (token && typeof token === 'string') {
     try {
-      const session = await nhost.auth.refreshSession(
-        token,
-      );
+      // Store the JWT token
+      localStorage.setItem('auth_token', token);
 
-      if (session.error) {
-        add({
-          type: "negative",
-          message: session.error.message || "Authentication failed.",
-        });
+      add({
+        type: "positive",
+        message: "Authentication successful! Redirecting to home page.",
+      });
 
-        await navigateTo(PATHS.signin);
-      } else {
-        add({
-          type: "positive",
-          message: "Authentication successful! Redirecting to home page.",
-        });
-
-        await navigateTo(PATHS.home);
-      }
+      await navigateTo(PATHS.home);
     } catch (err) {
       add({
         type: "negative",

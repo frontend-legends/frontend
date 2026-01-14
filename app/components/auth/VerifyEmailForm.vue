@@ -1,42 +1,93 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import { useSendVerificationEmail } from '@nhost/vue';
 import { useAuthStore } from '~/store/auth.store';
 import { useNotificationStore } from '~/store/notification.store';
 
 const authStore = useAuthStore();
 const { add } = useNotificationStore();
-
-const { error, isError, isLoading, isSent, sendEmail } =
-  useSendVerificationEmail();
+const { resendVerificationEmail, isLoading } = useResendVerificationEmail();
+const isCheckingVerification = ref(false);
 
 const email = computed(() => String(authStore.getEmail || ""));
 
 async function sendVerification() {
-  await sendEmail(email.value);
+  const result = await resendVerificationEmail(email.value);
 
-  if (isError.value) {
-    console.log(
-      error.value
-        ? `email-verification error (${error.value?.status}): ${error.value?.message}`
-        : `email-verification error`,
-    );
+  if (!result.success) {
+    console.log(`resend-verification error: ${result.error}`);
 
     add({
       type: "negative",
-      message: String(
-        error.value
-          ? `email-verification error: ${error.value?.message}`
-          : `email-verification error`,
-      ),
+      message: String(result.error || 'Failed to resend verification email'),
     });
+    return;
   }
 
-  if (isSent) {
-    add({
-      type: "positive",
-      message: "Verification Email was sent to your mailbox",
+  add({
+    type: "positive",
+    message: "Verification email was sent to your mailbox. Please check your email.",
+  });
+}
+
+async function checkVerificationAndContinue() {
+  isCheckingVerification.value = true;
+
+  try {
+    const config = useRuntimeConfig();
+    const backendUrl = config.public.backendUrl || "http://localhost:4000";
+    const token = localStorage.getItem("auth_token");
+
+    const response = await fetch(`${backendUrl}/graphql`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        query: `query Me { me { id email name email_verified stories_finished created_at } }`,
+      }),
     });
+
+    const data = await response.json();
+    const user = data?.data?.me;
+
+    if (user?.email_verified) {
+      // Update store with verified status
+      authStore.setUser({
+        id: user.id,
+        email: user.email,
+        displayName: user.name,
+        emailVerified: user.email_verified,
+        createdAt: user.created_at,
+        avatarUrl: null,
+        defaultRole: "user",
+        isAnonymous: false,
+        locale: "en",
+        metadata: { stories: [] },
+        phoneNumber: null,
+        phoneNumberVerified: false,
+        roles: ["user"],
+      });
+
+      add({
+        type: "positive",
+        message: "Email verified! Redirecting to home page.",
+      });
+
+      await navigateTo(PATHS.home);
+    } else {
+      add({
+        type: "negative",
+        message: "Email not yet verified. Please check your inbox and click the verification link.",
+      });
+    }
+  } catch (error) {
+    add({
+      type: "negative",
+      message: "Failed to check verification status. Please try again.",
+    });
+  } finally {
+    isCheckingVerification.value = false;
   }
 }
 </script>

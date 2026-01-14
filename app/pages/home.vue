@@ -7,7 +7,7 @@ definePageMeta({
 });
 
 useHead({
-  title: "frontend legends"
+  title: "Frontend Legends"
 })
 </script>
 <template>

@@ -1,24 +1,11 @@
 <script setup lang="ts">
-import { useNhostClient, useSignUpEmailPassword } from '@nhost/vue';
-import { useAuthStore } from '~/store/auth.store';
 import { useNotificationStore } from '~/store/notification.store';
-import type { IAuthStoreUser } from '~/types/user.type';
 import PATHS from '~/const/paths';
 
-const authStore = useAuthStore();
-const { nhost } = useNhostClient();
 const { add } = useNotificationStore();
 const { errors, validate } = useSignUpValidation();
-
-const {
-  signUpEmailPassword,
-  needsEmailVerification,
-  isLoading,
-  isSuccess,
-  isError,
-  error,
-  user,
-} = useSignUpEmailPassword();
+const { signUp: signUpMutation, isLoading } = useSignUp();
+const { signInWithGoogle, signInWithGitHub } = useOAuthSignIn();
 
 const form = ref({
   login: "",
@@ -38,58 +25,43 @@ const isFormFull = computed(() =>
 );
 
 async function signUp() {
-  if (!validate(form.value)) return
+  if (!validate(form.value)) return;
 
-  await signUpEmailPassword(form.value.email, form.value.password, {
-    displayName: form.value.login,
-  });
+  const result = await signUpMutation(form.value.email, form.value.password, form.value.login);
 
-  if (isError.value) {
-    console.log(
-      error.value
-        ? `sign-up error (${error.value?.status}): ${error.value?.message}`
-        : `sign-up error`,
-    );
+  if (!result.success) {
+    console.log(`sign-up error: ${result.error}`);
 
     return add({
       type: "negative",
-      message: String(
-        error.value
-          ? `sign-up error: ${error.value?.message}`
-          : `sign-up error`,
-      ),
+      message: String(result.error || 'Sign up failed'),
     });
   }
 
-  if (needsEmailVerification.value) {
-    // SET USER STORE
-    authStore.setUser(user.value as unknown as IAuthStoreUser);
+  console.log(result)
 
+  if (result.needsEmailVerification) {
     // REDIRECT TO VERIFICATION
     await navigateTo({ path: PATHS.verifyemail });
+    return;
   }
 
-  if (isSuccess.value) {
-    await navigateTo({ path: PATHS.signin });
-  }
+  // REDIRECT TO SIGN IN
+  await navigateTo({ path: PATHS.signin });
 }
 
 function signInGoogle() {
-  nhost.auth.signIn({
-    provider: 'google',
-  })
+  signInWithGoogle();
 }
 
 function signInGithub() {
-  nhost.auth.signIn({
-    provider: 'github',
-  })
+  signInWithGitHub();
 }
 </script>
 <template>
   <div class="flex flex-col items-center w-[340px]">
     <div class="flex flex-col items-center w-full">
-      <h5 class="text-lg font-bold mb-4">frontend legends</h5>
+      <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
       <div class="mt-6 w-full">
         <q-input color="primary" outlined type="text" label="Login" v-model="form.login"
           hint="at least 5 characters long" :error="!!errors.login" :error-message="errors.login" />
@@ -111,7 +83,11 @@ function signInGithub() {
         </q-btn>
       </div>
     </div>
-    <hr class="w-full border-0 bg-semi-gray text-semi-gray h-px my-8" />
+    <div class="w-full flex items-center gap-4 my-8">
+      <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
+      <span class="text-xs text-gray uppercase">or sign in with</span>
+      <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
+    </div>
     <div class="flex gap-x-8 w-full">
       <q-btn outline class="flex-1" @click="signInGoogle" :disable="true">
         <Icon name="ph:google-logo-bold" class="mr-2" />

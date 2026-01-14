@@ -1,11 +1,10 @@
 <script setup lang="ts">
-import { useUserData } from '@nhost/vue';
 import { useQuery } from '@vue/apollo-composable';
 import { usersGql } from '~/api/app';
 import { useAuthStore } from '~/store/auth.store';
 
-const $q = useQuasar();
-const user = useUserData();
+const authStore = useAuthStore();
+const user = computed(() => authStore.getUser);
 
 const { data: page } = await useAsyncData("/", () => {
   return queryCollection('content')
@@ -13,13 +12,16 @@ const { data: page } = await useAsyncData("/", () => {
     .first()
 });
 
-const { result, loading, error } = useQuery(usersGql.RANKING);
-
-const users = computed(() => result.value?.users_monthly_activity || []);
-
 const now = useNow();
+const leaderboardVars = computed(() => ({
+  year: new Date(now.value).getFullYear(),
+  month: new Date(now.value).getMonth() + 1,
+  limit: 10,
+}));
 
-const authStore = useAuthStore();
+const { result, loading, error } = useQuery(usersGql.MONTHLY_LEADERBOARD, leaderboardVars);
+
+const users = computed(() => result.value?.monthly_leaderboard || []);
 
 const storiesLen = computed(() => authStore.getUserStoriesLen);
 </script>
@@ -68,24 +70,25 @@ const storiesLen = computed(() => authStore.getUserStoriesLen);
 
             <div v-if="loading" class="text-xs text-gray">Загрузка...</div>
             <div v-else-if="error" class="text-xs text-red">Ошибка загрузки</div>
-            <div v-else class="flex flex-col gap-3">
-              <div v-for="(u, idx) in users" :key="u.id" class="flex items-center gap-3">
-                <div class="text-gray">#{{ idx + 1 }}</div>
-                <img :src="u.avatar_url" alt=""
-                  class="w-10 h-10 rounded-full border border-solid border-gray object-cover" />
+            <div v-else-if="users.length" class="flex flex-col gap-3">
+              <div v-for="u in users" :key="u.user.id" class="flex items-center gap-3">
+                <div class="text-gray">#{{ u.rank }}</div>
                 <div class="flex flex-col">
-                  <span class="text-base font-bold">{{ u.display_name }}</span>
-                  <span class="text-xs text-gray">{{ u.story_finished }} завершено</span>
+                  <span class="text-base font-bold">{{ u.user.name }}</span>
+                  <span class="text-xs text-gray">{{ u.stories_finished }} завершено</span>
                 </div>
               </div>
             </div>
+            <div v-else>
+              <span>Здесь еще никого нет</span>
+            </div>
           </div>
         </div>
-        <q-btn color="semi-gray">
+        <q-btn color="primary">
           <Icon name="mynaui:brand-telegram" class="mr-2" />
           <span>telegram</span>
         </q-btn>
-        <q-btn color="semi-gray">
+        <q-btn color="semi-gray" text-color="white">
           <Icon name="mynaui:brand-github" class="mr-2" />
           <span>github</span>
         </q-btn>

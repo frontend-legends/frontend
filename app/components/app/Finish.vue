@@ -7,7 +7,7 @@ import { useAuthStore } from "~/store/auth.store";
 import { useNotificationStore } from "~/store/notification.store";
 
 const route = useRoute();
-const storyPath = computed(() => {
+const storyId = computed(() => {
   const chapter = route.params.chapter as string;
   const story = route.params.story as string | undefined;
   return story ? `${chapter}/${story}` : chapter;
@@ -16,38 +16,40 @@ const storyPath = computed(() => {
 const authStore = useAuthStore();
 const { add } = useNotificationStore();
 
-const userId = computed(() => authStore.getUserId);
 const userMetadata = computed(() => authStore.getUserMetadata);
 
 const currentStory = computed(() =>
-  userMetadata.value?.stories?.find((s) => s.title === storyPath.value)
+  userMetadata.value?.stories?.find((s) => s.title === storyId.value)
 );
 
 const isFinished = computed(() => currentStory.value?.is_finished ?? false);
 
-const { loading: muLoading, error: muError, mutate: muFn } =
-  useMutation(storyGql.FINISH);
+const { loading: finishLoading, mutate: finishMutate } = useMutation(storyGql.FINISH);
+const { loading: unfinishLoading, mutate: unfinishMutate } = useMutation(storyGql.UNFINISH);
+
+const isLoading = computed(() => finishLoading.value || unfinishLoading.value);
 
 async function handleBtn() {
   const newState = !isFinished.value;
-  authStore.updateStoryProgress(storyPath.value, newState);
 
   try {
-    await muFn({
-      user_id: userId.value,
-      metadata: userMetadata.value,
-    });
+    if (newState) {
+      await finishMutate({ story_id: storyId.value });
+    } else {
+      await unfinishMutate({ story_id: storyId.value });
+    }
+
+    authStore.updateStoryProgress(storyId.value, newState);
 
     add({
       type: "positive",
       message: `Updated status: ${newState ? "finished" : "restarted"}`,
     });
-  } catch {
-    authStore.updateStoryProgress(storyPath.value, !newState);
-    console.error(muError);
+  } catch (error: any) {
+    console.error(error);
     add({
       type: "negative",
-      message: "Error: unable to update status",
+      message: error.message || "Error: unable to update status",
     });
   }
 }
@@ -55,7 +57,7 @@ async function handleBtn() {
 
 <template>
   <div>
-    <q-btn class="w-full font-bold" color="positive" :outline="!isFinished" :loading="muLoading" @click="handleBtn">
+    <q-btn class="w-full font-bold" color="positive" :outline="!isFinished" :loading="isLoading" @click="handleBtn">
       <span>{{ isFinished ? "Restart" : "Finish" }}</span>
     </q-btn>
   </div>
