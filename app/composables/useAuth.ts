@@ -51,7 +51,17 @@ const ME_QUERY = gql`
 
 const VERIFY_EMAIL_MUTATION = gql`
   mutation VerifyEmail($token: String!) {
-    verify_email(token: $token)
+    verify_email(token: $token) {
+      token
+      user {
+        id
+        email
+        name
+        email_verified
+        stories_finished
+        created_at
+      }
+    }
   }
 `;
 
@@ -167,12 +177,26 @@ export function useCurrentUser() {
 }
 
 export function useVerifyEmail() {
+  const authStore = useAuthStore();
   const { mutate, loading, error } = useMutation(VERIFY_EMAIL_MUTATION);
 
   const verifyEmail = async (token: string) => {
     try {
       const result = await mutate({ token });
-      return { success: !!result?.data?.verify_email };
+
+      if (result?.data?.verify_email) {
+        const { token: authToken, user } = result.data.verify_email;
+
+        // Store token
+        localStorage.setItem('auth_token', authToken);
+
+        // Store user in auth store
+        authStore.setUser(transformUserToStore(user));
+
+        return { success: true, user };
+      }
+
+      return { success: false, error: 'Email verification failed' };
     } catch (err: any) {
       return { success: false, error: err.message || 'Email verification failed' };
     }
