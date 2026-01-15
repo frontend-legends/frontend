@@ -18,7 +18,8 @@ const grouped = computed(() => groupContent(home.value as ContentItem[]));
 function isCompleted(path: string) {
   if (!userMetadata.value?.stories) return false;
 
-  const normalized = path
+  // Normalize to format: /chapter/story (with leading /)
+  const normalized = '/' + path
     .replace(/^\/?content\//, "")
     .replace(/^\/+/, "");
 

@@ -15,6 +15,12 @@ const SIGN_IN_MUTATION = gql`
         email_verified
         stories_finished
         created_at
+        story_progress {
+          story {
+            slug
+          }
+          created_at
+        }
       }
     }
   }
@@ -31,6 +37,12 @@ const SIGN_UP_MUTATION = gql`
         email_verified
         stories_finished
         created_at
+        story_progress {
+          story {
+            slug
+          }
+          created_at
+        }
       }
     }
   }
@@ -45,6 +57,12 @@ const ME_QUERY = gql`
       email_verified
       stories_finished
       created_at
+      story_progress {
+        story {
+          slug
+        }
+        created_at
+      }
     }
   }
 `;
@@ -60,6 +78,12 @@ const VERIFY_EMAIL_MUTATION = gql`
         email_verified
         stories_finished
         created_at
+        story_progress {
+          story {
+            slug
+          }
+          created_at
+        }
       }
     }
   }
@@ -155,15 +179,26 @@ export function useSignUp() {
 
 export function useCurrentUser() {
   const authStore = useAuthStore();
+
+  // Skip query if store already has user (populated by middleware)
+  const shouldSkip = computed(() => !!authStore.user.id);
+
   const { result, loading, error, refetch } = useQuery(ME_QUERY, {}, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-first',
+    enabled: computed(() => !shouldSkip.value),
   });
 
-  const user = computed(() => result.value?.me || null);
+  const user = computed(() => {
+    // Return store user if available, otherwise from query result
+    if (authStore.user.id) {
+      return authStore.user;
+    }
+    return result.value?.me || null;
+  });
 
-  // Update store when user data changes
-  watch(user, (newUser) => {
-    if (newUser) {
+  // Update store when user data changes from query
+  watch(() => result.value?.me, (newUser) => {
+    if (newUser && !authStore.user.id) {
       authStore.setUser(transformUserToStore(newUser));
     }
   });
@@ -313,6 +348,13 @@ export function useOAuthSignIn() {
 
 // Helper function to transform backend user to store format
 function transformUserToStore(user: any): IAuthStoreUser {
+  // Transform story_progress into the expected metadata.stories format
+  const stories = (user.story_progress || []).map((progress: any) => ({
+    title: progress.story?.slug || '',
+    is_finished: true,
+    last_updated: progress.created_at || new Date().toISOString(),
+  }));
+
   return {
     id: user.id,
     email: user.email,
@@ -323,7 +365,7 @@ function transformUserToStore(user: any): IAuthStoreUser {
     defaultRole: 'user',
     isAnonymous: false,
     locale: 'en',
-    metadata: { stories: [] },
+    metadata: { stories },
     phoneNumber: null,
     phoneNumberVerified: false,
     roles: ['user'],

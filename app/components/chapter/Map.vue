@@ -34,9 +34,10 @@ const date = computed(() => page.value?.date);
 function isCompleted(path: string) {
   if (!userMetadata.value?.stories) return false;
 
-  const normalized = path
-    .replace(/^\/?content\//, "") // remove leading /content/
-    .replace(/^\/+/, ""); // remove extra slashes
+  // Normalize to format: /chapter/story (with leading /)
+  const normalized = '/' + path
+    .replace(/^\/?content\//, "")
+    .replace(/^\/+/, "");
 
   return userMetadata.value.stories.some(
     (s) => s.title === normalized && s.is_finished

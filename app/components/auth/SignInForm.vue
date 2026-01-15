@@ -41,10 +41,6 @@ async function signIn() {
   navigateTo({ path: PATHS.home });
 }
 
-function signInGoogle() {
-  signInWithGoogle();
-}
-
 function signInGithub() {
   signInWithGitHub();
 }
@@ -73,7 +69,7 @@ function signInGithub() {
       <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
     </div>
     <div class="flex gap-x-8 w-full">
-      <q-btn outline class="flex-1" :disable="true" @click="signInGoogle">
+      <q-btn outline class="flex-1" :disable="true">
         <Icon name="ph:google-logo-bold" class="mr-2" />
         <span>Google</span>
       </q-btn>

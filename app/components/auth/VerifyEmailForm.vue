@@ -76,7 +76,7 @@ async function checkVerificationAndContinue() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        query: `query Me { me { id email name email_verified stories_finished created_at } }`,
+        query: `query Me { me { id email name email_verified stories_finished created_at story_progress { story { slug } created_at } } }`,
       }),
     });
 
@@ -84,6 +84,13 @@ async function checkVerificationAndContinue() {
     const user = data?.data?.me;
 
     if (user?.email_verified) {
+      // Transform story_progress into the expected metadata.stories format
+      const stories = (user.story_progress || []).map((progress: any) => ({
+        title: progress.story?.slug || '',
+        is_finished: true,
+        last_updated: progress.created_at || new Date().toISOString(),
+      }));
+
       // Update store with verified status
       authStore.setUser({
         id: user.id,
@@ -95,7 +102,7 @@ async function checkVerificationAndContinue() {
         defaultRole: "user",
         isAnonymous: false,
         locale: "en",
-        metadata: { stories: [] },
+        metadata: { stories },
         phoneNumber: null,
         phoneNumberVerified: false,
         roles: ["user"],

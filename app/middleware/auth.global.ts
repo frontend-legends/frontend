@@ -5,6 +5,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server) return;
   if (to.path === PATHS.redirecting) return;
 
+  // Skip auth check for email verification links - let the page handle it
+  if (to.path === PATHS.verifyemail && to.query.token) {
+    localStorage.removeItem("auth_token"); // Clear stale token
+    return;
+  }
+
   const token = localStorage.getItem("auth_token");
   const isAuthenticated = !!token;
 
@@ -24,7 +30,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            query: `query Me { me { id email name email_verified stories_finished created_at } }`,
+            query: `query Me { me { id email name email_verified stories_finished created_at story_progress { story { slug } created_at } } }`,
           }),
         });
 
@@ -32,6 +38,13 @@ export default defineNuxtRouteMiddleware(async (to) => {
         const user = data?.data?.me;
 
         if (user) {
+          // Transform story_progress into the expected metadata.stories format
+          const stories = (user.story_progress || []).map((progress: any) => ({
+            title: progress.story?.slug || '',
+            is_finished: true,
+            last_updated: progress.created_at || new Date().toISOString(),
+          }));
+
           authStore.setUser({
             id: user.id,
             email: user.email,
@@ -42,7 +55,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
             defaultRole: "user",
             isAnonymous: false,
             locale: "en",
-            metadata: { stories: [] },
+            metadata: { stories },
             phoneNumber: null,
             phoneNumberVerified: false,
             roles: ["user"],
