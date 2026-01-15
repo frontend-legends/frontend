@@ -24,6 +24,19 @@ const { result, loading, error } = useQuery(usersGql.MONTHLY_LEADERBOARD, leader
 const users = computed(() => result.value?.monthly_leaderboard || []);
 
 const storiesLen = computed(() => authStore.getUserStoriesLen);
+
+const formattedCreatedAt = computed(() => {
+  const ts = user.value?.createdAt;
+  if (!ts) return null;
+
+  const date = new Date(Number(ts));
+  if (isNaN(date.getTime())) return null;
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+});
 </script>
 <template>
   <div>
@@ -56,7 +69,7 @@ const storiesLen = computed(() => authStore.getUserStoriesLen);
               }}
               </h6>
             </div>
-            <p class="text-xs text-gray">Вы начали свой путь {{ useDateFormat(String(user?.createdAt), "YYYY-MM-DD") }}
+            <p class="text-xs text-gray" v-if="formattedCreatedAt">Вы начали свой путь {{ formattedCreatedAt }}
             </p>
           </div>
 
