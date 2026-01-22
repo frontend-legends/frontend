@@ -38,8 +38,6 @@ async function signUp() {
     });
   }
 
-  console.log(result)
-
   if (result.needsEmailVerification) {
     // REDIRECT TO VERIFICATION
     await navigateTo({ path: PATHS.verifyemail });
@@ -48,6 +46,10 @@ async function signUp() {
 
   // REDIRECT TO SIGN IN
   await navigateTo({ path: PATHS.signin });
+}
+
+function signInGoogle() {
+  signInWithGoogle();
 }
 
 function signInGithub() {
@@ -85,7 +87,7 @@ function signInGithub() {
       <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
     </div>
     <div class="flex gap-x-8 w-full">
-      <q-btn outline class="flex-1" :disable="true">
+      <q-btn outline class="flex-1" @click="signInGoogle">
         <Icon name="ph:google-logo-bold" class="mr-2" />
         <span>Google</span>
       </q-btn>
