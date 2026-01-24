@@ -31,17 +31,45 @@ export default defineNuxtConfig({
     baseURL: "/",
 
     head: {
+      title: "Frontend Legends",
       charset: "utf-8",
       viewport: "width=device-width, initial-scale=1",
+
       meta: [
-        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        {
+          name: "description",
+          content: "Frontend Legends - Made with passion for developers",
+        },
+
+        // Open Graph
+        { property: "og:url", content: "https://frontend-legends.com/" },
+        { property: "og:type", content: "website" },
+        { property: "og:title", content: "Frontend Legends" },
+        {
+          property: "og:description",
+          content: "Frontend Legends - Made with passion for developers",
+        },
+        {
+          property: "og:image",
+          content: "https://frontend-legends.com/logo.svg",
+        },
+
+        // Twitter
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:domain", content: "frontend-legends.com" },
+        { name: "twitter:url", content: "https://frontend-legends.com/" },
+        { name: "twitter:title", content: "Frontend Legends" },
+        {
+          name: "twitter:description",
+          content: "Frontend Legends - Made with passion for developers",
+        },
+        {
+          name: "twitter:image",
+          content: "https://frontend-legends.com/logo.svg",
+        },
       ],
-      script: [
-        // { src: "https://awesome-lib.js" },
-      ],
-      link: [],
-      style: [],
-      // noscript: [{ children: "JavaScript is required" }],
+
+      noscript: [{ textContent: "JavaScript is required" }],
     },
   },
 
