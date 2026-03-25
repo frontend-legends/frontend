@@ -6,7 +6,7 @@ order: 0
 
 # Frontend Legends
 
-<b class="text-on-semi-light">Ну как говорится **`Hello, world!`**, а это frontend legends.</b> [**Сразу перейти к карте**](#map).
+<b class="text-on-semi-light">Ну как говорится **`Hello, World!`**, а это frontend legends.</b> [**Сразу перейти к карте**](#map).
 
 frontend legends изначально создавался для помощи подготовки к фронтенд собесам продвинутого уровня, это не гайд с 0 до middle, а быстрый справочник, для повторения и подготовки к интервью.
 

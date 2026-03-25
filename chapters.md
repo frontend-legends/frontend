@@ -33,13 +33,13 @@
    - [x] 1.07 — paradigms: Парадигмы программирования (+сравнение языков)
    - [x] 1.08 — fp: Функциональное программирование (с Haskell/Scala примерами)
    - [x] 1.09 — oop: Объектно-ориентированное программирование (с Python/Java/C++ сравнениями)
-   - [~] 1.10 — reactive-programming: Реактивное программирование
-   - [~] 1.11 — theory-of-computation: Теория вычислений (+обзор AI и ML как прикладных моделей)
-   - [~] 1.12 — math-for-cs: Математика для CS
-   - [~] 1.13 — threads: Потоки и параллелизм
-   - [~] 1.14 — encryption: Численные представления и кодировки
-   - [~] 1.15 — os-architecture: Архитектура ОС
-   - [~] 1.16 — intro-to-db: Введение в базы данных
+   - [x] 1.10 — reactive-programming: Реактивное программирование
+   - [x] 1.11 — theory-of-computation: Теория вычислений (+обзор AI и ML как прикладных моделей)
+   - [x] 1.12 — math-for-cs: Математика для CS
+   - [x] 1.13 — threads: Потоки и параллелизм
+   - [x] 1.14 — encryption: Численные представления и кодировки
+   - [x] 1.15 — os-architecture: Архитектура ОС
+   - [x] 1.16 — intro-to-db: Введение в базы данных
 
 2. [~] algorithms-data-structure:
    - [x] 2.01 - data structures
@@ -70,22 +70,17 @@
    - [ ] 2.26 - multidimensional dp
    - [ ] 2.27 - other algorithms
 
-3. [ ] web:
-   - [ ] 3.01 — browser Как работает браузер (Rendering pipeline, Critical Rendering Path)
-   - [ ] 3.02 — rendering Rendering lifecycle: URL → DOM (high-level, без сетевых деталей)
-   - [ ] 3.03 — parsing HTML, CSS, JS парсинг и оптимизация загрузки
-   - [ ] 3.04 — dom DOM, BOM и Event Loop
-   - [ ] 3.05 — storage-in-web Storage в браузере: Cookies, LocalStorage, SessionStorage, IndexedDB
-   - [ ] 3.06 — caching-in-web Кэширование на клиенте (memory cache, disk cache, service workers)
-   - [ ] 3.07 — devtools DevTools для веб-разработчика: network, performance, lighthouse
-   - [ ] 3.08 — Progressive Enhancement vs Graceful Degradation
-   - [ ] 3.09 — pwa-and-mobile Progressive Web Apps (PWA) основы
-   - [ ] 3.10 — web-workers Web Workers и OffscreenCanvas
-   - [ ] 3.11 — wasm WebAssembly: зачем и где встраивать
-   - [ ] 3.12 — security Безопасность в вебе (обзор XSS/CSRF/CSP — базово, без глубины)
-   - [ ] 3.13 — accessibility Accessibility (a11y) основы
-   - [ ] 3.14 — seo SEO основы для фронтенд-разработчика
-   - [ ] 3.15 — future-of-web Современные и будущие веб-технологии (Web3, decentralization, metaverse overview)
+3. [x] web:
+   - [x] 3.01 — what-is-web: Что такое веб, архитектуры рендеринга (SPA/SSR/SSG/ISR)
+   - [x] 3.02 — browser-engines: Архитектура браузера, V8, GC, hidden classes
+   - [x] 3.03 — rendering: Critical Rendering Path, reflow/repaint/composite
+   - [x] 3.04 — dom-events: DOM, событийная модель, delegation, AbortController
+   - [x] 3.05 — browser-apis: IntersectionObserver, Performance API, Streams, rAF/rIC
+   - [x] 3.06 — core-web-vitals: LCP, INP, CLS, RUM vs Synthetic
+   - [x] 3.07 — seo: Техническое SEO для фронтенда, structured data, мета-теги
+   - [x] 3.08 — devtools: Performance profiling, memory debugging, практические сценарии
+   - [x] 3.09 — pwa: Service Workers, кэширование, offline, push
+   - [x] 3.10 — future-of-web: WASM, Web Components, WebGPU, новые API
 
 4. [ ] network-and-api:
    - [ ] 4.01 — packets Основы компьютерных сетей (IP, TCP/UDP, порты, пакеты)
@@ -104,38 +99,27 @@
    - [ ] 4.14 — API тестирование (Postman, Insomnia, автоматизация)
    - [ ] 4.15 — API versioning и документация (OpenAPI/Swagger)
 
-5. [ ] html:
-   - [ ] 5.01 — Основы структуры HTML-документа (doctype, html, head, body)
-   - [ ] 5.02 — Семантическая разметка (header, main, article, section, nav, footer)
-   - [ ] 5.03 — Теги для текста и форматирования (p, span, strong, em, pre, code)
-   - [ ] 5.04 — Формы и элементы ввода (input types, textarea, select, datalist)
-   - [ ] 5.05 — Accessibility в HTML (aria-labels, roles, alt, tabindex)
-   - [ ] 5.06 — Мультимедиа (img, picture, video, audio, source, track)
-   - [ ] 5.07 — Таблицы и списки (ul, ol, table, thead, tbody, caption)
-   - [ ] 5.08 — Ссылки и навигация (a, target, rel, hash-links, fragment navigation)
-   - [ ] 5.09 — Мета-теги и SEO (title, meta description, viewport, social preview)
-   - [ ] 5.10 — Custom data-\* атрибуты
-   - [ ] 5.11 — Shadow DOM и Web Components (overview)
-   - [ ] 5.12 — Best practices: валидность, вложенность, минимизация div/span soup
+5. [x] html:
+   - [x] 5.01 — markup-language: Основы HTML5 (Living Standard, content models, парсинг, DOCTYPE, entities)
+   - [x] 5.02 — structure: Структура документа и рендеринг (DOM, CRP, reflow/repaint, render-blocking)
+   - [x] 5.03 — head-content: Содержимое head (meta, resource hints, async/defer, CSP)
+   - [x] 5.04 — tags: Семантика и теги (semantic elements, block/inline, document outline, deprecated)
+   - [x] 5.05 — attributes: Атрибуты (global, data-\*, boolean, attribute vs property, security attrs)
+   - [x] 5.06 — accessibility: Доступность (WCAG, ARIA, keyboard nav, screen readers, a11y checklist)
+   - [x] 5.07 — forms: Формы (input types, constraint validation API, FormData, events, controlled/uncontrolled)
+   - [x] 5.08 — media: Медиа (responsive images, srcset/picture, video/audio, SVG, canvas, iframe security)
+   - [x] 5.09 — web-components: Web Components (Custom Elements, Shadow DOM, template/slot, CSS encapsulation)
 
-6. [ ] css:
-   - [ ] 6.01 — Основы CSS: каскад, наследование, специфичность
-   - [ ] 6.02 — Единицы измерения (px, em, rem, %, vw, vh, fr)
-   - [ ] 6.03 — Box Model (content, padding, border, margin)
-   - [ ] 6.04 — Positioning (static, relative, absolute, fixed, sticky)
-   - [ ] 6.05 — Display и visibility (block, inline, inline-block, flex, grid, none)
-   - [ ] 6.06 — Flexbox: основные концепции и практические паттерны
-   - [ ] 6.07 — Grid Layout: основы, авторазмещение, шаблоны сеток
-   - [ ] 6.08 — Responsive Design: media queries, fluid layouts, clamp()
-   - [ ] 6.09 — Цвета, шрифты и типографика (font-face, variable fonts)
-   - [ ] 6.10 — Анимации и переходы (transition, keyframes, will-change)
-   - [ ] 6.11 — CSS Variables (custom properties) и их использование
-   - [ ] 6.12 — Pseudo-классы и pseudo-элементы (:hover, :nth-child, ::before, ::after)
-   - [ ] 6.13 — Z-index и stacking context
-   - [ ] 6.14 — Modern CSS: container queries, subgrid, nesting
-   - [ ] 6.15 — Архитектура CSS: BEM, OOCSS, ITCSS, CSS Modules
-   - [ ] 6.16 — CSS-in-JS и современные подходы (emotion, styled-components, vanilla-extract)
-   - [ ] 6.17 — Оптимизация CSS (Critical CSS, tree-shaking, минимизация)
+6. [x] css:
+   - [x] 6.01 — styling: Каскад и стилизация (cascade algorithm, specificity, inheritance, box model, margin collapse, units, colors)
+   - [x] 6.02 — css-rules: Селекторы и at-rules (combinators, :has/:is/:where, pseudo-elements, @layer, @property, CSS functions)
+   - [x] 6.03 — flow: Раскладка и поток (normal flow, BFC, positioning, sticky, stacking context, Flexbox, Grid, subgrid)
+   - [x] 6.04 — rwd: Адаптивный дизайн (mobile-first, media queries, container queries, viewport units dvh/svh/lvh, fluid typography)
+   - [x] 6.05 — modern-css: Современный CSS (custom properties, @property, nesting, :has(), oklch, color-mix, contain, content-visibility)
+   - [x] 6.06 — animations: Анимации и переходы (transitions, @keyframes, timing functions, composite-only, will-change, scroll-driven, view transitions)
+   - [x] 6.07 — typography: Типографика и шрифты (@font-face, font-display, FOIT/FOUT, variable fonts, text overflow, text-wrap balance)
+   - [x] 6.08 — visual-effects: Визуальные эффекты (gradients, shadows, filter, backdrop-filter, clip-path, mask, blend modes, aspect-ratio)
+   - [x] 6.09 — architecture: CSS-архитектура (BEM, CSS Modules, CSS-in-JS, utility-first, design tokens, @layer structure)
 
 7. [ ] javascript:
    - [ ] 7.01 — История и стандарты (ECMAScript, ES5 → ESNext)
