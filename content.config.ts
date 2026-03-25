@@ -4,7 +4,11 @@ export default defineContentConfig({
   collections: {
     content: defineCollection({
       type: "page",
-      source: "**",
+      source: {
+        repository: "https://github.com/frontend-legends/content",
+        branch: "main",
+        prefix: "/",
+      },
       schema: z.object({
         title: z.string(),
         description: z.string().optional(),

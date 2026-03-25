@@ -18,6 +18,9 @@ logs
 .fleet
 .idea
 
+# Content (fetched from github.com/frontend-legends/content)
+content/
+
 # Local env files
 .env
 .env.*
