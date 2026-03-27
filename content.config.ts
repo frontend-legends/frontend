@@ -6,7 +6,7 @@ export default defineContentConfig({
       type: "page",
       source: {
         repository: "https://github.com/frontend-legends/content",
-        branch: "main",
+        include: "**",
         prefix: "/",
       },
       schema: z.object({
