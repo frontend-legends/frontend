@@ -180,8 +180,12 @@ export function useSignUp() {
 export function useCurrentUser() {
   const authStore = useAuthStore();
 
-  // Skip query if store already has user (populated by middleware)
-  const shouldSkip = computed(() => !!authStore.user.id);
+  // Skip the `me` query when the store is already hydrated, or when the
+  // visitor is a guest (no token) — guests browse freely, so there's no
+  // point firing an unauthenticated request that always resolves to null.
+  const hasToken = () =>
+    !import.meta.server && !!localStorage.getItem("auth_token");
+  const shouldSkip = computed(() => !!authStore.user.id || !hasToken());
 
   const { result, loading, error, refetch } = useQuery(ME_QUERY, {}, {
     fetchPolicy: 'cache-first',

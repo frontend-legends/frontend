@@ -136,19 +136,19 @@
    - [ ] 7.15 - memory-and-performance: Память и производительность (GC, утечки, FinalizationRegistry, profiling)
    - [ ] 7.16 - modern-js: Современный JS (ES2020+, optional chaining, nullish coalescing, structuredClone, Intl, JSON, Date/Temporal)
 
-8. [ ] typescript:
-   - [ ] 8.01 - introduction: Зачем TypeScript (плюсы/минусы, TS vs JS, playground)
-   - [ ] 8.02 - basic-types: Базовые типы (primitives, any/unknown/never, enum, literal, objects, arrays, tuples)
-   - [ ] 8.03 - functions-and-classes: Функции и классы (типизация параметров, overloads, классы, модификаторы, this)
-   - [ ] 8.04 - composing-types: Композиция типов (union, intersection, type aliases vs interfaces, расширение)
-   - [ ] 8.05 - type-narrowing: Сужение типов (typeof, instanceof, in, discriminated unions, type guards)
-   - [ ] 8.06 - generics: Дженерики (основы, constraints, defaults, generic functions/classes)
-   - [ ] 8.07 - utility-types: Utility types (Partial, Pick, Omit, Readonly, Record, ReturnType и др.)
-   - [ ] 8.08 - advanced-types: Продвинутые типы (mapped, conditional, infer, template literals, distributive)
-   - [ ] 8.09 - project-setup: Настройка проекта (tsconfig.json, strict mode, .d.ts, DefinitelyTyped, ESM/CJS)
-   - [ ] 8.10 - async-and-dom: Async и DOM (типизация промисов, DOM types, API typing - fetch/axios)
-   - [ ] 8.11 - ts-with-react: TS + React (props, state, hooks, children, events, generic components)
-   - [ ] 8.12 - ts-with-vue: TS + Vue (defineProps, defineEmits, composables, типизация компонентов)
+8. [x] typescript:
+   - [x] 8.01 - introduction: Зачем TypeScript (плюсы/минусы, TS vs JS, playground)
+   - [x] 8.02 - basic-types: Базовые типы (primitives, any/unknown/never, enum, literal, as const, satisfies)
+   - [x] 8.03 - functions-and-classes: Функции и классы (типизация параметров, overloads, abstract, decorators)
+   - [x] 8.04 - composing-types: Композиция типов (union, intersection, type vs interface, keyof, typeof)
+   - [x] 8.05 - type-narrowing: Сужение типов (type guards, discriminated unions, assertion functions, exhaustive check)
+   - [x] 8.06 - generics: Дженерики (constraints, defaults, keyof patterns, const type params)
+   - [x] 8.07 - utility-types: Utility types (Partial, Pick, Omit, Record, ReturnType, Awaited и др.)
+   - [x] 8.08 - advanced-types: Продвинутые типы (mapped, conditional, infer, template literals, branded types)
+   - [x] 8.09 - project-setup: Настройка проекта (tsconfig.json, strict mode, .d.ts, DefinitelyTyped, ESM/CJS)
+   - [x] 8.10 - async-and-dom: Async и DOM (типизация промисов, DOM types, API typing - fetch/axios)
+   - [x] 8.11 - ts-with-react: TS + React (props, hooks, events, generic components, forwardRef)
+   - [x] 8.12 - ts-with-vue: TS + Vue (defineProps, defineEmits, defineModel, composables, Pinia)
 
 9. [ ] reactjs:
    - [ ] 9.01 - fundamentals: Основы React (Virtual DOM, reconciliation, Fiber, JSX под капотом)
