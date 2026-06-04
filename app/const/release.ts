@@ -1,6 +1,6 @@
 // release.ts
 
-const version = "v0.41";
+const version = "v0.41a";
 const updated = "04 Jun 2026";
 
 const RELEASE = {

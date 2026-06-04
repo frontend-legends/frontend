@@ -1,7 +1,4 @@
 <script setup lang="ts">
-import { useAuthStore } from '~/store/auth.store';
-
-const authStore = useAuthStore();
 const { isMenuVisible } = useMenu();
 const { user } = useCurrentUser();
 
@@ -17,7 +14,9 @@ watch(user, (newUser) => {
     <header>
       <AppNav />
     </header>
-    <AppMenu v-if="isMenuVisible" />
+    <Transition name="menu">
+      <AppMenu v-if="isMenuVisible" />
+    </Transition>
     <main>
       <section>
         <slot />

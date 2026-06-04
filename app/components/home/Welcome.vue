@@ -4,9 +4,11 @@ import { usersGql } from '~/api/app';
 import { useAuthStore } from '~/store/auth.store';
 import RELEASE from '~/const/release';
 import LINKS from '~/const/links';
+import PATHS from '~/const/paths';
 
 const authStore = useAuthStore();
 const user = computed(() => authStore.getUser);
+const isAuth = computed(() => authStore.getAuth);
 
 const { data: page } = await useAsyncData("/", () => {
   return queryCollection('content')
@@ -86,19 +88,37 @@ const formattedCreatedAt = computed(() => {
 
       <div class="flex flex-col gap-4 flex-1 lg:sticky right-0 top-[100px] min-w-[280px] h-fit">
         <div class="flex flex-col gap-4 border border-solid border-on-semi-dark p-8">
-          <div class="flex flex-col">
-            <div class="flex items-center gap-x-2">
-              <Icon :name="getGreeting(String(new Date(now))).icon" />
-              <h6 class="text-sm text-gray">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName ||
-                'Guest'
-                }}
-              </h6>
+          <!-- authed: greeting + progress -->
+          <template v-if="isAuth">
+            <div class="flex flex-col">
+              <div class="flex items-center gap-x-2">
+                <Icon :name="getGreeting(String(new Date(now))).icon" />
+                <h6 class="text-sm text-gray">{{ getGreeting(String(new Date(now))).message }}, {{ user?.displayName ||
+                  'Guest'
+                  }}
+                </h6>
+              </div>
+              <p class="text-xs text-gray" v-if="formattedCreatedAt">Вы начали свой путь {{ formattedCreatedAt }}
+              </p>
             </div>
-            <p class="text-xs text-gray" v-if="formattedCreatedAt">Вы начали свой путь {{ formattedCreatedAt }}
-            </p>
-          </div>
 
-          <p class="text-lg">Завершено глав: {{ storiesLen || 0 }}</p>
+            <p class="text-lg">Завершено глав: {{ storiesLen || 0 }}</p>
+          </template>
+
+          <!-- guest: sign-in CTA -->
+          <div v-else class="flex flex-col gap-3">
+            <div class="flex items-center gap-x-2">
+              <Icon name="ph:rocket-launch-bold" />
+              <h6 class="text-sm font-sans">Отслеживайте прогресс</h6>
+            </div>
+            <p class="text-xs text-gray font-sans leading-relaxed">
+              Войдите, чтобы отмечать пройденные главы и подниматься в рейтинге.
+            </p>
+            <q-btn color="primary" :to="PATHS.signin" no-caps class="mt-1">
+              <Icon name="ph:arrow-right-bold" class="mr-2" />
+              <span class="uppercase" style="font-variant: sub">sign in</span>
+            </q-btn>
+          </div>
 
           <hr class="h-px w-full text-semi-gray bg-semi-gray border-0 my-2" />
           <div>

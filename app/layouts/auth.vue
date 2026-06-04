@@ -6,7 +6,9 @@ const { isMenuVisible } = useMenu();
     <header>
       <AuthNav />
     </header>
-    <AuthMenu v-if="isMenuVisible" />
+    <Transition name="menu">
+      <AuthMenu v-if="isMenuVisible" />
+    </Transition>
     <main class="flex flex-col items-center justify-center">
       <section>
         <slot />
