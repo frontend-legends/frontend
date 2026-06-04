@@ -1,11 +1,20 @@
 <script setup lang="ts">
-import LINKS from '~/const/links';
 import PATHS from '~/const/paths';
+import { useAuthStore } from '~/store/auth.store';
 
 const { toggleMenu } = useMenu();
 const { switchMode, isDark } = useDarkMode();
+const { signOut } = useSignOut();
+
+const authStore = useAuthStore();
+const isAuth = computed(() => authStore.getAuth);
 
 const route = useRoute();
+
+async function signOutFn() {
+  signOut();
+  await navigateTo({ path: PATHS.home });
+}
 </script>
 <template>
   <nav class="flex items-center w-full h-full justify-between max-width border-x border-semi-gray mx-auto bg-op-60">
@@ -28,40 +37,43 @@ const route = useRoute();
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
-      <NuxtLink :href="LINKS.telegram"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:telegram-logo-bold" />
+      <NuxtLink :to="PATHS.ladder"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
+        :class="{ 'op-100': route.name === 'ladder' }">
+        <Icon name="ph:ranking-bold" />
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+          :class="{ 'w-full bg-on-light!': route.name === 'ladder' }" />
       </NuxtLink>
-      <NuxtLink :href="LINKS.github"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:github-logo-bold" />
+      <NuxtLink :to="PATHS.contributors"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
+        :class="{ 'op-100': route.name === 'contributors' }">
+        <Icon name="ph:users-three-bold" />
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+          :class="{ 'w-full bg-on-light!': route.name === 'contributors' }" />
       </NuxtLink>
 
-      <NuxtLink :to="PATHS.signin"
+      <NuxtLink v-if="!isAuth" :to="PATHS.signin"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
         :class="{ 'op-100 text-on-light': route.name === 'signin' }">
-        <span class="uppercase" style="font-variant: sub">sign-in</span>
+        <span class="uppercase" style="font-variant: sub">sign in</span>
 
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
           :class="{ 'w-full bg-on-light!': route.name === 'signin' }" />
       </NuxtLink>
 
-      <NuxtLink :to="PATHS.signup"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
-        :class="{ 'op-100 text-on-light': route.name === 'signup' }">
-        <span class="uppercase" style="font-variant: sub">sign-up</span>
+      <div v-else
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
+        @click="signOutFn">
+        <span class="uppercase" style="font-variant: sub">sign out</span>
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
-          :class="{ 'w-full bg-on-light!': route.name === 'signup' }" />
-      </NuxtLink>
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+      </div>
     </div>
 
     <div class="flex items-center lg:hidden">

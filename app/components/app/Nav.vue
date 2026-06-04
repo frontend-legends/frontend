@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
 import useScrollPage from "~/composables/usePageProgress";
+import { useAuthStore } from '~/store/auth.store';
 
 const { toggleMenu } = useMenu();
 const { scrollProgress } = useScrollPage();
 const { switchMode, isDark } = useDarkMode();
 const { signOut } = useSignOut();
+
+const authStore = useAuthStore();
+const isAuth = computed(() => authStore.getAuth);
 
 const route = useRoute();
 
@@ -76,15 +80,25 @@ async function signOutFn() {
           :class="{ 'w-full bg-on-light!': route.name === 'contributors' }" />
       </NuxtLink>
       <div
+        v-if="isAuth"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="signOutFn">
-        <!-- <Icon name="ph:sign-out-bold" /> -->
         <span class="uppercase" style="font-variant: sub">sign out</span>
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
-          :class="{ 'w-full bg-on-light!': route.name === 'signup' }" />
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
+      <NuxtLink
+        v-else
+        :to="PATHS.signin"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
+        :class="{ 'op-100': route.name === 'signin' }">
+        <span class="uppercase" style="font-variant: sub">sign in</span>
+
+        <div
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+          :class="{ 'w-full bg-on-light!': route.name === 'signin' }" />
+      </NuxtLink>
     </div>
 
     <div class="flex items-center lg:hidden">

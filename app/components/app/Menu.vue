@@ -1,9 +1,13 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
 import LINKS from '~/const/links';
+import { useAuthStore } from '~/store/auth.store';
 
 const { switchMode, isDark } = useDarkMode();
 const { signOut } = useSignOut();
+
+const authStore = useAuthStore();
+const isAuth = computed(() => authStore.getAuth);
 
 const route = useRoute();
 
@@ -48,11 +52,18 @@ async function signOutFn() {
         <span>telegram</span>
       </NuxtLink>
 
-      <div class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
+      <div v-if="isAuth"
+        class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
         @click="signOutFn">
         <Icon name="ph:sign-out-bold" />
         <span>sign out</span>
       </div>
+      <NuxtLink v-else
+        class="flex items-center gap-4 text-light bg-primary px-6 py-4 underline underline-light font-500 rounded"
+        :to="PATHS.signin">
+        <Icon name="ph:arrow-right-bold" />
+        <span>sign in</span>
+      </NuxtLink>
     </div>
   </div>
 </template>
