@@ -11,6 +11,8 @@ const PATHS = {
   // app side:
   home: "/",
   about: "/about",
+  ladder: "/ladder",
+  contributors: "/contributors",
   chapter: "/content/:chapter",
   story: "/content/:chapter/:story",
 

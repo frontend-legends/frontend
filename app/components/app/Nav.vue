@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import PATHS from '~/const/paths';
-import LINKS from '~/const/links';
 import useScrollPage from "~/composables/usePageProgress";
 
 const { toggleMenu } = useMenu();
@@ -25,10 +24,10 @@ async function signOutFn() {
       <div class="flex items-center">
         <NuxtLink :to="PATHS.home"
           class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-          <img src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" v-show="isDark" />
-          <img src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" v-show="!isDark" />
+          <img v-show="isDark" src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" >
+          <img v-show="!isDark" src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" >
 
-          <h1 class="text-sm font-semibold">Frontend Legends</h1>
+          <h1 class="text-base uppercase" style="font-variant: sub">Frontend Legends</h1>
 
           <div
             class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
@@ -58,25 +57,29 @@ async function signOutFn() {
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
-      <NuxtLink :href="LINKS.telegram"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:telegram-logo-bold" />
+      <NuxtLink :to="PATHS.ladder"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
+        :class="{ 'op-100': route.name === 'ladder' }">
+        <Icon name="ph:ranking-bold" />
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+          :class="{ 'w-full bg-on-light!': route.name === 'ladder' }" />
       </NuxtLink>
-      <NuxtLink :href="LINKS.github"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-        <Icon name="ph:github-logo-bold" />
+      <NuxtLink :to="PATHS.contributors"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
+        :class="{ 'op-100': route.name === 'contributors' }">
+        <Icon name="ph:users-three-bold" />
 
         <div
-          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
+          class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
+          :class="{ 'w-full bg-on-light!': route.name === 'contributors' }" />
       </NuxtLink>
       <div
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="signOutFn">
         <!-- <Icon name="ph:sign-out-bold" /> -->
-        <span>sign out</span>
+        <span class="uppercase" style="font-variant: sub">sign out</span>
 
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"

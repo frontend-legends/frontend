@@ -13,6 +13,18 @@ export const usersGql = {
       }
     }
   `,
+  GLOBAL_LEADERBOARD: gql`
+    query GlobalLeaderboard($limit: Int) {
+      global_leaderboard(limit: $limit) {
+        rank
+        user {
+          id
+          name
+        }
+        stories_finished
+      }
+    }
+  `,
 };
 
 export const storyGql = {

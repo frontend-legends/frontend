@@ -5,6 +5,7 @@ import { useMutation } from "@vue/apollo-composable";
 import { storyGql } from "~/api/app";
 import { useAuthStore } from "~/store/auth.store";
 import { useNotificationStore } from "~/store/notification.store";
+import PATHS from "~/const/paths";
 
 const route = useRoute();
 const storyId = computed(() => {
@@ -28,6 +29,12 @@ const { loading: finishLoading, mutate: finishMutate } = useMutation(storyGql.FI
 const { loading: unfinishLoading, mutate: unfinishMutate } = useMutation(storyGql.UNFINISH);
 
 const isLoading = computed(() => finishLoading.value || unfinishLoading.value);
+
+const isAuth = computed(() => authStore.getAuth);
+
+function goSignIn() {
+  navigateTo(PATHS.signin);
+}
 
 async function handleBtn() {
   const newState = !isFinished.value;
@@ -57,8 +64,21 @@ async function handleBtn() {
 
 <template>
   <div>
-    <q-btn class="w-full font-bold" color="positive" :outline="!isFinished" :loading="isLoading" @click="handleBtn">
-      <span>{{ isFinished ? "Restart" : "Finish" }}</span>
+    <!-- guest: redirect to sign-in instead of finishing -->
+    <q-btn v-if="!isAuth" class="w-full" color="primary" @click="goSignIn">
+      <span class="uppercase" style="font-variant: sub">Sign in to save progress</span>
+    </q-btn>
+
+    <!-- authed: finish / restart -->
+    <q-btn
+      v-else
+      class="w-full font-bold"
+      color="positive"
+      :outline="!isFinished"
+      :loading="isLoading"
+      @click="handleBtn"
+    >
+      <span class="uppercase" style="font-variant: sub">{{ isFinished ? "Restart" : "Finish" }}</span>
     </q-btn>
   </div>
 </template>

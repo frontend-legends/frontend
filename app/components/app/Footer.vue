@@ -3,7 +3,7 @@ import RELEASE from '~/const/release';
 </script>
 <template>
   <footer>
-    <span>{{ RELEASE }}</span>
+    <span>{{ RELEASE.label }}</span>
   </footer>
 </template>
 <style scoped></style>

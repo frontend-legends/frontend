@@ -118,7 +118,7 @@ export default defineNuxtConfig({
   },
 
   quasar: {
-    plugins: ["AppFullscreen", "LoadingBar", "Loading", "Dialog", "Notify"],
+    plugins: ["AppFullscreen", "LoadingBar", "Loading", "Dialog"],
 
     config: {
       brand: {

@@ -14,7 +14,7 @@ const route = useRoute();
       <img src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" v-show="isDark" />
       <img src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" v-show="!isDark" />
 
-      <h1 class="text-sm font-semibold">Frontend Legends</h1>
+      <h1 class="text-base uppercase" style="font-variant: sub">Frontend Legends</h1>
 
       <div
         class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
@@ -46,7 +46,7 @@ const route = useRoute();
       <NuxtLink :to="PATHS.signin"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
         :class="{ 'op-100 text-on-light': route.name === 'signin' }">
-        <span>sign-in</span>
+        <span class="uppercase" style="font-variant: sub">sign-in</span>
 
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
@@ -56,7 +56,7 @@ const route = useRoute();
       <NuxtLink :to="PATHS.signup"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
         :class="{ 'op-100 text-on-light': route.name === 'signup' }">
-        <span>sign-up</span>
+        <span class="uppercase" style="font-variant: sub">sign-up</span>
 
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
