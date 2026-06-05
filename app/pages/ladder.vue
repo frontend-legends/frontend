@@ -90,22 +90,22 @@ function initials(name: string | null) {
     <!-- list -->
     <div v-else class="flex flex-col">
       <div
-        class="grid grid-cols-[36px_1fr_90px] items-center px-3 py-2 text-[11px] uppercase tracking-wide text-gray"
+        class="grid grid-cols-[36px_1fr_120px] items-center px-3 py-2 text-[11px] uppercase tracking-wide text-gray"
       >
         <span>#</span>
         <span>пользователь</span>
-        <span class="text-right">завершено</span>
+        <span class="text-right">завершено глав</span>
       </div>
 
       <div
         v-for="entry in entries"
         :key="entry.user.id"
-        class="row grid grid-cols-[36px_1fr_90px] items-center px-3 py-3 text-sm transition hover:bg-on-semi-dark"
+        class="row grid grid-cols-[36px_1fr_120px] items-center px-3 py-3 text-sm transition hover:bg-on-semi-dark"
         :class="{ 'lb-me': entry.user.id === meId }"
       >
         <span class="font-main font-bold text-gray">{{ entry.rank }}</span>
         <span class="flex items-center gap-3 min-w-0">
-          <span class="w-8 h-8 grid place-items-center bg-on-semi-dark text-xs font-bold shrink-0">
+          <span class="w-8 h-8 grid place-items-center bg-on-semi-dark border border-solid border-semi-gray text-xs font-bold shrink-0">
             {{ initials(entry.user.name) }}
           </span>
           <span class="truncate">{{ entry.user.name || "anon" }}</span>

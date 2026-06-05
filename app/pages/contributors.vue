@@ -28,7 +28,6 @@ const { data, pending, error } = await useFetch<Contributor[]>(
 const contributors = computed(() =>
   (data.value || []).filter((c) => c.type === "User"),
 );
-const total = computed(() => contributors.value.length);
 </script>
 
 <template>
@@ -37,9 +36,7 @@ const total = computed(() => contributors.value.length);
     <div class="flex items-end justify-between flex-wrap gap-4">
       <div class="flex flex-col gap-1">
         <h2 class="text-2xl lowercase">contributors</h2>
-        <p class="text-xs text-gray">
-          open-source контент<span v-if="total"> · {{ total }} contributors</span>
-        </p>
+        <p class="text-xs text-gray">авторы и редакторы контента</p>
       </div>
 
       <div class="flex gap-2">
@@ -82,13 +79,11 @@ const total = computed(() => contributors.value.length);
         :href="c.html_url"
         target="_blank"
         rel="noopener"
-        class="relative flex flex-col items-center gap-2 p-4 border border-solid text-on-light no-underline transition hover:-translate-y-0.5"
-        :class="i === 0 ? 'border-positive hover:border-positive' : 'border-on-semi-dark hover:border-primary'"
+        class="relative flex flex-col items-center gap-2 p-4 border border-solid border-semi-gray text-on-light no-underline transition hover:border-primary"
       >
         <span
-          class="absolute top-0 left-0 min-w-5 h-5 px-1 grid place-items-center text-[10px] font-main font-bold"
-          :class="i === 0 ? 'bg-positive text-[#06371f]' : 'bg-on-semi-dark text-on-light'"
-        >{{ i + 1 }}</span>
+          class="absolute top-0 left-0 min-w-5 h-5 px-1 grid place-items-center bg-on-semi-dark text-on-light text-[10px] font-main font-bold"
+        >#{{ i + 1 }}</span>
 
         <img
           :src="c.avatar_url"
