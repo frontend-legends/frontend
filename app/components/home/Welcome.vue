@@ -2,7 +2,6 @@
 import { useQuery } from '@vue/apollo-composable';
 import { usersGql } from '~/api/app';
 import { useAuthStore } from '~/store/auth.store';
-import RELEASE from '~/const/release';
 import LINKS from '~/const/links';
 import PATHS from '~/const/paths';
 
@@ -16,6 +15,9 @@ const { data: page } = await useAsyncData("/", () => {
     .first()
 });
 
+// expose frontmatter (order/date) to ProseH1 so the root gets its tagline
+provide("contentPage", page);
+
 const now = useNow();
 const leaderboardVars = computed(() => ({
   year: new Date(now.value).getFullYear(),
@@ -26,6 +28,17 @@ const leaderboardVars = computed(() => ({
 const { result, loading, error } = useQuery(usersGql.MONTHLY_LEADERBOARD, leaderboardVars);
 
 const users = computed(() => result.value?.monthly_leaderboard || []);
+
+function initials(name?: string | null) {
+  if (!name) return "?";
+  return name
+    .trim()
+    .split(/\s+/)
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 
 const storiesLen = computed(() => authStore.getUserStoriesLen);
 
@@ -74,10 +87,6 @@ const formattedCreatedAt = computed(() => {
                      /_____/\___/\__, /\___/_/ /_/\__,_/____/  
                                 /____/                         
       </pre>
-      <div class="fl-meta">
-        <span class="fl-meta-ver">{{ RELEASE.version }}</span>
-        <span class="fl-meta-upd">last updated {{ RELEASE.updated }}</span>
-      </div>
     </div>
     <div class="flex gap-y-4 gap-x-24" v-if="page">
       <div class="flex flex-col gap-8 lg:flex-row">
@@ -131,6 +140,9 @@ const formattedCreatedAt = computed(() => {
             <div v-else-if="users.length" class="flex flex-col gap-3">
               <div v-for="u in users" :key="u.user.id" class="flex items-center gap-3">
                 <div class="text-gray">#{{ u.rank }}</div>
+                <span class="w-8 h-8 grid place-items-center bg-on-semi-dark border border-solid border-semi-gray text-xs font-bold shrink-0">
+                  {{ initials(u.user.name) }}
+                </span>
                 <div class="flex flex-col">
                   <span class="text-base font-bold">{{ u.user.name }}</span>
                   <span class="text-xs text-gray">{{ u.stories_finished }} завершено</span>
@@ -165,20 +177,35 @@ const formattedCreatedAt = computed(() => {
   overflow: hidden;
 }
 
-/* soft brand-blue glow that fades fully to transparent well before the edges,
-   so the page background shows through continuously — no panel bg, no rectangular
-   seam, and nothing to mismatch the page bg during a theme switch */
+/* aurora glow — soft drifting primary-blue blobs that fade to transparent well
+   before the edges, so the page background shows through continuously (no panel
+   bg, no rectangular seam, nothing to mismatch during a theme switch). Primary
+   only — no secondary tint. */
 .fractal-color {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(40% 50% at 44% 46%,
-      color-mix(in srgb, var(--primary) 32%, transparent),
-      transparent 58%),
-    radial-gradient(34% 44% at 62% 56%,
-      color-mix(in srgb, var(--semi-primary) 20%, transparent),
+    radial-gradient(38% 48% at 36% 40%,
+      color-mix(in srgb, var(--primary) 50%, transparent),
+      transparent 62%),
+    radial-gradient(34% 44% at 66% 58%,
+      color-mix(in srgb, var(--semi-primary) 40%, transparent),
+      transparent 64%),
+    radial-gradient(30% 40% at 54% 30%,
+      color-mix(in srgb, var(--primary) 22%, transparent),
       transparent 60%);
+  filter: blur(34px);
   opacity: 0.8;
+  will-change: transform;
+  animation: hero-drift 14s ease-in-out infinite alternate;
+}
+@keyframes hero-drift {
+  0%   { transform: translate3d(-2%, -1%, 0) scale(1);    }
+  50%  { transform: translate3d( 2%,  1%, 0) scale(1.08); }
+  100% { transform: translate3d( 1%, -2%, 0) scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fractal-color { animation: none; }
 }
 
 /* reeded texture + vignette no longer used — the glow blends edge-to-edge
@@ -188,30 +215,4 @@ const formattedCreatedAt = computed(() => {
   display: none;
 }
 
-/* version + last updated, bottom-right of the hero */
-.fl-meta {
-  position: absolute;
-  right: 1rem;
-  bottom: 0.85rem;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 1px;
-  font-family: var(--font-main);
-  color: var(--gray);
-}
-
-.fl-meta-ver {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--on-semi-light);
-}
-
-.fl-meta-upd {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
 </style>

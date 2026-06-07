@@ -4,13 +4,22 @@ export interface ContentItem {
   id: string;
   path: string;
   order: number;
+  date?: string;
 }
 
 export interface GroupedContent {
   order: number;
   title: string;
   path: string;
+  date?: string; // latest date among the section index and its children
   children: ContentItem[];
+}
+
+// ISO dates (YYYY-MM-DD) compare correctly as strings; returns the later one.
+function maxDate(a?: string, b?: string): string | undefined {
+  if (!a) return b;
+  if (!b) return a;
+  return a >= b ? a : b;
 }
 
 export function groupContent(items: ContentItem[]): GroupedContent[] {
@@ -27,6 +36,7 @@ export function groupContent(items: ContentItem[]): GroupedContent[] {
         order,
         title: item.title,
         path: item.path,
+        date: item.date,
         children: [],
       });
     } else {
@@ -34,11 +44,13 @@ export function groupContent(items: ContentItem[]): GroupedContent[] {
       const parent = grouped.get(parentOrder);
       if (parent) {
         parent.children.push(item);
+        parent.date = maxDate(parent.date, item.date);
       } else {
         grouped.set(parentOrder, {
           order: parentOrder,
           title: "Untitled",
           path: "",
+          date: item.date,
           children: [item],
         });
       }

@@ -167,7 +167,10 @@ header {
   left: 0;
   right: 0;
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(24px);
+  /* translucent page-colored backdrop so the glass nav keeps text contrast
+     over anything scrolling beneath it (e.g. the dark headline block) */
+  background-color: color-mix(in srgb, var(--on-dark) 72%, transparent);
   border-bottom: 1px solid var(--semi-gray);
 
   z-index: 1000;
@@ -341,4 +344,56 @@ pre {
 .menu-leave-from {
   clip-path: inset(0 0 0 0);
   opacity: 1;
+}
+
+/* ──────────────────────────────────────────────────────────
+   Page navigation transitions
+   ────────────────────────────────────────────────────────── */
+
+/* View Transitions API (modern browsers): cross-fade only the page
+   content. The header/footer are persistent chrome — lift them out of
+   the root snapshot so they stay pinned instead of flickering. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.28s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header {
+  view-transition-name: site-header;
+}
+footer {
+  view-transition-name: site-footer;
+}
+
+/* Persistent chrome is identical across pages — skip its cross-fade
+   entirely so the nav appears continuous while content swaps. */
+::view-transition-old(site-header),
+::view-transition-new(site-header),
+::view-transition-old(site-footer),
+::view-transition-new(site-footer) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Fallback for browsers without the View Transitions API: the named
+   `page-fade` transition (out-in) defined in nuxt.config. */
+.page-fade-enter-active,
+.page-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.page-fade-enter-from,
+.page-fade-leave-to {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+  .page-fade-enter-active,
+  .page-fade-leave-active {
+    transition: none;
+  }
 }

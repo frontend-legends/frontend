@@ -4,7 +4,6 @@ import PATHS from '~/const/paths';
 definePageMeta({
   name: "signup",
   path: PATHS.signup,
-  layout: "auth",
 });
 </script>
 <template>

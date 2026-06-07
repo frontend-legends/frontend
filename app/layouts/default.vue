@@ -1,13 +1,12 @@
 <script setup lang="ts">
 const { isMenuVisible } = useMenu();
-const { user } = useCurrentUser();
+const route = useRoute();
 
-// Update auth store when user data is loaded
-watch(user, (newUser) => {
-  if (newUser) {
-    // User is already set in the auth store by useCurrentUser composable
-  }
-}, { immediate: true });
+// Loads the current user and populates the auth store as a side effect.
+useCurrentUser();
+
+// Auth pages center their content (sign-in/up forms, etc.).
+const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 </script>
 <template>
   <div>
@@ -17,7 +16,7 @@ watch(user, (newUser) => {
     <Transition name="menu">
       <AppMenu v-if="isMenuVisible" />
     </Transition>
-    <main>
+    <main :class="{ 'flex flex-col items-center justify-center': isAuthRoute }">
       <section>
         <slot />
       </section>

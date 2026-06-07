@@ -20,7 +20,6 @@ const cats = await useAsyncData(route.path, () => {
 });
 
 const author = computed(() => cats.data.value?.author)
-const date = computed(() => cats.data.value?.date)
 
 const activeId = ref<string | null>(null)
 
@@ -83,16 +82,18 @@ onBeforeUnmount(() => {
   <div>
     <!-- Desktop TOC -->
     <div
-      class="toc-container w-[320px] min-h-[320px] max-h-[calc(100vh-320px)] overflow-auto s:hidden xl:flex xl:flex-col">
-      <h6 class="text-xs font-bold uppercase mb-2">Content</h6>
+      class="toc-container w-[320px] overflow-auto s:hidden xl:flex xl:flex-col">
+      <h6 v-if="cats.data.value" class="text-xs font-bold uppercase mb-2">
+        {{ Number(cats.data.value.order).toFixed(2) }}. {{ cats.data.value.title.toLowerCase() }}
+      </h6>
       <div class="toc-el" v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-        <NuxtLink :to="`#${cat.id}`" class="text-on-light underline-gray op-60"
+        <NuxtLink :to="`#${cat.id}`" class="text-xs text-on-light underline-gray op-60"
           :class="{ 'underline-primary op-100!': activeId === cat.id }">
           {{ cat.text }}
         </NuxtLink>
         <ul class="toc-el" v-if="cat.children">
           <li v-for="item in cat.children" :key="item.id">
-            <NuxtLink :to="`#${item.id}`" class="text-on-light underline-gray op-60"
+            <NuxtLink :to="`#${item.id}`" class="text-xs text-on-light underline-gray op-60"
               :class="{ 'underline-primary op-100!': activeId === item.id }">
               {{ item.text }}
             </NuxtLink>
@@ -117,14 +118,15 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-for="cat of cats.data.value?.body.toc?.links" :key="cat.id">
-          <NuxtLink :to="`#${cat.id}`" class="text-gray" :class="{ 'text-primary font-bold': activeId === cat.id }">
+          <NuxtLink :to="`#${cat.id}`" class="text-xs text-on-light underline-gray op-60"
+            :class="{ 'underline-primary op-100!': activeId === cat.id }">
             {{ cat.text }}
           </NuxtLink>
 
           <ul v-if="cat.children">
             <li v-for="item in cat.children" :key="item.id">
-              <NuxtLink :to="`#${item.id}`" class="text-gray"
-                :class="{ 'text-primary font-bold': activeId === item.id }">
+              <NuxtLink :to="`#${item.id}`" class="text-xs text-on-light underline-gray op-60"
+                :class="{ 'underline-primary op-100!': activeId === item.id }">
                 {{ item.text }}
               </NuxtLink>
             </li>
@@ -137,7 +139,6 @@ onBeforeUnmount(() => {
 
     <div class="flex flex-col text-sm text-gray">
       <small v-if="author">Author: {{ author }}</small>
-      <small v-if="date">Last edited: {{ useDateFormat(date, 'DD MMM YYYY') }}</small>
     </div>
   </div>
 </template>
@@ -145,6 +146,13 @@ onBeforeUnmount(() => {
 <style scoped>
 .toc-container {
   scrollbar-width: thin;
+
+  max-height: min(calc(100vh - 320px), 640px);
+  padding-bottom: 16px;
+
+  /* soft fade at the bottom edge so scrolled links dissolve instead of being sliced */
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 20px), transparent);
 
   transition: all .2s;
 }

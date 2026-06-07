@@ -4,7 +4,6 @@ import PATHS from "~/const/paths";
 definePageMeta({
   name: "redirecting",
   path: PATHS.redirecting,
-  layout: "auth",
 });
 
 const route = useRoute();

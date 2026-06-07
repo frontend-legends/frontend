@@ -16,6 +16,9 @@ const { data: page } = await useAsyncData(route.path, () => {
 useHead({
   title: page.value?.title ? `${page.value.order}. ${page.value.title}` : "frontend legends",
 });
+
+// Expose the current page (incl. frontmatter `date`) to prose components like ProseH1.
+provide("contentPage", page);
 </script>
 <template>
   <div v-if="page" class="flex flex-col pb-4">
@@ -24,8 +27,10 @@ useHead({
         <ContentRenderer :value="page" class="prose" />
       </div>
       <hr class="s:block xl:hidden w-full text-semi-gray">
-      <AppToc v-if="!isChapter" class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit" />
-      <ChapterMap v-else class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit" />
+      <aside class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit">
+        <AppToc v-if="!isChapter" class="flex flex-col gap-4" />
+        <ChapterMap v-else class="flex flex-col gap-4" />
+      </aside>
     </div>
     <StoryNavigation :order="page.order" v-if="!isChapter" />
   </div>

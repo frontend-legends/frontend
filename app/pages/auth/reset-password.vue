@@ -4,7 +4,6 @@ import PATHS from '~/const/paths';
 definePageMeta({
   name: "resetpassword",
   path: PATHS.resetpassword,
-  layout: "auth",
 });
 </script>
 <template>

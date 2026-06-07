@@ -18,7 +18,7 @@ const story = computed(() => route.params?.story as string | undefined);
 
 async function signOutFn() {
   signOut();
-  await navigateTo({ path: PATHS.signin });
+  await navigateTo({ path: PATHS.home });
 };
 </script>
 <template>
@@ -28,8 +28,8 @@ async function signOutFn() {
       <div class="flex items-center">
         <NuxtLink :to="PATHS.home"
           class="relative border-right border-semi-gray flex items-center justify-center no-underline min-w-[60px] gap-x-2 px-4 h-[48px] text-on-light op-80 transition group hover:op-100">
-          <img v-show="isDark" src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL" >
-          <img v-show="!isDark" src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL" >
+          <img v-show="isDark" src="/assets/logos/dark-on-light.svg" width="20" height="20" alt="FL">
+          <img v-show="!isDark" src="/assets/logos/light-on-dark.svg" width="20" height="20" alt="FL">
 
           <h1 class="text-base uppercase" style="font-variant: sub">Frontend Legends</h1>
 
@@ -79,8 +79,7 @@ async function signOutFn() {
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full"
           :class="{ 'w-full bg-on-light!': route.name === 'contributors' }" />
       </NuxtLink>
-      <div
-        v-if="isAuth"
+      <div v-if="isAuth"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="signOutFn">
         <span class="uppercase" style="font-variant: sub">sign out</span>
@@ -88,9 +87,7 @@ async function signOutFn() {
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
-      <NuxtLink
-        v-else
-        :to="PATHS.signin"
+      <NuxtLink v-else :to="PATHS.signin"
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
         :class="{ 'op-100': route.name === 'signin' }">
         <span class="uppercase" style="font-variant: sub">sign in</span>

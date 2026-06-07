@@ -9,7 +9,6 @@ const { data: home } = await useAsyncData(() =>
   queryCollection("content")
     .order("order", "ASC")
     .where("order", ">", "0")
-    .select("title", "id", "path", "order")
     .all()
 );
 
@@ -32,17 +31,24 @@ function isCompleted(path: string) {
 <template>
   <div class="grid md:grid-cols-2 gap-4 my-12">
     <div v-for="section in grouped" :key="section.order">
-      <NuxtLink class="text-on-light" :to="`/content${section.path}`">
-        <h4 class="text-base font-semibold">
+      <h4 class="text-base font-semibold flex items-baseline gap-2">
+        <NuxtLink class="text-on-light" :to="`/content${section.path}`">
           {{ section.order }}. {{ section.title.toLowerCase() }}
-        </h4>
-      </NuxtLink>
+        </NuxtLink>
+        <span v-if="section.date" class="text-xs font-normal text-on-semi-light no-underline" style="font-variant: sub">
+          [{{ useDateFormat(section.date, 'DD MMM YYYY', { locales: 'ru' }) }}]
+        </span>
+      </h4>
 
       <ul class="ml-4 list-disc">
         <li v-for="child in section.children" :key="child.id" class="flex items-center gap-2">
           <NuxtLink class="text-sm font-main text-on-semi-light" :to="`/content${child.path}`">
             {{ child.order.toFixed(2) }}. {{ child.title.toLowerCase() }}
           </NuxtLink>
+
+          <span v-if="child.date" class="text-xs text-gray no-underline" style="font-variant: sub">
+            [{{ useDateFormat(child.date, 'DD MMM YYYY', { locales: 'ru' }) }}]
+          </span>
 
           <Icon v-if="isCompleted(child.path)" name="ph:check-bold" class="text-positive w-3 h-3" />
         </li>
