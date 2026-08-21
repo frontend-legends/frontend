@@ -58,6 +58,13 @@ const contributors = computed(() =>
           <Icon name="ph:github-logo-bold" class="text-lg" />
           <span class="uppercase text-sm" style="font-variant: sub">github</span>
         </a>
+        <a
+          :href="LINKS.email"
+          class="flex items-center gap-2 bg-on-semi-dark px-3 py-2 text-on-light no-underline op-90 transition hover:op-100"
+        >
+          <Icon name="ph:envelope-bold" class="text-lg" />
+          <span class="uppercase text-sm" style="font-variant: sub">email</span>
+        </a>
       </div>
     </div>
 
