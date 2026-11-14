@@ -1,55 +1,156 @@
-<!-- https://github.com/barelyhuman/snips/blob/dev/pages/css-loader.md -->
-<div class="background">
-  <div class="loader"></div>
+<!--
+  First paint of the SPA (ssr: false): shown until the Nuxt app mounts.
+  Same language as the in-app loader (components/app/Loading.vue) and the home hero:
+  ASCII "FL" in the slant font, a wave runs through it along the density ramp ". : - = + * # % @".
+  Nothing from the app is available yet (no CSS vars, no Vue), so colours are literal and the
+  theme follows the same rule as the app: the stored choice (localStorage q-dark-mode), otherwise the OS.
+-->
+<script>
+  // runs before the boot markup is parsed: the very first paint is already in the right theme.
+  // Same rule as the app (plugins/theme.client.ts): the stored choice wins, otherwise follow the OS.
+  (function () {
+    var stored = null;
+    try { stored = localStorage.getItem("q-dark-mode"); } catch (e) {}
+    var osDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (stored === "true" || (stored === null && osDark)) document.documentElement.classList.add("fl-boot-dark");
+  })();
+</script>
+<div id="fl-boot" class="fl-boot" role="status" aria-live="polite">
+  <div class="fl-boot__mark" aria-hidden="true">
+    <pre id="fl-boot-base" class="fl-boot__ascii fl-boot__ascii--base">    ________
+   / ____/ /
+  / /_  / /
+ / __/ / /___
+/_/   /_____/</pre>
+    <pre id="fl-boot-ink" class="fl-boot__ascii fl-boot__ascii--ink"></pre>
+  </div>
+  <span class="fl-boot__label">загрузка</span>
 </div>
 <style>
-  .background {
-    display: block;
+  .fl-boot {
+    --bg: #f1f2f5;
+    --fg: #131313;
+    --muted: #666666;
+    --ink: #2f41e3;
+
     position: fixed;
+    inset: 0;
     z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
-
-    background-color: var(--light);
+    background-color: var(--bg);
+    user-select: none;
+    -webkit-user-select: none;
   }
 
-  .loader {
-    display: block;
-    position: fixed;
-    z-index: 99998;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 18px;
-    height: 18px;
-    box-sizing: border-box;
-    border: solid 2px transparent;
-    border-top-color: var(--primary);
-    border-left-color: var(--primary);
-    border-bottom-color: var(--semi-light);
-    border-right-color: var(--semi-light);
-    border-radius: 50%;
-    -webkit-animation: loader 400ms linear infinite;
-    animation: loader 400ms linear infinite;
+  .fl-boot-dark .fl-boot {
+    --bg: #131313;
+    --fg: #f1f2f5;
+    --muted: #a0a0a0;
+    --ink: #4277f3;
   }
 
-  @-webkit-keyframes loader {
-    0% {
-      -webkit-transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-      -webkit-transform: translate(-50%, -50%) rotate(360deg);
-    }
+  .fl-boot__mark {
+    display: grid;
   }
-  @keyframes loader {
-    0% {
-      transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-      transform: translate(-50%, -50%) rotate(360deg);
-    }
+
+  .fl-boot__ascii {
+    grid-area: 1 / 1;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 15px;
+    line-height: 1.2;
+    white-space: pre;
+  }
+
+  .fl-boot__ascii--base {
+    color: color-mix(in srgb, var(--fg) 55%, transparent);
+  }
+
+  .fl-boot__ascii--ink {
+    color: var(--ink);
+    text-shadow: 0 0 10px color-mix(in srgb, var(--ink) 60%, transparent);
+  }
+
+  .fl-boot__label {
+    font-family: Inter, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    color: var(--muted);
   }
 </style>
+<script>
+  (function () {
+    var root = document.getElementById("fl-boot");
+    if (!root) return;
+
+    // Warm the fonts while the boot screen is up: a face is only downloaded once text needs it,
+    // so without this Inter / Space Grotesk / JetBrains Mono arrive after the app mounts and the
+    // text visibly swaps. Latin + Cyrillic samples pull both subsets of the variable faces.
+    try {
+      if (document.fonts && document.fonts.load) {
+        [
+          '400 1em "Inter"',
+          '700 1em "Inter"',
+          '500 1em "Space Grotesk"',
+          '700 1em "Space Grotesk"',
+          '400 1em "JetBrains Mono"',
+          '500 1em "JetBrains Mono"',
+        ].forEach(function (f) {
+          document.fonts.load(f, "Aa Яя 01").catch(function () {});
+        });
+      }
+    } catch (e) {}
+
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    var baseEl = document.getElementById("fl-boot-base");
+    var inkEl = document.getElementById("fl-boot-ink");
+    var art = baseEl.textContent.split("\n");
+    var cols = 0;
+    for (var i = 0; i < art.length; i++) cols = Math.max(cols, art[i].length);
+    var ramp = ".:-=+*#%@";
+    var period = 1100;
+    var t0 = performance.now();
+
+    function frame(t) {
+      // the template is removed when Nuxt mounts: stop with it
+      if (!root.isConnected) return;
+      var front = (((t - t0) % period) / period) * (cols + 8) - 4;
+      var base = [];
+      var ink = [];
+      for (var row = 0; row < art.length; row++) {
+        var line = art[row];
+        var b = "";
+        var k = "";
+        for (var col = 0; col < cols; col++) {
+          var c = line.charAt(col) || " ";
+          var d = front - (col + (art.length - 1 - row) * 0.6);
+          var v = d >= 0 && d < 5 ? 1 - d / 5 : 0;
+          if (c !== " " && v > 0.12) {
+            b += " ";
+            k += ramp.charAt(Math.min(ramp.length - 1, Math.floor(v * ramp.length)));
+          } else {
+            b += c;
+            k += " ";
+          }
+        }
+        base.push(b.replace(/\s+$/, ""));
+        ink.push(k.replace(/\s+$/, ""));
+      }
+      baseEl.textContent = base.join("\n");
+      inkEl.textContent = ink.join("\n");
+      requestAnimationFrame(frame);
+    }
+
+    requestAnimationFrame(frame);
+  })();
+</script>
