@@ -6,8 +6,10 @@ import presetUno from "@unocss/preset-uno";
 export default defineConfig({
   presets: [
     presetUno(),
+    // provider "none": keep the font-main / font-sans utilities, but don't load the fonts a second
+    // time from bunny — they come from Google Fonts in <head> (nuxt.config app.head.link)
     presetWebFonts({
-      provider: "bunny",
+      provider: "none",
       fonts: {
         main: ["Space Grotesk:300,400,500,700"],
         sans: ["Inter:300,400,500,700,900"],

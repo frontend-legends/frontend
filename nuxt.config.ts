@@ -69,7 +69,24 @@ export default defineNuxtConfig({
         },
       ],
 
+      // fonts start downloading with the HTML (in parallel with the JS, during the boot screen),
+      // not after app.css arrives with the bundle — no font swap right after the app mounts
+      link: [
+        { rel: "preconnect", href: "https://fonts.googleapis.com" },
+        { rel: "preconnect", href: "https://fonts.gstatic.com", crossorigin: "" },
+        { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:wght@400;500;700&display=swap" },
+      ],
+
       noscript: [{ textContent: "JavaScript is required" }],
+    },
+  },
+
+  // icons ship inside the client bundle: no runtime requests to api.iconify.design,
+  // no empty squares that fill in after the page is shown
+  icon: {
+    clientBundle: {
+      scan: true,
+      sizeLimitKb: 256,
     },
   },
 
