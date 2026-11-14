@@ -1,12 +1,9 @@
 <script setup lang="ts">
 const { isMenuVisible } = useMenu();
-const route = useRoute();
 
 // Loads the current user and populates the auth store as a side effect.
 useCurrentUser();
 
-// Auth pages center their content (sign-in/up forms, etc.).
-const isAuthRoute = computed(() => route.path.startsWith('/auth'));
 </script>
 <template>
   <div>
@@ -16,7 +13,7 @@ const isAuthRoute = computed(() => route.path.startsWith('/auth'));
     <Transition name="menu">
       <AppMenu v-if="isMenuVisible" />
     </Transition>
-    <main :class="{ 'flex flex-col items-center justify-center': isAuthRoute }">
+    <main>
       <section>
         <slot />
       </section>
