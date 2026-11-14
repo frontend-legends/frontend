@@ -15,6 +15,7 @@ useHead({
     <HomeWelcome />
     <hr class="h-px w-full text-semi-gray bg-semi-gray border-0 my-12" id="map" />
     <AppRoadmap />
+    <HomeContinue />
   </div>
 </template>
 <style scoped></style>
