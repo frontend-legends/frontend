@@ -3,6 +3,8 @@ import { useQuasar } from "quasar";
 export function useDarkMode() {
   const $q = useQuasar();
 
+  // the theme is applied before mount by plugins/theme.client.ts; init() re-applies the same rule
+  // (stored choice, otherwise follow the OS) for callers that still use it
   const init = () => {
     const stored = localStorage.getItem("q-dark-mode");
 
@@ -10,6 +12,8 @@ export function useDarkMode() {
       $q.dark.set(true);
     } else if (stored === "false") {
       $q.dark.set(false);
+    } else {
+      $q.dark.set("auto");
     }
   };
 
