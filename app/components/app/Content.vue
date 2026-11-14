@@ -32,7 +32,8 @@ provide("contentPage", page);
         <ChapterMap v-else class="flex flex-col gap-4" />
       </aside>
     </div>
-    <StoryNavigation :order="page.order" v-if="!isChapter" />
+    <StoryNavigation :order="page.order" />
+    <StorySelectionMenu />
   </div>
   <AppNotFound v-else />
 </template>
