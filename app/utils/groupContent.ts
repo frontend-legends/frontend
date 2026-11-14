@@ -5,6 +5,7 @@ export interface ContentItem {
   path: string;
   order: number;
   date?: string;
+  author?: string;
 }
 
 export interface GroupedContent {
@@ -12,6 +13,7 @@ export interface GroupedContent {
   title: string;
   path: string;
   date?: string; // latest date among the section index and its children
+  author?: string;
   children: ContentItem[];
 }
 
@@ -37,6 +39,7 @@ export function groupContent(items: ContentItem[]): GroupedContent[] {
         title: item.title,
         path: item.path,
         date: item.date,
+        author: item.author,
         children: [],
       });
     } else {
