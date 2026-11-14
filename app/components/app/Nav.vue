@@ -62,8 +62,8 @@ async function signOutFn() {
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
       <NuxtLink :to="PATHS.ladder"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
-        :class="{ 'op-100': route.name === 'ladder' }">
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light transition group hover:op-100"
+        :class="route.name === 'ladder' ? 'op-100' : 'op-80'">
         <Icon name="ph:ranking-bold" />
 
         <div
@@ -71,8 +71,8 @@ async function signOutFn() {
           :class="{ 'w-full bg-on-light!': route.name === 'ladder' }" />
       </NuxtLink>
       <NuxtLink :to="PATHS.contributors"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
-        :class="{ 'op-100': route.name === 'contributors' }">
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light transition group hover:op-100"
+        :class="route.name === 'contributors' ? 'op-100' : 'op-80'">
         <Icon name="ph:users-three-bold" />
 
         <div
@@ -88,8 +88,8 @@ async function signOutFn() {
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
       </div>
       <NuxtLink v-else :to="PATHS.signin"
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light op-80 transition group hover:op-100"
-        :class="{ 'op-100': route.name === 'signin' }">
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light transition group hover:op-100"
+        :class="route.name === 'signin' ? 'op-100' : 'op-80'">
         <span class="uppercase" style="font-variant: sub">sign in</span>
 
         <div
