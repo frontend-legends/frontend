@@ -19,7 +19,7 @@ logs
 .idea
 
 # Content (fetched from github.com/frontend-legends/content)
-content/
+/content/
 
 # Local env files
 .env
