@@ -2,13 +2,18 @@
 ** FONTS
 */
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&display=swap");
+/* fonts: loaded from <head> in nuxt.config (app.head.link), not via @import */
 
 /* 
 ** BASE
 */
 
 :root {
+  /* home hero glow: soft and desaturated on light, full on dark */
+  --hero-glow-opacity: 0.38;
+  --hero-glow-saturate: 0.75;
+  --hero-ink: var(--primary);
+
   --primary: #2f41e3;
   --semi-primary: #4277f3;
 
@@ -39,11 +44,16 @@
   /* --accent:  */
   --font-main: "Space Grotesk", sans-serif;
   --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --max-width: 1280px;
 }
 
 .body--dark {
+  --hero-glow-opacity: 0.8;
+  --hero-glow-saturate: 1;
+  --hero-ink: var(--semi-primary);
+
   --primary: #2f41e3;
   --semi-primary: #4277f3;
 
@@ -277,31 +287,29 @@ pre {
 }
 
 .prose pre code {
-  font-weight: 500;
+  font-weight: 400;
 
   counter-reset: line-number;
 }
-
 .prose pre code .line {
   counter-increment: line-number;
   position: relative;
-  padding-left: 2rem;
+  padding-left: 2.75em;
 
-  font-size: 14px;
-
-  bottom: 0;
+  font-size: 13px;
 }
-
+/* line numbers: thin, tabular, right-aligned in a fixed gutter */
 .prose pre code .line::before {
-  font-weight: 900;
-  content: counter(line-number) ". ";
+  content: counter(line-number);
   position: absolute;
   left: 0;
-  color: var(--gray);
+  width: 1.75em;
+  text-align: right;
 
-  opacity: 0.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--on-light);
+  opacity: 0.28;
 }
-
 .prose blockquote {
   color: var(--on-semi-light);
 }
@@ -396,4 +404,256 @@ footer {
   .page-fade-leave-active {
     transition: none;
   }
+}
+
+/*
+** CONTENT COMPONENTS (::tldr, ::question, ::pitfall, ::practice)
+** micro-label: the same voice as the "last updated" line in the page header
+*/
+
+.fl-label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--gray);
+}
+
+/* wide tables scroll inside the column instead of widening the page on mobile */
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+/* auth forms (components/auth/*) */
+.fl-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 2rem;
+}
+
+.fl-form > :last-child {
+  margin-top: 0.6rem;
+}
+
+.fl-form__pw {
+  position: relative;
+}
+
+/* «забыл пароль?» sits on the label row, right-aligned */
+.fl-form__forgot {
+  position: absolute;
+  top: -2px;
+  right: 0;
+
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--gray);
+  text-decoration: none;
+}
+
+.fl-form__forgot:hover {
+  color: var(--on-light);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fl-form__inline-link {
+  font-weight: 600;
+  color: var(--on-light);
+  text-underline-offset: 3px;
+}
+
+.fl-form__error {
+  margin: 1.25rem 0 0;
+
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--negative);
+}
+
+.fl-form :is(a):focus-visible,
+.fl-form__inline-link:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+/* ===================== markdown (prose) — same language as the map and components =====================
+   Only direct children of .prose: lists/tables inside ::tldr, ::question, ::practice keep their own styles. */
+
+/* --- headings: numbered sections, no link underline, "#" on hover --- */
+.prose {
+  counter-reset: fl-h2;
+}
+
+.prose > h2 {
+  counter-increment: fl-h2;
+  margin: 3.5rem 0 1.25rem;
+
+  font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--on-light);
+}
+
+/* section index above the title: 01, 02 … */
+.prose > h2::before {
+  content: counter(fl-h2, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.65rem;
+
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--gray);
+}
+
+.prose > h3 {
+  margin: 2.25rem 0 0.75rem;
+
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--on-light);
+}
+
+.prose > :is(h2, h3) > a {
+  color: inherit;
+  font-weight: inherit;
+  text-decoration: none;
+}
+
+.prose > :is(h2, h3) > a::after {
+  content: "#";
+  margin-left: 0.35em;
+
+  font-weight: 400;
+  color: var(--gray);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.prose > :is(h2, h3):hover > a::after {
+  opacity: 1;
+}
+
+/* --- links: hover settles the underline into the text colour --- */
+.prose a:not(:is(h2, h3) > a) {
+  transition: text-decoration-color 0.2s ease, color 0.2s ease;
+}
+
+.prose a:not(:is(h2, h3) > a):hover {
+  color: var(--on-light);
+  text-decoration-color: currentColor;
+}
+
+/* --- lists: square markers, ordered lists as 01 / 02 --- */
+.prose > ul,
+.prose > ol,
+.prose > :is(ul, ol) li > ul {
+  padding-left: 0;
+  list-style: none;
+}
+
+.prose > ul > li,
+.prose > :is(ul, ol) li > ul > li {
+  position: relative;
+  padding-left: 1.35rem;
+}
+
+.prose > ul > li::before,
+.prose > :is(ul, ol) li > ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  background-color: color-mix(in srgb, var(--on-light) 55%, transparent);
+}
+
+.prose > ol {
+  counter-reset: fl-ol;
+}
+
+.prose > ol > li {
+  counter-increment: fl-ol;
+  position: relative;
+  padding-left: 2.1rem;
+}
+
+.prose > ol > li::before {
+  content: counter(fl-ol, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.32em;
+
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  color: var(--gray);
+}
+
+.prose > :is(ul, ol) > li::marker {
+  content: none;
+}
+
+/* --- tables: micro-label header, hairline rows, tabular numbers --- */
+.prose > table {
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose > table th {
+  padding: 0 1.25rem 0.6rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--on-light) 22%, transparent);
+  text-align: left;
+  vertical-align: bottom;
+
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+  color: var(--gray);
+}
+
+.prose > table td {
+  padding: 0.75rem 1.25rem 0.75rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--on-light) 8%, transparent);
+  vertical-align: top;
+}
+
+.prose > table :is(th, td):last-child {
+  padding-right: 0;
+}
+
+.prose > table tbody tr:last-child td {
+  border-bottom-color: color-mix(in srgb, var(--on-light) 22%, transparent);
+}
+
+/* --- content spans: the book wraps answers in <span class="text-gray">…</span>. The global
+   `span { font-family: var(--font-main) }` turned them into Space Grotesk (no Cyrillic → Helvetica).
+   Inside running text a span inherits the paragraph font; explicit font-* / fl-* spans keep theirs. --- */
+.prose :is(p, li, td, th, blockquote, dd) span:not([class*="font-"]):not([class*="fl-"]) {
+  font-family: inherit;
+}
+
+/* inverted slabs (article header, TL;DR, «дальше», closing slab, auth deck).
+   Light theme: a black slab on a light page. Dark theme: not a white block on black, which glares,
+   but a raised dark surface. Only the slab's own tokens change, so every inner tint follows. */
+.body--dark .fl-slab {
+  --on-light: #232325; /* slab surface */
+  --on-dark: var(--light); /* slab text and inner tints */
 }
