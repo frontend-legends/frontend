@@ -1,14 +1,26 @@
 <template>
-  <code class="inline-block font-main text-on-semi-light bg-on-semi-dark px-1 rounded">
-    <slot />
-  </code>
+  <!-- inline code: thin square chip in mono, wraps across lines like text -->
+  <code class="fl-ic"><slot /></code>
 </template>
+
 <style scoped>
-code::after {
-  content: "";
+.fl-ic {
+  display: inline;
+  padding: 0.12em 0.36em;
+  border-radius: 0;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+
+  font-family: var(--font-mono);
+  font-size: 0.84em;
+  font-weight: 400;
+  /* quieter than the text around it: the chip marks code, it shouldn't shout */
+  color: color-mix(in srgb, var(--on-light) 82%, transparent);
+  background-color: color-mix(in srgb, var(--on-light) 6%, transparent);
 }
 
-code::before {
-  content: "";
+.fl-ic::before,
+.fl-ic::after {
+  content: none;
 }
 </style>
