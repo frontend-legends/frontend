@@ -5,7 +5,6 @@ import PATHS from '~/const/paths';
 const { add } = useNotificationStore();
 const { errors, validate } = useSignInValidation();
 const { signIn: signInMutation, isLoading } = useSignIn();
-const { signInWithGoogle, signInWithGitHub } = useOAuthSignIn();
 
 const form = ref({
   email: "",
@@ -40,61 +39,22 @@ async function signIn() {
   // REDIRECT TO HOME
   navigateTo({ path: PATHS.home });
 }
-function signInGoogle() {
-  signInWithGoogle();
-}
-
-
-function signInGithub() {
-  signInWithGitHub();
-}
 </script>
 <template>
-  <div class="flex flex-col items-center w-[340px]">
-    <div class="flex flex-col items-center w-full">
-      <h5 class="text-lg font-bold mb-4">Frontend Legends</h5>
-      <div class="mt-4 w-full">
-        <q-input v-model="form.email" color="primary" type="email" label="Email" :error="!!errors.email"
-          :error-message="errors.email" class="text-light" />
+  <AuthPanel title="С возвращением">
+    <template #lead>Войди, чтобы отмечать пройденные главы и продолжать с того места, где остановился.</template>
+
+    <form class="fl-form" novalidate @submit.prevent="signIn">
+      <AuthField v-model="form.email" label="email" type="email" autocomplete="email" :error="errors.email" />
+      <div class="fl-form__pw">
+        <AuthField v-model="form.password" label="пароль" type="password" autocomplete="current-password"
+          :error="errors.password" />
+        <NuxtLink :to="PATHS.resetpassword" class="fl-form__forgot">забыл пароль?</NuxtLink>
       </div>
-      <div class="mt-4 w-full">
-        <q-input v-model="form.password" color="primary" type="password" label="Password" :error="!!errors.password"
-          :error-message="errors.password" />
-      </div>
-      <div class="mt-4 w-full">
-        <q-btn color="primary" class="w-full" :disable="!isFormFull" :loading="isLoading" @click="signIn">
-          <span>Sign In</span>
-        </q-btn>
-      </div>
-    </div>
-    <div class="w-full flex items-center gap-4 my-8">
-      <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
-      <span class="text-xs text-gray uppercase">or sign in with</span>
-      <hr class="flex-1 border-0 bg-semi-gray text-semi-gray h-px" />
-    </div>
-    <div class="flex gap-x-8 w-full">
-      <q-btn outline class="flex-1" @click="signInGoogle">
-        <Icon name="ph:google-logo-bold" class="mr-2" />
-        <span>Google</span>
-      </q-btn>
-      <q-btn outline class="flex-1" @click="signInGithub">
-        <Icon name="ph:github-logo-bold" class="mr-2" />
-        <span>Github</span>
-      </q-btn>
-    </div>
-    <div class="flex flex-col mt-4">
-      <div class="flex flex-col text-center mt-4">
-        <span class="font-sans text-gray text-sm text-paragraph">Don't have an account?</span>
-        <NuxtLink class="font-main text-sm font-bold text-on-light underline" :to="{ path: PATHS.signup }">Sign Up
-        </NuxtLink>
-      </div>
-      <div class="flex flex-col text-center mt-4">
-        <span class="font-sans text-gray text-sm text-paragraph">Forgot the password?</span>
-        <NuxtLink class="font-main text-sm font-bold text-on-light underline" :to="{ path: PATHS.resetpassword }">Reset
-          password
-        </NuxtLink>
-      </div>
-    </div>
-  </div>
+      <AuthSubmit :loading="isLoading" :disabled="!isFormFull">Войти</AuthSubmit>
+    </form>
+
+    <AuthOauth />
+  </AuthPanel>
 </template>
 <style scoped></style>

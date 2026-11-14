@@ -2,6 +2,7 @@
 import PATHS from '~/const/paths';
 
 definePageMeta({
+  layout: "auth",
   name: "verifyemail",
   path: PATHS.verifyemail,
 });

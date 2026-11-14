@@ -2,6 +2,7 @@
 import PATHS from "~/const/paths";
 
 definePageMeta({
+  layout: "auth",
   name: "redirecting",
   path: PATHS.redirecting,
 });
@@ -35,7 +36,7 @@ const title = computed(
   () =>
     ({
       processing: "Завершаем вход…",
-      success: "С возвращением!",
+      success: "С возвращением",
       error: "Не удалось войти",
     })[state.value],
 );
@@ -52,136 +53,74 @@ const sub = computed(
 </script>
 
 <template>
-  <div
-    class="flex flex-col items-center text-center w-[380px] max-w-full border border-solid border-on-semi-dark pt-12 px-8 pb-8"
-  >
-    <!-- status glyph -->
-    <div class="relative w-[104px] h-[104px] mb-7">
-      <!-- processing -->
-      <div
-        v-if="state === 'processing'"
-        class="absolute inset-0 grid place-items-center"
-      >
-        <svg viewBox="0 0 100 100" class="cb-ring absolute inset-0 w-[104px] h-[104px]">
-          <circle cx="50" cy="50" r="42" class="track" />
-          <circle cx="50" cy="50" r="42" class="spin" />
-        </svg>
-        <span class="font-main font-bold text-[22px] text-on-light">FL</span>
-      </div>
+  <AuthPanel :title="title">
+    <template #lead>{{ sub }}</template>
 
-      <!-- success -->
-      <div
-        v-else-if="state === 'success'"
-        class="absolute inset-0 grid place-items-center"
-      >
-        <svg viewBox="0 0 100 100" class="cb-ring absolute inset-0 w-[104px] h-[104px]">
-          <circle cx="50" cy="50" r="42" class="track ok" />
-        </svg>
-        <svg viewBox="0 0 52 52" class="check absolute w-[52px] h-[52px]">
-          <path d="M14 27 l8 8 l16 -18" />
-        </svg>
-      </div>
-
-      <!-- error -->
-      <div v-else class="absolute inset-0 grid place-items-center">
-        <svg viewBox="0 0 100 100" class="cb-ring absolute inset-0 w-[104px] h-[104px]">
-          <circle cx="50" cy="50" r="42" class="track bad" />
-        </svg>
-        <svg viewBox="0 0 52 52" class="cross absolute w-[52px] h-[52px]">
-          <path d="M17 17 L35 35 M35 17 L17 35" />
-        </svg>
-      </div>
+    <!-- status: one hairline. processing sweeps, success fills, error stays red -->
+    <div class="fl-status" :class="`is-${state}`" role="status" :aria-label="title">
+      <span class="fl-status__fill" />
     </div>
 
-    <h4 class="text-xl mb-2">{{ title }}</h4>
-    <p class="text-[13px] leading-normal max-w-[280px] text-gray mb-6">{{ sub }}</p>
-
-    <!-- indeterminate bar — processing only -->
-    <div
-      v-if="state === 'processing'"
-      class="w-full h-[3px] bg-semi-gray overflow-hidden"
-    >
-      <div class="cb-bar-fill h-full w-[40%] bg-secondary" />
+    <div v-if="state === 'error'" class="fl-status__action">
+      <AuthSubmit :to="PATHS.signin">Вернуться ко входу</AuthSubmit>
     </div>
-
-    <!-- recovery action — error only -->
-    <NuxtLink
-      v-if="state === 'error'"
-      class="mt-5 w-full py-3 px-4 flex items-center justify-center gap-2 font-main font-semibold text-sm text-on-dark bg-on-light no-underline transition-opacity hover:op-85"
-      :to="PATHS.signin"
-    >
-      <span>Вернуться ко входу</span>
-    </NuxtLink>
-
-    <p class="text-[10px] tracking-[0.12em] uppercase text-gray mt-5">
-      {{ state === "error" ? "oauth error" : state === "success" ? "redirecting" : "не закрывайте вкладку" }}
-    </p>
-  </div>
+  </AuthPanel>
 </template>
 
 <style scoped>
-/* SVG strokes + keyframe animations — not expressible as Uno utilities */
-.cb-ring circle {
-  fill: none;
-  stroke-width: 4;
-}
-.track {
-  stroke: var(--semi-gray);
-}
-.track.ok {
-  stroke: var(--positive);
-}
-.track.bad {
-  stroke: var(--negative);
+.fl-status {
+  position: relative;
+  height: 2px;
+  margin-top: 2rem;
+  overflow: hidden;
+  background-color: color-mix(in srgb, var(--on-light) 14%, transparent);
 }
 
-.spin {
-  stroke: var(--secondary);
-  stroke-linecap: square;
-  stroke-dasharray: 80 184;
-  transform-origin: center;
-  animation: cb-ringspin 1s linear infinite;
+.fl-status__fill {
+  position: absolute;
+  inset: 0;
+  background-color: var(--on-light);
+  transform-origin: left;
 }
 
-.check path {
-  fill: none;
-  stroke: var(--positive);
-  stroke-width: 5;
-  stroke-linecap: square;
-  stroke-dasharray: 60;
-  stroke-dashoffset: 60;
-  animation: cb-draw 0.4s 0.1s forwards;
-}
-.cross path {
-  fill: none;
-  stroke: var(--negative);
-  stroke-width: 5;
-  stroke-linecap: square;
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
-  animation: cb-draw 0.35s 0.1s forwards;
+.is-processing .fl-status__fill {
+  transform: scaleX(0.35);
 }
 
-.cb-bar-fill {
-  animation: cb-indet 1.1s ease-in-out infinite;
+.is-success .fl-status__fill {
+  background-color: var(--positive);
 }
 
-@keyframes cb-ringspin {
+.is-error .fl-status__fill {
+  background-color: var(--negative);
+}
+
+.fl-status__action {
+  margin-top: 2rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .is-processing .fl-status__fill {
+    animation: fl-status-sweep 1.1s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  .is-success .fl-status__fill {
+    animation: fl-status-fill 0.5s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+}
+
+@keyframes fl-status-sweep {
+  from {
+    transform: translateX(-100%) scaleX(0.35);
+  }
   to {
-    transform: rotate(360deg);
+    transform: translateX(100%) scaleX(0.35);
   }
 }
-@keyframes cb-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes cb-indet {
-  0% {
-    margin-left: -40%;
-  }
-  100% {
-    margin-left: 100%;
+
+@keyframes fl-status-fill {
+  from {
+    transform: scaleX(0);
   }
 }
 </style>

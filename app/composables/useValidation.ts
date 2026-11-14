@@ -39,12 +39,12 @@ export function useSignInValidation() {
   const validate = (form: SignInForm) => {
     errors.value = {};
 
-    if (!form.email) errors.value.email = "Email is required";
-    else if (!emailRegex.test(form.email)) errors.value.email = "Invalid email";
+    if (!form.email) errors.value.email = "Введи email";
+    else if (!emailRegex.test(form.email)) errors.value.email = "Похоже, в адресе опечатка";
 
-    if (!form.password) errors.value.password = "Password is required";
+    if (!form.password) errors.value.password = "Введи пароль";
     else if (form.password.length < passwordMinLength)
-      errors.value.password = `Password must be at least ${passwordMinLength} characters`;
+      errors.value.password = `Пароль - минимум ${passwordMinLength} символов`;
 
     return Object.keys(errors.value).length === 0;
   };
@@ -58,16 +58,16 @@ export function useSignUpValidation() {
   const validate = (form: SignUpForm) => {
     errors.value = {};
 
-    if (!form.login) errors.value.login = "Login is required";
-    else if (form.login.length < passwordMinLength)
-      errors.value.login = `Login must be at least ${loginMinLength} characters`;
+    if (!form.login) errors.value.login = "Введи логин";
+    else if (form.login.length < loginMinLength)
+      errors.value.login = `Логин - минимум ${loginMinLength} символов`;
 
-    if (!form.email) errors.value.email = "Email is required";
-    else if (!emailRegex.test(form.email)) errors.value.email = "Invalid email";
+    if (!form.email) errors.value.email = "Введи email";
+    else if (!emailRegex.test(form.email)) errors.value.email = "Похоже, в адресе опечатка";
 
-    if (!form.password) errors.value.password = "Password is required";
+    if (!form.password) errors.value.password = "Введи пароль";
     else if (form.password.length < passwordMinLength)
-      errors.value.password = `Password must be at least ${passwordMinLength} characters`;
+      errors.value.password = `Пароль - минимум ${passwordMinLength} символов`;
 
     // if (!form.repeatPassword)
     //   errors.value.repeatPassword = "Please repeat your password";
@@ -86,8 +86,8 @@ export function useResetPasswordValidation() {
   const validate = (form: ResetPasswordForm) => {
     errors.value = {};
 
-    if (!form.email) errors.value.email = "Email is required";
-    else if (!emailRegex.test(form.email)) errors.value.email = "Invalid email";
+    if (!form.email) errors.value.email = "Введи email";
+    else if (!emailRegex.test(form.email)) errors.value.email = "Похоже, в адресе опечатка";
 
     return Object.keys(errors.value).length === 0;
   };

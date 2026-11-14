@@ -29,30 +29,17 @@ async function resetPasswordFn() {
 }
 </script>
 <template>
-  <div class="flex flex-col items-center w-[340px]">
-    <div class="flex flex-col items-center w-full rounded-md">
-      <h5 class="text-lg font-bold mb-4">Reset password</h5>
-      <div class="mt-6 w-full">
-        <q-input color="primary" outlined type="email" label="Email" v-model="form.email" />
-      </div>
-      <div class="mt-6 w-full">
-        <q-btn :disable="!form.email" color="primary" class="w-full" :loading="isLoading" @click="resetPasswordFn">
-          <span>Reset password</span>
-        </q-btn>
-      </div>
-    </div>
-    <div class="flex flex-col mt-4">
-      <div class="flex flex-col text-center mt-4">
-        <span class="font-sans text-gray text-sm">Don't have an account?</span>
-        <NuxtLink class="font-main text-sm font-bold text-on-light underline" :to="{ path: PATHS.signup }">Sign Up
-        </NuxtLink>
-      </div>
-      <div class="flex flex-col text-center mt-4">
-        <span class="font-sans text-gray text-sm">Remember the password?</span>
-        <NuxtLink class="font-main text-sm font-bold text-on-light underline" :to="{ path: PATHS.signin }">Sign In
-        </NuxtLink>
-      </div>
-    </div>
-  </div>
+  <AuthPanel title="Сброс пароля">
+    <template #lead>Пришлём на почту ссылку, по которой можно задать новый пароль.</template>
+
+    <form class="fl-form" novalidate @submit.prevent="resetPasswordFn">
+      <AuthField v-model="form.email" label="email" type="email" autocomplete="email" />
+      <AuthSubmit :loading="isLoading" :disabled="!form.email">Отправить ссылку</AuthSubmit>
+    </form>
+
+    <template #footer>
+      Вспомнил пароль? <NuxtLink :to="PATHS.signin">Войти</NuxtLink>
+    </template>
+  </AuthPanel>
 </template>
 <style scoped></style>

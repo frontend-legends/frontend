@@ -131,36 +131,24 @@ async function checkVerificationAndContinue() {
 }
 </script>
 <template>
-  <div>
-    <div class="flex flex-col items-center w-[340px]">
-      <!-- Auto-verification in progress -->
-      <div v-if="isAutoVerifying" class="flex flex-col items-center w-full border-1px border-solid border-semi-light p-8">
-        <h5 class="text-lg font-bold mb-4">Verifying your email...</h5>
-        <p class="font-main text-center text-on-semi-light">Please wait while we verify your email address.</p>
-      </div>
+  <AuthPanel :title="isAutoVerifying ? 'Проверяем почту…' : 'Подтверди почту'">
+    <template #lead>
+      <template v-if="isAutoVerifying">Секунду, сверяем ссылку из письма.</template>
+      <template v-else>
+        Мы отправили письмо<template v-if="email"> на <b>{{ email }}</b></template>. Перейди по ссылке из него,
+        затем <NuxtLink :to="PATHS.signin" class="fl-form__inline-link">войди</NuxtLink>.
+      </template>
+    </template>
 
-      <!-- Verification error or manual verification -->
-      <div v-else class="flex flex-col items-center w-full border-1px border-solid border-semi-light p-8">
-        <h5 class="text-lg font-bold mb-4">Verify your account</h5>
-        <p v-if="verificationError" class="font-main text-center text-red-500 mb-4">
-          {{ verificationError }}
-        </p>
-        <p class="font-main text-center text-on-semi-light">
-          Please check your mailbox and follow the verification link to verify
-          your email. After verification go to
-          <NuxtLink :to="{ path: PATHS.signin }" class="text-sm font-bold text-on-light underline">Sign In
-          </NuxtLink>.
-        </p>
-      </div>
-      <div class="flex flex-col mt-4" v-if="!isLoading && !isAutoVerifying">
-        <div class="flex flex-col text-center mt-4">
-          <span class="font-sans text-sm text-on-semi-light">Don't see email?</span>
-          <span class="font-main text-sm font-bold underline cursor-pointer" @click="sendVerification">Send
-            verification email again</span>
-        </div>
-      </div>
-    </div>
-  </div>
+    <p v-if="verificationError" class="fl-form__error" role="alert">{{ verificationError }}</p>
 
+    <form v-if="!isAutoVerifying" class="fl-form" @submit.prevent="checkVerificationAndContinue">
+      <AuthSubmit :loading="isCheckingVerification">Я подтвердил, продолжить</AuthSubmit>
+    </form>
+
+    <template v-if="!isAutoVerifying" #footer>
+      Письма нет? <button type="button" :disabled="isLoading" @click="sendVerification">Отправить ещё раз</button>
+    </template>
+  </AuthPanel>
 </template>
 <style scoped></style>
