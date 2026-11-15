@@ -561,6 +561,16 @@ const formattedCreatedAt = computed(() => {
   cursor: crosshair;
 }
 
+/* from tablets up the wordmark owns the first screen: the window minus the header
+   (3px offset + 48px + 1px border, then the section's 2rem padding) and the 20px footer strip.
+   On phones it stays a 340px band — the art is too small there to hold a whole screen. */
+@media (min-width: 640px) {
+  .fl-hero {
+    min-height: calc(100svh - 52px - 2rem - 20px);
+    margin-top: 0;
+  }
+}
+
 /* ---------- sidebar ---------- */
 .fl-side {
   display: flex;
