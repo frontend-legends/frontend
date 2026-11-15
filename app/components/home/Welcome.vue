@@ -304,12 +304,85 @@ function runGlitch(done: () => void) {
   ghost.raf = requestAnimationFrame(frame);
 }
 
+// 4) particles: now and then a burst of sparks flies out of one or two points of the wordmark —
+//    each spark is a tiny pointer leaving the same ink as the real cursor (stroke → paint → cooling trail):
+//    it shoots out, slows down, curls a little and fades.
+type Spark = { x: number; y: number; vx: number; vy: number; spin: number; born: number; life: number; r: number };
+
+function runParticles(done: () => void) {
+  const { cw, ch, cols, rows } = grid;
+  if (!cw) return done();
+
+  // the wordmark's box inside the field, in px
+  const ax = Math.floor((cols - ART_COLS) / 2) * cw;
+  const ay = Math.floor((rows - ART_ROWS) / 2) * ch;
+  const aw = ART_COLS * cw;
+  const ah = ART_ROWS * ch;
+
+  const t0 = performance.now();
+  const emitters = Array.from({ length: randInt(1, 2) }, () => ({ x: ax + aw * rand(0.15, 0.85), y: ay + ah * rand(0.2, 0.8) }));
+  const sparks: Spark[] = Array.from({ length: randInt(10, 18) }, () => {
+    const e = emitters[randInt(0, emitters.length - 1)]!;
+    const a = rand(0, Math.PI * 2);
+    const v = rand(90, 260); // px/s
+    return {
+      x: e.x + rand(-cw, cw),
+      y: e.y + rand(-ch, ch),
+      vx: Math.cos(a) * v,
+      vy: Math.sin(a) * v * 0.6, // cells are taller than wide: keep the burst flat like the wordmark
+      spin: rand(-2.2, 2.2), // rad/s: the curl
+      born: t0 + rand(0, 520), // staggered: a crackle, not one pop
+      life: rand(800, 1800),
+      r: Math.max(cw * rand(1.3, 2.2), 9),
+    };
+  });
+
+  let prev = t0;
+  const frame = (now: number) => {
+    const dt = Math.min(0.05, (now - prev) / 1000);
+    prev = now;
+    let alive = false;
+    for (const s of sparks) {
+      const age = now - s.born;
+      if (age < 0) {
+        alive = true;
+        continue;
+      }
+      const left = 1 - age / s.life;
+      if (left <= 0) continue;
+      alive = true;
+      // drag + curl: rotate the velocity a little, lose speed
+      const c = Math.cos(s.spin * dt);
+      const sn = Math.sin(s.spin * dt);
+      const vx = (s.vx * c - s.vy * sn) * (1 - 1.6 * dt);
+      const vy = (s.vx * sn + s.vy * c) * (1 - 1.6 * dt);
+      s.vx = vx;
+      s.vy = vy;
+      s.x += vx * dt;
+      s.y += vy * dt;
+      // hotter while young; the trail cools on its own in paint()
+      stroke(s.x, s.y, 0.25 + 0.6 * left, s.r * (0.6 + 0.4 * left));
+    }
+    if (alive) ghost.raf = requestAnimationFrame(frame);
+    else done();
+  };
+  ghost.raf = requestAnimationFrame(frame);
+}
+
 function scheduleGhost(delay = rand(4500, 8500)) {
   clearTimeout(ghost.timer);
   ghost.timer = window.setTimeout(() => {
     const idle = !pointer.inside && !field.active && performance.now() - pointer.lastMove > 2500;
     if (!idle || !heroVisible.value || docVisibility.value !== "visible" || ghost.raf) {
       scheduleGhost(1500);
+      return;
+    }
+    // half the idle turns sparks fly off the wordmark, the other half it glitches
+    if (Math.random() < 0.5) {
+      runParticles(() => {
+        ghost.raf = 0;
+        scheduleGhost();
+      });
       return;
     }
     // sometimes a double hit: burst, short silence, burst
@@ -378,7 +451,7 @@ const formattedCreatedAt = computed(() => {
       </filter>
     </svg>
 
-    <!-- hero: the ASCII wordmark decodes itself once, glitches on its own when idle; the pointer paints with ASCII (density ramp, cooling trail) -->
+    <!-- hero: the ASCII wordmark decodes itself once; when idle it either glitches or throws off a burst of ASCII sparks; the pointer paints with ASCII (density ramp, cooling trail) -->
     <div ref="heroRef" class="fl-hero relative my-8 flex items-center justify-center overflow-hidden min-h-[340px]"
       @pointermove="onPointer" @pointerleave="onPointerLeave">
       <div class="fractal" aria-hidden="true">

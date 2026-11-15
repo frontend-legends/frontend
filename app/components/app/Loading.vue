@@ -1,50 +1,77 @@
 <script setup lang="ts">
-// Экран загрузки в языке hero на главной: ASCII-монограмма «FL» тем же шрифтом (slant),
-// по ней бежит волна — символы проходят шкалу плотности `. : - = + * # % @` и гаснут обратно.
-// Два слоя, как у кисти в hero: приглушённая база и «чернила» волны акцентным цветом.
-const ART = [
-  "    ________",
-  "   / ____/ /",
-  "  / /_  / /",
-  " / __/ / /___",
-  "/_/   /_____/",
-];
-const COLS = Math.max(...ART.map((l) => l.length));
-const GRID = ART.map((l) => l.padEnd(COLS, " "));
+// Экран загрузки в языке hero на главной: ASCII-орбита. На поле из едва заметной сетки точек
+// по эллипсу кружат четыре частицы, за каждой — хвост по шкале плотности `@ % # * + = - : .`,
+// который остывает, как след кисти в hero. Скорости чуть разные: частицы то догоняют друг друга
+// и сливаются, то расходятся — картинка не повторяется.
+// Та же анимация — в стартовом экране до загрузки приложения (app/spa-loading-template.html).
+const COLS = 31;
+const ROWS = 9;
 const RAMP = ".:-=+*#%@";
-const PERIOD = 1100; // ms for one sweep
 
-const baseText = ref(ART.join("\n"));
+// the quiet lattice under the orbit: a dot every third column on every other row
+const LATTICE = Array.from({ length: ROWS }, (_, r) =>
+  Array.from({ length: COLS }, (_, c) => (r % 2 === 0 && c % 3 === 1 ? "." : " ")).join(""),
+);
+
+const baseText = ref(LATTICE.join("\n"));
 const inkText = ref("");
 let raf = 0;
 
 onMounted(() => {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+  const heat = new Float32Array(COLS * ROWS);
+  const cx = (COLS - 1) / 2;
+  const cy = (ROWS - 1) / 2;
+  const rx = COLS / 2 - 2.5;
+  const ry = ROWS / 2 - 1;
+  const sparks = [0, 1, 2, 3].map((i) => ({ phase: (i * Math.PI) / 2, speed: 2.1 + i * 0.23, wobble: 0.5 + i * 0.7 }));
+
   const t0 = performance.now();
-  const frame = (t: number) => {
-    // wave front travels left → right and a little beyond, then wraps
-    const front = (((t - t0) % PERIOD) / PERIOD) * (COLS + 8) - 4;
+  let prev = t0;
+  const frame = (now: number) => {
+    const dt = Math.min(0.05, (now - prev) / 1000);
+    prev = now;
+    const t = (now - t0) / 1000;
+
+    // cool the trails (frame-rate independent)
+    const cool = Math.pow(0.84, dt * 60);
+    for (let i = 0; i < heat.length; i++) heat[i]! *= cool;
+
+    // each spark heats the cells around it; cells are ~2× taller than wide, so y distance counts double
+    for (const s of sparks) {
+      const a = s.phase + t * s.speed;
+      const k = 1 + 0.12 * Math.sin(a * 3 + t * s.wobble);
+      const x = cx + Math.cos(a) * rx * k;
+      const y = cy + Math.sin(a) * ry * k;
+      for (let r = Math.floor(y - 1); r <= Math.ceil(y + 1); r++) {
+        if (r < 0 || r >= ROWS) continue;
+        for (let c = Math.floor(x - 2); c <= Math.ceil(x + 2); c++) {
+          if (c < 0 || c >= COLS) continue;
+          const d = Math.hypot(c - x, (r - y) * 2);
+          if (d < 1.6) heat[r * COLS + c] = Math.min(1, heat[r * COLS + c]! + (1 - d / 1.6) * 0.55);
+        }
+      }
+    }
+
     const base: string[] = [];
     const ink: string[] = [];
-    GRID.forEach((line, row) => {
+    for (let r = 0; r < ROWS; r++) {
       let b = "";
       let k = "";
-      for (let col = 0; col < COLS; col++) {
-        const c = line[col]!;
-        // slanted front, like the glyphs; strength falls off behind the front
-        const d = front - (col + (ART.length - 1 - row) * 0.6);
-        const v = d >= 0 && d < 5 ? 1 - d / 5 : 0;
-        if (c !== " " && v > 0.12) {
+      for (let c = 0; c < COLS; c++) {
+        const v = heat[r * COLS + c]!;
+        if (v > 0.06) {
           b += " ";
           k += RAMP[Math.min(RAMP.length - 1, Math.floor(v * RAMP.length))];
         } else {
-          b += c;
+          b += LATTICE[r]![c];
           k += " ";
         }
       }
-      base.push(b.trimEnd());
-      ink.push(k.trimEnd());
-    });
+      base.push(b);
+      ink.push(k);
+    }
     baseText.value = base.join("\n");
     inkText.value = ink.join("\n");
     raf = requestAnimationFrame(frame);
@@ -98,8 +125,9 @@ onBeforeUnmount(() => cancelAnimationFrame(raf));
   white-space: pre;
 }
 
+/* the lattice: barely there */
 .fl-loading__ascii--base {
-  color: color-mix(in srgb, var(--on-light) 55%, transparent);
+  color: color-mix(in srgb, var(--on-light) 22%, transparent);
 }
 
 .fl-loading__ascii--ink {

@@ -1,7 +1,8 @@
 <!--
   First paint of the SPA (ssr: false): shown until the Nuxt app mounts.
-  Same language as the in-app loader (components/app/Loading.vue) and the home hero:
-  ASCII "FL" in the slant font, a wave runs through it along the density ramp ". : - = + * # % @".
+  Same language as the in-app loader (components/app/Loading.vue) and the home hero: an ASCII orbit —
+  four sparks circle an ellipse over a faint dot lattice, each trailing the density ramp "@ % # * + = - : ."
+  and cooling like the hero's brush.
   Nothing from the app is available yet (no CSS vars, no Vue), so colours are literal and the
   theme follows the same rule as the app: the stored choice (localStorage q-dark-mode), otherwise the OS.
 -->
@@ -17,11 +18,15 @@
 </script>
 <div id="fl-boot" class="fl-boot" role="status" aria-live="polite">
   <div class="fl-boot__mark" aria-hidden="true">
-    <pre id="fl-boot-base" class="fl-boot__ascii fl-boot__ascii--base">    ________
-   / ____/ /
-  / /_  / /
- / __/ / /___
-/_/   /_____/</pre>
+    <pre id="fl-boot-base" class="fl-boot__ascii fl-boot__ascii--base"> .  .  .  .  .  .  .  .  .  .  
+                               
+ .  .  .  .  .  .  .  .  .  .  
+                               
+ .  .  .  .  .  .  .  .  .  .  
+                               
+ .  .  .  .  .  .  .  .  .  .  
+                               
+ .  .  .  .  .  .  .  .  .  .  </pre>
     <pre id="fl-boot-ink" class="fl-boot__ascii fl-boot__ascii--ink"></pre>
   </div>
   <span class="fl-boot__label">загрузка</span>
@@ -70,8 +75,9 @@
     white-space: pre;
   }
 
+  /* the lattice: barely there */
   .fl-boot__ascii--base {
-    color: color-mix(in srgb, var(--fg) 55%, transparent);
+    color: color-mix(in srgb, var(--fg) 22%, transparent);
   }
 
   .fl-boot__ascii--ink {
@@ -114,37 +120,66 @@
 
     var baseEl = document.getElementById("fl-boot-base");
     var inkEl = document.getElementById("fl-boot-ink");
-    var art = baseEl.textContent.split("\n");
-    var cols = 0;
-    for (var i = 0; i < art.length; i++) cols = Math.max(cols, art[i].length);
+    var lattice = baseEl.textContent.split("\n");
+    var COLS = 31;
+    var ROWS = 9;
     var ramp = ".:-=+*#%@";
-    var period = 1100;
+    var heat = new Float32Array(COLS * ROWS);
+    var cx = (COLS - 1) / 2;
+    var cy = (ROWS - 1) / 2;
+    var rx = COLS / 2 - 2.5;
+    var ry = ROWS / 2 - 1;
+    var sparks = [0, 1, 2, 3].map(function (i) {
+      return { phase: (i * Math.PI) / 2, speed: 2.1 + i * 0.23, wobble: 0.5 + i * 0.7 };
+    });
     var t0 = performance.now();
+    var prev = t0;
 
-    function frame(t) {
+    function frame(now) {
       // the template is removed when Nuxt mounts: stop with it
       if (!root.isConnected) return;
-      var front = (((t - t0) % period) / period) * (cols + 8) - 4;
-      var base = [];
-      var ink = [];
-      for (var row = 0; row < art.length; row++) {
-        var line = art[row];
-        var b = "";
-        var k = "";
-        for (var col = 0; col < cols; col++) {
-          var c = line.charAt(col) || " ";
-          var d = front - (col + (art.length - 1 - row) * 0.6);
-          var v = d >= 0 && d < 5 ? 1 - d / 5 : 0;
-          if (c !== " " && v > 0.12) {
-            b += " ";
-            k += ramp.charAt(Math.min(ramp.length - 1, Math.floor(v * ramp.length)));
-          } else {
-            b += c;
-            k += " ";
+      var dt = Math.min(0.05, (now - prev) / 1000);
+      prev = now;
+      var t = (now - t0) / 1000;
+
+      // cool the trails (frame-rate independent)
+      var cool = Math.pow(0.84, dt * 60);
+      for (var i = 0; i < heat.length; i++) heat[i] *= cool;
+
+      // each spark heats the cells around it; cells are ~2x taller than wide, so y distance counts double
+      for (var s = 0; s < sparks.length; s++) {
+        var sp = sparks[s];
+        var a = sp.phase + t * sp.speed;
+        var k = 1 + 0.12 * Math.sin(a * 3 + t * sp.wobble);
+        var x = cx + Math.cos(a) * rx * k;
+        var y = cy + Math.sin(a) * ry * k;
+        for (var r = Math.floor(y - 1); r <= Math.ceil(y + 1); r++) {
+          if (r < 0 || r >= ROWS) continue;
+          for (var c = Math.floor(x - 2); c <= Math.ceil(x + 2); c++) {
+            if (c < 0 || c >= COLS) continue;
+            var d = Math.hypot(c - x, (r - y) * 2);
+            if (d < 1.6) heat[r * COLS + c] = Math.min(1, heat[r * COLS + c] + (1 - d / 1.6) * 0.55);
           }
         }
-        base.push(b.replace(/\s+$/, ""));
-        ink.push(k.replace(/\s+$/, ""));
+      }
+
+      var base = [];
+      var ink = [];
+      for (var row = 0; row < ROWS; row++) {
+        var b = "";
+        var kk = "";
+        for (var col = 0; col < COLS; col++) {
+          var v = heat[row * COLS + col];
+          if (v > 0.06) {
+            b += " ";
+            kk += ramp.charAt(Math.min(ramp.length - 1, Math.floor(v * ramp.length)));
+          } else {
+            b += lattice[row].charAt(col) || " ";
+            kk += " ";
+          }
+        }
+        base.push(b);
+        ink.push(kk);
       }
       baseEl.textContent = base.join("\n");
       inkEl.textContent = ink.join("\n");
