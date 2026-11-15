@@ -18,7 +18,9 @@ const updated = computed(() => formatRuDate(page?.value?.date));
 </script>
 
 <template>
-  <div class="relative overflow-hidden flex items-end justify-between gap-4 mb-8 min-h-[180px] p-6 fl-slab bg-on-light text-on-dark">
+  <!-- article: on phones the title takes the full width and «copy page» drops under it -->
+  <div class="relative overflow-hidden flex justify-between gap-4 mb-8 min-h-[180px] p-6 fl-slab bg-on-light text-on-dark"
+    :class="isRoot ? 'items-end' : 'flex-col justify-end items-start gap-5 md:flex-row md:items-end'">
     <!-- oversized, soft-blurred section number as a watermark in the bottom-left.
          inherits currentColor (text-on-dark) so it flips with the theme. -->
     <span
@@ -28,7 +30,7 @@ const updated = computed(() => formatRuDate(page?.value?.date));
     >{{ isRoot ? "FL" : order }}</span>
 
     <!-- title block in the bottom-left, with the update date above it -->
-    <div class="relative z-1 flex flex-col gap-0.5">
+    <div class="relative z-1 flex flex-col min-w-0" :class="isRoot ? 'gap-0.5' : 'gap-2'">
       <span
         v-if="isRoot"
         class="font-sans text-[10px] uppercase tracking-tight op-80"
@@ -39,9 +41,12 @@ const updated = computed(() => formatRuDate(page?.value?.date));
         class="font-sans text-[10px] uppercase tracking-tight op-80"
       >обновлено {{ updated }}</span>
 
+      <!-- article titles are Russian: Inter, since Space Grotesk (font-main) has no Cyrillic;
+           lang="ru" lets long words (ОБЪЕКТНО-ОРИЕНТИРОВАННОЕ) hyphenate instead of overflowing -->
       <h1
-        class="m-0 font-main font-bold uppercase leading-tight"
-        :class="isRoot ? 'font-main! text-[1.75rem] md:text-[2.75rem] tracking-[-0.02em] leading-none mt-1' : 'tracking-wide text-sm md:text-base'"
+        class="m-0 font-bold uppercase"
+        :class="isRoot ? 'font-main! text-[1.75rem] md:text-[2.75rem] tracking-[-0.02em] leading-none mt-1' : 'fl-h1'"
+        :lang="isRoot ? undefined : 'ru'"
       >
         <slot />
       </h1>
@@ -60,6 +65,16 @@ const updated = computed(() => formatRuDate(page?.value?.date));
 </template>
 
 <style scoped>
+.fl-h1 {
+  font-family: var(--font-sans);
+  font-size: clamp(1.375rem, 5.4vw, 2.125rem);
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  text-wrap: balance;
+}
+
 /* square tile, same as copy page / arrow tiles */
 /* the tile lives inside .prose: reset its link line-height (28px) and underline so the icon centres */
 .fl-cover__jump {

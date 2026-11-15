@@ -25,9 +25,15 @@ provide("contentPage", page);
     <div class="flex flex-col flex-col-reverse justify-between gap-8 xl:flex-row">
       <div class="w-[calc(100vw-64px)] lg:w-full max-w-[768px]">
         <ContentRenderer :value="page" class="prose" />
+        <!-- below xl a story has no sidebar (its outline is in the menu): «прочитано» closes the article -->
+        <div v-if="!isChapter" class="xl:hidden mt-16 flex flex-col gap-2">
+          <AppFinish />
+          <small v-if="page.author" class="text-sm text-gray">Author: {{ page.author }}</small>
+        </div>
       </div>
-      <hr class="s:block xl:hidden w-full text-semi-gray">
-      <aside class="flex flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit">
+      <hr v-if="isChapter" class="s:block xl:hidden w-full text-semi-gray">
+      <aside class="flex-col gap-4 relative xl:sticky xl:right-0 xl:top-[100px] h-fit"
+        :class="isChapter ? 'flex' : 's:hidden xl:flex'">
         <AppToc v-if="!isChapter" class="flex flex-col gap-4" />
         <ChapterMap v-else class="flex flex-col gap-4" />
       </aside>

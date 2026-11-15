@@ -3,7 +3,7 @@ import PATHS from '~/const/paths';
 import useScrollPage from "~/composables/usePageProgress";
 import { useAuthStore } from '~/store/auth.store';
 
-const { toggleMenu } = useMenu();
+const { toggleMenu, isMenuVisible } = useMenu();
 const { scrollProgress } = useScrollPage();
 const { switchMode, isDark } = useDarkMode();
 const { signOut } = useSignOut();
@@ -52,7 +52,8 @@ async function signOutFn() {
         <span class="text-xs">{{ Number(scrollProgress || 0).toFixed(2) }}%</span>
       </div>
     </div>
-    <div class="flex items-center s:hidden lg:flex">
+    <!-- below xl these live in the menu (AppMenu), together with the story outline -->
+    <div class="flex items-center s:hidden xl:flex">
       <div
         class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
         @click="switchMode">
@@ -98,15 +99,17 @@ async function signOutFn() {
       </NuxtLink>
     </div>
 
-    <div class="flex items-center lg:hidden">
-      <div
-        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] text-on-light cursor-pointer op-80 transition group hover:op-100"
+    <div class="flex items-center xl:hidden">
+      <button type="button"
+        class="relative border-left border-semi-gray flex items-center justify-center no-underline min-w-[60px] px-4 h-[48px] bg-transparent text-on-light cursor-pointer op-80 transition group hover:op-100"
+        :class="{ 'op-100': isMenuVisible }"
+        :aria-expanded="isMenuVisible" aria-controls="app-menu" :aria-label="isMenuVisible ? 'Закрыть меню' : 'Открыть меню'"
         @click="toggleMenu()">
-        <Icon name="ph:list-bold" />
+        <Icon :name="isMenuVisible ? 'ph:x-bold' : 'ph:list-bold'" />
 
         <div
           class="absolute left-0 bottom-1px w-0 h-[3px] bg-on-semi-dark transition-all duration-300 group-hover:w-full" />
-      </div>
+      </button>
     </div>
   </nav>
 </template>
