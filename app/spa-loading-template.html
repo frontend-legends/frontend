@@ -1,7 +1,7 @@
 <!--
   First paint of the SPA (ssr: false): shown until the Nuxt app mounts.
   Same language as the in-app loader (components/app/Loading.vue) and the home hero: an ASCII orbit —
-  four sparks circle an ellipse over a faint dot lattice, each trailing the density ramp "@ % # * + = - : ."
+  four sparks circle an ellipse on an empty field, each trailing the density ramp "@ % # * + = - : ."
   and cooling like the hero's brush.
   Nothing from the app is available yet (no CSS vars, no Vue), so colours are literal and the
   theme follows the same rule as the app: the stored choice (localStorage q-dark-mode), otherwise the OS.
@@ -18,15 +18,15 @@
 </script>
 <div id="fl-boot" class="fl-boot" role="status" aria-live="polite">
   <div class="fl-boot__mark" aria-hidden="true">
-    <pre id="fl-boot-base" class="fl-boot__ascii fl-boot__ascii--base"> .  .  .  .  .  .  .  .  .  .  
+    <pre id="fl-boot-base" class="fl-boot__ascii fl-boot__ascii--base">                               
                                
- .  .  .  .  .  .  .  .  .  .  
                                
- .  .  .  .  .  .  .  .  .  .  
                                
- .  .  .  .  .  .  .  .  .  .  
                                
- .  .  .  .  .  .  .  .  .  .  </pre>
+                               
+                               
+                               
+                               </pre>
     <pre id="fl-boot-ink" class="fl-boot__ascii fl-boot__ascii--ink"></pre>
   </div>
   <span class="fl-boot__label">загрузка</span>
@@ -75,11 +75,7 @@
     white-space: pre;
   }
 
-  /* the lattice: barely there */
-  .fl-boot__ascii--base {
-    color: color-mix(in srgb, var(--fg) 22%, transparent);
-  }
-
+  /* the base layer is blank: it only holds the grid's size */
   .fl-boot__ascii--ink {
     color: var(--ink);
     text-shadow: 0 0 10px color-mix(in srgb, var(--ink) 60%, transparent);
@@ -120,7 +116,7 @@
 
     var baseEl = document.getElementById("fl-boot-base");
     var inkEl = document.getElementById("fl-boot-ink");
-    var lattice = baseEl.textContent.split("\n");
+    var blank = baseEl.textContent.split("\n");
     var COLS = 31;
     var ROWS = 9;
     var ramp = ".:-=+*#%@";
@@ -174,7 +170,7 @@
             b += " ";
             kk += ramp.charAt(Math.min(ramp.length - 1, Math.floor(v * ramp.length)));
           } else {
-            b += lattice[row].charAt(col) || " ";
+            b += blank[row].charAt(col) || " ";
             kk += " ";
           }
         }

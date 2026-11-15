@@ -369,12 +369,12 @@ function runParticles(done: () => void) {
   ghost.raf = requestAnimationFrame(frame);
 }
 
-function scheduleGhost(delay = rand(4500, 8500)) {
+function scheduleGhost(delay = rand(1500, 3500)) {
   clearTimeout(ghost.timer);
   ghost.timer = window.setTimeout(() => {
-    const idle = !pointer.inside && !field.active && performance.now() - pointer.lastMove > 2500;
+    const idle = !pointer.inside && !field.active && performance.now() - pointer.lastMove > 1500;
     if (!idle || !heroVisible.value || docVisibility.value !== "visible" || ghost.raf) {
-      scheduleGhost(1500);
+      scheduleGhost(1000);
       return;
     }
     // half the idle turns sparks fly off the wordmark, the other half it glitches
@@ -408,7 +408,7 @@ onMounted(async () => {
   if (heroRef.value) resizeObs.observe(heroRef.value);
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   intro();
-  scheduleGhost(2500);
+  scheduleGhost(1200);
 });
 
 onBeforeUnmount(() => {

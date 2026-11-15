@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Экран загрузки в языке hero на главной: ASCII-орбита. На поле из едва заметной сетки точек
+// Экран загрузки в языке hero на главной: ASCII-орбита. На пустом поле
 // по эллипсу кружат четыре частицы, за каждой — хвост по шкале плотности `@ % # * + = - : .`,
 // который остывает, как след кисти в hero. Скорости чуть разные: частицы то догоняют друг друга
 // и сливаются, то расходятся — картинка не повторяется.
@@ -8,12 +8,10 @@ const COLS = 31;
 const ROWS = 9;
 const RAMP = ".:-=+*#%@";
 
-// the quiet lattice under the orbit: a dot every third column on every other row
-const LATTICE = Array.from({ length: ROWS }, (_, r) =>
-  Array.from({ length: COLS }, (_, c) => (r % 2 === 0 && c % 3 === 1 ? "." : " ")).join(""),
-);
+// the base layer is blank: it only holds the grid's size, the sparks fly on an empty field
+const BLANK = Array.from({ length: ROWS }, () => " ".repeat(COLS));
 
-const baseText = ref(LATTICE.join("\n"));
+const baseText = ref(BLANK.join("\n"));
 const inkText = ref("");
 let raf = 0;
 
@@ -65,7 +63,7 @@ onMounted(() => {
           b += " ";
           k += RAMP[Math.min(RAMP.length - 1, Math.floor(v * RAMP.length))];
         } else {
-          b += LATTICE[r]![c];
+          b += " ";
           k += " ";
         }
       }
@@ -123,11 +121,6 @@ onBeforeUnmount(() => cancelAnimationFrame(raf));
   font-size: 15px;
   line-height: 1.2;
   white-space: pre;
-}
-
-/* the lattice: barely there */
-.fl-loading__ascii--base {
-  color: color-mix(in srgb, var(--on-light) 22%, transparent);
 }
 
 .fl-loading__ascii--ink {
