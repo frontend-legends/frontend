@@ -657,3 +657,13 @@ footer {
   --on-light: #232325; /* slab surface */
   --on-dark: var(--light); /* slab text and inner tints */
 }
+
+/* Code shows exactly what is typed: JetBrains Mono ligatures turn `||=` into `|⊨` and `=>` into `⇒`,
+   which misleads in a reference about syntax. */
+.prose code,
+.prose pre,
+.fl-ic,
+.fl-code {
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "calt" 0;
+}

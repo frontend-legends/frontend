@@ -2,8 +2,8 @@
 //
 // В главах вопросы оформлены двумя способами, оба разбираются здесь:
 //   1. <b class="text-on-semi-light">Вопрос?</b> <span class="text-gray">Ответ</span>  (раздел «Вопросы на собеседовании»)
-//   2. ::question … #mid … ::                                                            (новый стандарт глав)
-// Ответ на карточке — короткий «mid»-ответ из книги, ссылка ведёт в раздел главы.
+//   2. ::question … #answer … ::  (старое имя слота — #mid)                                                            (новый стандарт глав)
+// Ответ на карточке — короткий «хороший ответ» из книги, ссылка ведёт в раздел главы.
 
 type MNode = string | [string, Record<string, unknown>, ...MNode[]];
 
@@ -89,11 +89,11 @@ function cardsOf(page: Page): DeckCard[] {
       push(textOf(kids[qi]!), segmentsOf(answer.slice(2) as MNode[]));
     }
 
-    // 2. ::question — default slot = question, #mid = short answer
+    // 2. ::question — default slot = question, #answer (или старый #mid) = short answer
     if (tag === "question") {
       const kids = n.slice(2) as MNode[];
       const qNode = kids.find((k) => isEl(k) && k[0] !== "template");
-      const mid = kids.find((k) => isEl(k) && k[0] === "template" && "v-slot:mid" in (k[1] ?? {}));
+      const mid = kids.find((k) => isEl(k) && k[0] === "template" && ("v-slot:answer" in (k[1] ?? {}) || "v-slot:mid" in (k[1] ?? {})));
       if (!qNode || !isEl(mid)) continue;
       const firstP = (mid.slice(2) as MNode[]).find((k) => isEl(k) && k[0] === "p");
       if (!isEl(firstP)) continue;

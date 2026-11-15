@@ -1,40 +1,39 @@
 <script setup lang="ts">
 // MDC:
-// ::question{level="senior"}
+// ::question
 // Текст вопроса
-// #mid
-// Ответ, которого достаточно на mid
-// #senior
-// Что добавляет senior: механизм, trade-offs, грабли
+// #answer
+// Хороший ответ: 2–3 предложения
+// #more
+// Что добавить: механизм, компромиссы, грабли
 // #followups
 // - уточняющий вопрос → короткий ответ
 // ::
 //
 // Ответ свёрнут: сначала ответь сам, потом сверься.
-// level не отображается — пригодится для фильтров/режима карточек.
+// Ответы не делятся по уровням (справочник для фронтенда в целом).
+// #mid и #senior — старые имена слотов, читаются как #answer и #more, пока весь контент не переведён.
 // Соседние вопросы складываются в один список: общие волосяные линии, без коробок.
-const props = withDefaults(defineProps<{ level?: "mid" | "senior" }>(), {
-  level: "mid",
-});
-
 const slots = useSlots();
+const answerSlot = computed(() => (slots.answer ? "answer" : slots.mid ? "mid" : null));
+const moreSlot = computed(() => (slots.more ? "more" : slots.senior ? "senior" : null));
 </script>
 
 <template>
-  <details class="fl-q" :data-level="props.level">
+  <details class="fl-q">
     <summary class="fl-q__summary">
       <span class="fl-q__text"><slot mdc-unwrap="p" /></span>
       <span class="fl-q__icon" aria-hidden="true" />
     </summary>
 
     <div class="fl-q__answer">
-      <div v-if="slots.mid" class="fl-q__part">
-        <div class="fl-label">ответ на mid</div>
-        <slot name="mid" />
+      <div v-if="answerSlot" class="fl-q__part">
+        <div class="fl-label">хороший ответ</div>
+        <slot :name="answerSlot" />
       </div>
-      <div v-if="slots.senior" class="fl-q__part fl-q__part--senior">
-        <div class="fl-label">что добавит senior</div>
-        <slot name="senior" />
+      <div v-if="moreSlot" class="fl-q__part fl-q__part--more">
+        <div class="fl-label">что добавить</div>
+        <slot :name="moreSlot" />
       </div>
       <div v-if="slots.followups" class="fl-q__part">
         <div class="fl-label">уточняющие вопросы</div>
@@ -152,7 +151,7 @@ const slots = useSlots();
   padding: 0 0 1.5rem;
 }
 
-.fl-q__part--senior {
+.fl-q__part--more {
   padding-left: 1rem;
   border-left: 2px solid var(--on-light);
 }
