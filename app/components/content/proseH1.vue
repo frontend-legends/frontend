@@ -18,9 +18,9 @@ const updated = computed(() => formatRuDate(page?.value?.date));
 </script>
 
 <template>
-  <!-- article: on phones the title takes the full width and «copy page» drops under it -->
+  <!-- article: actions in the top-right corner, the title owns the bottom at full width -->
   <div class="relative overflow-hidden flex justify-between gap-4 mb-8 min-h-[180px] p-6 fl-slab bg-on-light text-on-dark"
-    :class="isRoot ? 'items-end' : 'flex-col justify-end items-start gap-5 md:flex-row md:items-end'">
+    :class="isRoot ? 'items-end' : 'flex-col gap-6'">
     <!-- oversized, soft-blurred section number as a watermark in the bottom-left.
          inherits currentColor (text-on-dark) so it flips with the theme. -->
     <span
@@ -60,7 +60,7 @@ const updated = computed(() => formatRuDate(page?.value?.date));
             class="!bg-on-semi-dark !text-on-light border border-solid border-semi-gray font-sans text-xs !rounded-none px-2 py-1">к карте книги</q-tooltip>
       </a>
     </div>
-    <AppCopyPage v-else :page="page" class="relative z-1 shrink-0" />
+    <AppCopyPage v-else :page="page" class="relative z-1 shrink-0 self-end order-first" />
   </div>
 </template>
 
