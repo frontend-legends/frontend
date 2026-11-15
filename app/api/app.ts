@@ -25,6 +25,37 @@ export const usersGql = {
       }
     }
   `,
+  // everyone who finished the whole book, in the order they got there (permanent title)
+  HALL_OF_LEGENDS: gql`
+    query HallOfLegends {
+      hall_of_legends {
+        total_stories
+        legends {
+          rank
+          user {
+            id
+            name
+          }
+          legend_at
+          legend_total
+        }
+      }
+    }
+  `,
+  // the #1 of each finished month, newest first
+  MONTHLY_CHAMPIONS: gql`
+    query MonthlyChampions($limit: Int) {
+      monthly_champions(limit: $limit) {
+        year
+        month
+        user {
+          id
+          name
+        }
+        stories_finished
+      }
+    }
+  `,
 };
 
 export const storyGql = {
