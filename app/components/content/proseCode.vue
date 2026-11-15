@@ -11,6 +11,10 @@
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 
+  /* long identifiers like withAuth(withTheme(withRouter(Page))) have no spaces:
+     let them break anywhere instead of pushing the page sideways on phones */
+  overflow-wrap: anywhere;
+
   font-family: var(--font-mono);
   font-size: 0.84em;
   font-weight: 400;
