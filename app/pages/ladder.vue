@@ -1,10 +1,9 @@
 <script setup lang="ts">
-// Ladder — в языке /contributors: шапка как там, дальше три раздела, каждый — такая же таблица на
-// волосяных линиях; пустое место — строка с пунктирным квадратом, как «здесь может быть ваше имя».
-//  — Hall of Legends: кто прошёл книгу целиком, по порядку; место навсегда (звание не снимается,
-//    когда в книге появляются новые темы).
-//  — рейтинг за месяц / за всё время, полоса — доля от лидера.
-//  — чемпионы месяцев: лидер каждого завершённого месяца и текущий месяц («идёт»).
+// Ladder — одна таблица в языке /contributors, вкладки в шапке:
+//  — monthly / all time: рейтинг; полоса — какая часть книги пройдена (за месяц / всего);
+//  — legends: кто прошёл книгу целиком, по порядку; место навсегда (звание не снимается,
+//    когда в книге появляются новые темы). Легенды носят чип LEGEND и в остальных вкладках.
+// Пустое место — строка с пунктирным квадратом, как «здесь может быть ваше имя» на /contributors.
 import { useQuery } from "@vue/apollo-composable";
 import { usersGql } from "~/api/app";
 import { useAuthStore } from "~/store/auth.store";
@@ -36,14 +35,8 @@ interface Legend {
   legend_at: string;
   legend_total: number;
 }
-interface Champion {
-  year: number;
-  month: number;
-  user: PublicUser;
-  stories_finished: number;
-}
-
-const period = ref<"month" | "all">("month");
+type Tab = "month" | "all" | "legends";
+const tab = ref<Tab>("month");
 
 const now = useNow({ interval: 60_000 });
 const today = computed(() => new Date(now.value));
@@ -56,102 +49,127 @@ const monthlyVars = computed(() => ({
 
 const { result: monthlyRes, loading: monthlyLoading } = useQuery(usersGql.MONTHLY_LEADERBOARD, monthlyVars);
 const { result: globalRes, loading: globalLoading } = useQuery(usersGql.GLOBAL_LEADERBOARD, { limit: 100 });
-// an API without these queries yet (backend not deployed) → the sections hide instead of claiming "nobody"
+// an API without this query yet (backend not deployed) → the tab hides instead of claiming "nobody"
 const { result: hallRes, loading: hallLoading, error: hallError } = useQuery(usersGql.HALL_OF_LEGENDS);
-const { result: champsRes, loading: champsLoading, error: champsError } = useQuery(usersGql.MONTHLY_CHAMPIONS, {
-  limit: 12,
+const legends = computed<Legend[]>(() => hallRes.value?.hall_of_legends?.legends || []);
+const meLegend = computed(() => legends.value.some((l) => l.user.id === meId.value));
+const legendIds = computed(() => new Set(legends.value.map((l) => l.user.id)));
+
+const tabs = computed(() =>
+  [
+    { id: "month" as const, label: "monthly", count: null },
+    { id: "all" as const, label: "all time", count: null },
+    { id: "legends" as const, label: "legends", count: legends.value.length || null, hidden: !!hallError.value },
+  ].filter((t) => !t.hidden),
+);
+watchEffect(() => {
+  if (!tabs.value.some((t) => t.id === tab.value)) tab.value = "month";
 });
 
 const monthly = computed<Entry[]>(() => monthlyRes.value?.monthly_leaderboard || []);
-const entries = computed<Entry[]>(() =>
-  period.value === "month" ? monthly.value : globalRes.value?.global_leaderboard || [],
+const entries = computed<Entry[]>(() => (tab.value === "all" ? globalRes.value?.global_leaderboard || [] : monthly.value));
+const loading = computed(
+  () =>
+    ({
+      month: monthlyLoading.value,
+      all: globalLoading.value,
+      legends: hallLoading.value,
+    })[tab.value],
 );
-const loading = computed(() => (period.value === "month" ? monthlyLoading.value : globalLoading.value));
-const leaderCount = computed(() => Math.max(1, ...entries.value.map((e) => e.stories_finished)));
 
-const legends = computed<Legend[]>(() => hallRes.value?.hall_of_legends?.legends || []);
-const meLegend = computed(() => legends.value.some((l) => l.user.id === meId.value));
-// legends wear a chip wherever their name appears: in the rating and among the champions
-const legendIds = computed(() => new Set(legends.value.map((l) => l.user.id)));
-const left = computed(() => Math.max(0, totalStories.value - totalDone.value));
+// the book's size as the API counts it (the marks come from there too), else the book map's
+const bookTotal = computed(() => hallRes.value?.hall_of_legends?.total_stories || totalStories.value || 1);
+const share = (n: number) => Math.min(1, n / bookTotal.value);
+const pct = (n: number) => {
+  const v = share(n) * 100;
+  return v > 0 && v < 1 ? "<1%" : `${Math.round(v)}%`;
+};
 
-// the running month first, then the finished ones (newest first, as the API returns them)
-const months = computed(() => {
-  const lead = monthly.value[0];
-  return [
-    { key: "now", label: monthName.value, note: "идёт", user: lead?.user ?? null, count: lead?.stories_finished ?? 0 },
-    ...((champsRes.value?.monthly_champions || []) as Champion[]).map((c) => ({
-      key: `${c.year}-${c.month}`,
-      label: new Date(c.year, c.month - 1, 1).toLocaleDateString("ru-RU", { month: "long" }),
-      note: String(c.year),
-      user: c.user as PublicUser | null,
-      count: c.stories_finished,
-    })),
-  ];
-});
+const caption = computed(
+  () =>
+    ({
+      month: `За ${monthName.value}`,
+      all: "За всё время",
+      legends: "Hall of Legends",
+    })[tab.value],
+);
+const hint = computed(
+  () =>
+    ({
+      month: "темы, отмеченные в этом месяце, и какая это часть книги",
+      all: "все отмеченные темы и какая часть книги пройдена",
+      legends: "прошли всю книгу — место остаётся навсегда",
+    })[tab.value],
+);
+const midHead = computed(() => (tab.value === "legends" ? "прошёл книгу" : tab.value === "month" ? "за месяц от книги" : "пройдено от книги"));
 
 const p2 = (n: number) => String(n).padStart(2, "0");
 const topics = (n: number) => ruPlural(n, "тема", "темы", "тем");
+const left = computed(() => Math.max(0, totalStories.value - totalDone.value));
 const nextTo = computed(() => (isAuth.value ? (nextStory.value ? `/content${nextStory.value.path}` : PATHS.home) : PATHS.signin));
 
 function initials(name: string | null) {
   if (!name) return "?";
-  return name
-    .trim()
-    .split(/\s+/)
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
+  return (
+    name
+      .trim()
+      .split(/\s+/)
+      .map((w) => w.match(/[\p{L}\p{N}]/u)?.[0]) // first letter, skipping "(", quotes and the like
+      .filter(Boolean)
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?"
+  );
 }
 </script>
 
 <template>
   <div class="fl-ld">
-    <!-- header: the same shape as /contributors -->
+    <!-- header: the same shape as /contributors; the tabs pick what the one table shows -->
     <div class="fl-ld__head">
       <div class="fl-ld__titles">
         <h1 class="fl-ld__title">ladder</h1>
         <p class="fl-ld__sub">рейтинг по завершённым темам</p>
       </div>
-      <div class="fl-ld__actions" role="group" aria-label="Период рейтинга">
+      <div class="fl-ld__actions" role="group" aria-label="Что показать">
         <button
-type="button" class="fl-ld__btn" :class="{ 'is-primary': period === 'month' }"
-          :aria-pressed="period === 'month'" @click="period = 'month'">
-          <span>monthly</span>
-        </button>
-        <button
-type="button" class="fl-ld__btn" :class="{ 'is-primary': period === 'all' }"
-          :aria-pressed="period === 'all'" @click="period = 'all'">
-          <span>all time</span>
+v-for="t in tabs" :key="t.id" type="button" class="fl-ld__btn" :class="{ 'is-primary': tab === t.id }"
+          :aria-pressed="tab === t.id" @click="tab = t.id">
+          <span>{{ t.label }}</span>
+          <span v-if="t.count" class="fl-ld__btn-count">{{ t.count }}</span>
         </button>
       </div>
     </div>
 
-    <!-- ───── Hall of Legends ───── -->
-    <div v-if="!hallError" class="fl-ld__part">
+    <div class="fl-ld__part">
       <div class="fl-ld__part-head">
-        <h2 class="fl-ld__h2">Hall of Legends</h2>
-        <p class="fl-ld__hint">прошли всю книгу — место остаётся навсегда</p>
+        <h2 class="fl-ld__h2">{{ caption }}</h2>
+        <p class="fl-ld__hint">{{ hint }}</p>
       </div>
 
-      <div class="fl-ld__table" role="table" aria-label="Hall of Legends" :aria-busy="hallLoading">
+      <div class="fl-ld__table" role="table" :aria-label="caption" :aria-busy="loading">
+        <!-- ───── rank | user | middle | topics ───── -->
         <div class="fl-ld__row fl-ld__row--head" role="row">
           <span role="columnheader">место</span>
           <span role="columnheader">пользователь</span>
-          <span role="columnheader" class="fl-ld__col-mid">прошёл книгу</span>
+          <span role="columnheader" class="fl-ld__col-mid">{{ midHead }}</span>
           <span role="columnheader" class="fl-ld__col-end">темы</span>
         </div>
 
-        <div v-if="hallLoading" class="fl-ld__row fl-ld__row--ghost" aria-hidden="true">
-          <span class="fl-ld__rank">01</span>
-          <span class="fl-ld__who"><span class="fl-ld__avatar" /></span>
-          <span class="fl-ld__col-mid" />
-          <span />
-        </div>
+        <template v-if="loading">
+          <div v-for="n in 3" :key="n" class="fl-ld__row fl-ld__row--ghost" aria-hidden="true">
+            <span class="fl-ld__rank">{{ p2(n) }}</span>
+            <span class="fl-ld__who"><span class="fl-ld__avatar" /></span>
+            <span class="fl-ld__col-mid"><span class="fl-ld__bar" /></span>
+            <span />
+          </div>
+        </template>
 
-        <template v-else>
-          <div v-for="l in legends" :key="l.user.id" class="fl-ld__row" :class="{ 'is-me': l.user.id === meId }" role="row">
+        <!-- legends -->
+        <template v-else-if="tab === 'legends'">
+          <div
+v-for="l in legends" :key="l.user.id" class="fl-ld__row" :class="{ 'is-me': l.user.id === meId }"
+            role="row">
             <span class="fl-ld__rank" role="cell">{{ p2(l.rank) }}</span>
             <span class="fl-ld__who" role="cell">
               <span class="fl-ld__avatar" aria-hidden="true">{{ initials(l.user.name) }}</span>
@@ -165,7 +183,7 @@ type="button" class="fl-ld__btn" :class="{ 'is-primary': period === 'all' }"
             </span>
           </div>
 
-          <!-- the next place in the hall is open: the reader's own way to it -->
+          <!-- the next place in the hall: the reader's own way to it -->
           <NuxtLink v-if="!meLegend" :to="nextTo" class="fl-ld__row fl-ld__row--next" role="row">
             <span class="fl-ld__rank" role="cell">{{ p2(legends.length + 1) }}</span>
             <span class="fl-ld__who" role="cell">
@@ -181,44 +199,23 @@ type="button" class="fl-ld__btn" :class="{ 'is-primary': period === 'all' }"
             </span>
           </NuxtLink>
         </template>
-      </div>
-    </div>
 
-    <!-- ───── the ladder ───── -->
-    <div class="fl-ld__part">
-      <div class="fl-ld__part-head">
-        <h2 class="fl-ld__h2">{{ period === "month" ? `Рейтинг за ${monthName}` : "Рейтинг за всё время" }}</h2>
-      </div>
-
-      <div class="fl-ld__table" role="table" aria-label="Рейтинг" :aria-busy="loading">
-        <div class="fl-ld__row fl-ld__row--head" role="row">
-          <span role="columnheader">место</span>
-          <span role="columnheader">пользователь</span>
-          <span role="columnheader" class="fl-ld__col-mid">доля от лидера</span>
-          <span role="columnheader" class="fl-ld__col-end">темы</span>
-        </div>
-
-        <template v-if="loading">
-          <div v-for="n in 3" :key="n" class="fl-ld__row fl-ld__row--ghost" aria-hidden="true">
-            <span class="fl-ld__rank">{{ p2(n) }}</span>
-            <span class="fl-ld__who"><span class="fl-ld__avatar" /></span>
-            <span class="fl-ld__col-mid"><span class="fl-ld__bar" /></span>
-            <span />
-          </div>
-        </template>
-
+        <!-- rating: the bar is the part of the book done (this month / in all) -->
         <template v-else>
           <div
-v-for="e in entries" :key="e.user.id" class="fl-ld__row" :class="{ 'is-me': e.user.id === meId }" role="row"
-            :style="{ '--share': e.stories_finished / leaderCount }">
+v-for="e in entries" :key="e.user.id" class="fl-ld__row" :class="{ 'is-me': e.user.id === meId }"
+            role="row" :style="{ '--share': share(e.stories_finished) }">
             <span class="fl-ld__rank" role="cell">{{ p2(e.rank) }}</span>
             <span class="fl-ld__who" role="cell">
               <span class="fl-ld__avatar" aria-hidden="true">{{ initials(e.user.name) }}</span>
               <span class="fl-ld__name">{{ e.user.name || "anon" }}</span>
               <span v-if="e.user.id === meId" class="fl-ld__you">вы</span>
-              <span v-if="legendIds.has(e.user.id)" class="fl-ld__legend"><Icon name="ph:crown-simple-bold" aria-hidden="true" /><span class="fl-ld__legend-text">legend</span></span>
+              <span v-if="legendIds.has(e.user.id)" class="fl-ld__legend"><span class="fl-ld__legend-mark" aria-hidden="true"><Icon name="ph:crown-simple-fill" /></span><span class="fl-ld__legend-text">legend</span></span>
             </span>
-            <span class="fl-ld__col-mid" role="cell" aria-hidden="true"><span class="fl-ld__bar" /></span>
+            <span class="fl-ld__col-mid fl-ld__share" role="cell">
+              <span class="fl-ld__bar" aria-hidden="true" />
+              <span class="fl-ld__pct">{{ pct(e.stories_finished) }}</span>
+            </span>
             <span class="fl-ld__col-end" role="cell">
               <span class="fl-ld__num">{{ e.stories_finished }}</span>
               <span class="fl-ld__unit">{{ topics(e.stories_finished) }}</span>
@@ -241,46 +238,6 @@ v-if="!entries.some((e) => e.user.id === meId)" :to="nextTo" class="fl-ld__row f
             </span>
           </NuxtLink>
         </template>
-      </div>
-    </div>
-
-    <!-- ───── champions of the months ───── -->
-    <div v-if="!champsError && !champsLoading" class="fl-ld__part">
-      <div class="fl-ld__part-head">
-        <h2 class="fl-ld__h2">Чемпионы месяцев</h2>
-        <p class="fl-ld__hint">лидер месяца, итог подводится 1-го числа</p>
-      </div>
-
-      <div class="fl-ld__table" role="table" aria-label="Чемпионы месяцев">
-        <div class="fl-ld__row fl-ld__row--head fl-ld__row--months" role="row">
-          <span role="columnheader">месяц</span>
-          <span role="columnheader">пользователь</span>
-          <span role="columnheader" class="fl-ld__col-end">темы</span>
-        </div>
-
-        <div
-v-for="m in months" :key="m.key" class="fl-ld__row fl-ld__row--months"
-          :class="{ 'is-me': m.user && m.user.id === meId, 'is-now': m.key === 'now' }" role="row">
-          <span class="fl-ld__month" role="cell">
-            {{ m.label }} <span class="fl-ld__month-note">{{ m.note }}</span>
-          </span>
-          <span v-if="m.user" class="fl-ld__who" role="cell">
-            <span class="fl-ld__avatar" aria-hidden="true">{{ initials(m.user.name) }}</span>
-            <span class="fl-ld__name">{{ m.user.name || "anon" }}</span>
-            <span v-if="m.user.id === meId" class="fl-ld__you">вы</span>
-            <span v-if="legendIds.has(m.user.id)" class="fl-ld__legend"><Icon name="ph:crown-simple-bold" aria-hidden="true" /><span class="fl-ld__legend-text">legend</span></span>
-          </span>
-          <span v-else class="fl-ld__who fl-ld__who--free" role="cell">
-            <span class="fl-ld__avatar fl-ld__avatar--next" aria-hidden="true"><Icon name="ph:plus-bold" /></span>
-            <span class="fl-ld__name">пока никого</span>
-          </span>
-          <span class="fl-ld__col-end" role="cell">
-            <template v-if="m.user">
-              <span class="fl-ld__num">{{ m.count }}</span>
-              <span class="fl-ld__unit">{{ topics(m.count) }}</span>
-            </template>
-          </span>
-        </div>
       </div>
     </div>
   </div>
@@ -339,6 +296,19 @@ v-for="m in months" :key="m.key" class="fl-ld__row fl-ld__row--months"
   gap: 0.5rem;
 }
 
+/* phones: the four tabs in a 2 × 2 grid across the width */
+@media (max-width: 639.98px) {
+  .fl-ld__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+
+  .fl-ld__actions .fl-ld__btn {
+    justify-content: center;
+  }
+}
+
 .fl-ld__btn {
   display: inline-flex;
   align-items: center;
@@ -362,6 +332,19 @@ v-for="m in months" :key="m.key" class="fl-ld__row fl-ld__row--months"
 
 .fl-ld__btn:hover {
   background-color: color-mix(in srgb, var(--on-light) 16%, var(--on-semi-dark));
+}
+
+.fl-ld .fl-ld__btn-count {
+  margin-left: 0.45rem;
+  padding: 0 5px;
+
+  font-family: var(--font-main);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: none;
+  font-variant: normal;
+  line-height: 16px;
+  background-color: color-mix(in srgb, currentColor 16%, transparent);
 }
 
 .fl-ld__btn.is-primary {
@@ -458,22 +441,6 @@ v-for="m in months" :key="m.key" class="fl-ld__row fl-ld__row--months"
   grid-area: end;
 }
 
-/* months: month | user | count */
-.fl-ld__row--months {
-  grid-template-columns: 5.25rem minmax(0, 1fr) auto;
-  grid-template-areas: "rank who end";
-}
-
-@media (min-width: 640px) {
-  .fl-ld__row--months {
-    grid-template-columns: 9rem minmax(0, 1fr) 9.5rem;
-  }
-}
-
-.fl-ld__row--months > :nth-child(3) {
-  grid-area: end;
-}
-
 .fl-ld__row--head {
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
@@ -536,31 +503,12 @@ a.fl-ld__row:focus-visible {
   outline-offset: -2px;
 }
 
-.fl-ld .fl-ld__rank,
-.fl-ld .fl-ld__month {
+.fl-ld .fl-ld__rank {
   font-family: var(--font-main);
   font-size: 13px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--gray);
-}
-
-.fl-ld .fl-ld__month {
-  font-family: var(--font-sans);
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--on-light);
-}
-
-.fl-ld .fl-ld__month-note {
-  display: block;
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--gray);
-}
-
-.fl-ld .fl-ld__row.is-now .fl-ld__month-note {
-  color: var(--primary);
 }
 
 .fl-ld__who {
@@ -617,35 +565,67 @@ a.fl-ld__row:focus-visible {
   background-color: var(--primary);
 }
 
-/* Hall of Legends, shown next to the name: a quiet hairline chip */
+/* Hall of Legends, next to the name: a two-part tile in the header cells' language —
+   a solid square with the crown, the word in a hairline frame; a sheen crosses it once on row hover */
 .fl-ld .fl-ld__legend {
+  position: relative;
   display: inline-flex;
   flex-shrink: 0;
-  align-items: center;
-  gap: 0.25rem;
-  height: 18px;
-  padding: 0 5px;
-  border: 1px solid color-mix(in srgb, var(--on-light) 30%, transparent);
+  align-items: stretch;
+  height: 20px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--on-light) 38%, transparent);
 
+  font-family: var(--font-main);
   font-size: 10px;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  line-height: 18px;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--on-light);
 }
 
-.fl-ld__legend :deep(.iconify) {
+.fl-ld .fl-ld__legend-mark {
+  display: grid;
+  place-items: center;
+  width: 18px;
+
+  color: var(--on-dark);
+  background-color: var(--on-light);
+}
+
+.fl-ld__legend-mark :deep(.iconify) {
   font-size: 11px;
 }
 
-/* phones: just the crown, the name keeps the room */
-@media (max-width: 639.98px) {
-  .fl-ld .fl-ld__legend {
-    width: 18px;
-    padding: 0;
-    justify-content: center;
-  }
+.fl-ld .fl-ld__legend-text {
+  padding: 0 6px 0 7px;
+  font-family: var(--font-main);
+}
 
+.fl-ld__legend::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    color-mix(in srgb, var(--on-light) 28%, transparent) 50%,
+    transparent 65%
+  );
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fl-ld__row:hover .fl-ld__legend::after {
+    transform: translateX(110%);
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* phones: only the crown square, the name keeps the room */
+@media (max-width: 639.98px) {
   .fl-ld .fl-ld__legend-text {
     position: absolute;
     width: 1px;
@@ -685,13 +665,11 @@ a.fl-ld__row:hover .fl-ld__go {
 }
 
 /* the open line: everything a step quieter */
-.fl-ld__row--next,
-.fl-ld__who--free {
+.fl-ld__row--next {
   color: var(--gray);
 }
 
-.fl-ld .fl-ld__row--next .fl-ld__name,
-.fl-ld .fl-ld__who--free .fl-ld__name {
+.fl-ld .fl-ld__row--next .fl-ld__name {
   font-family: var(--font-sans);
   font-weight: 400;
   color: var(--gray);
@@ -701,7 +679,29 @@ a.fl-ld__row:hover .fl-ld__go {
   color: var(--on-light);
 }
 
-/* contribution relative to the leader: a track and a solid bar */
+/* the part of the book: a track, a solid bar and the percentage */
+.fl-ld__share {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fl-ld__share .fl-ld__bar {
+  flex: 1;
+}
+
+.fl-ld .fl-ld__pct {
+  width: 2.75rem;
+  flex-shrink: 0;
+
+  font-family: var(--font-main);
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--gray);
+}
+
 .fl-ld__bar {
   position: relative;
   display: block;

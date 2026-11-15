@@ -42,20 +42,6 @@ export const usersGql = {
       }
     }
   `,
-  // the #1 of each finished month, newest first
-  MONTHLY_CHAMPIONS: gql`
-    query MonthlyChampions($limit: Int) {
-      monthly_champions(limit: $limit) {
-        year
-        month
-        user {
-          id
-          name
-        }
-        stories_finished
-      }
-    }
-  `,
 };
 
 export const storyGql = {
