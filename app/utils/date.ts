@@ -23,3 +23,15 @@ export function getGreeting(date: string): { message: string, icon: string } {
     };
   }
 }
+
+// Frontmatter date → "15 ноября 2026". Day + month from Intl (genitive), year appended by hand:
+// with `year` Intl adds a trailing " г.". Null for a missing or invalid date.
+export function formatRuDate(raw?: string | Date): string | null {
+  if (!raw) return null;
+
+  const date = new Date(raw);
+  if (Number.isNaN(date.getTime())) return null;
+
+  const dayMonth = date.toLocaleDateString("ru-RU", { day: "numeric", month: "long" });
+  return `${dayMonth} ${date.getFullYear()}`;
+}

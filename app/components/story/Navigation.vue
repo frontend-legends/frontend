@@ -1,7 +1,13 @@
 <script setup lang="ts">
+import type { Ref } from "vue";
+
 const { order } = defineProps<{
   order: number;
 }>();
+
+// Provided by AppContent: the page frontmatter, for the «обновлено» date in the utility row.
+const page = inject<Ref<{ date?: string | Date } | null> | null>("contentPage", null);
+const updated = computed(() => formatRuDate(page?.value?.date));
 
 type NavItem = { id: string; title: string; path: string; order: number; stem?: string };
 const nav = ref<NavItem[]>([]);
@@ -71,6 +77,7 @@ const secondary = computed(() => (forward.value ? prev.value : undefined));
         <span>report an issue</span>
         <Icon name="ph:arrow-up-right-bold" class="fl-nav__ext" aria-hidden="true" />
       </a>
+      <span v-if="updated" class="fl-nav__updated">обновлено {{ updated }}</span>
 
       <NuxtLink v-if="secondary" :to="`/content${secondary.path}`" class="fl-nav__meta-link fl-nav__back" rel="prev">
         <Icon name="ph:arrow-left-bold" class="fl-nav__back-arrow" aria-hidden="true" />
@@ -130,6 +137,13 @@ const secondary = computed(() => (forward.value ? prev.value : undefined));
 .fl-nav__next:focus-visible {
   outline: 2px solid var(--primary);
   outline-offset: 3px;
+}
+
+/* plain text, not a link; font-sans: Space Grotesk (font-main) has no Cyrillic */
+.fl-nav__updated {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--gray);
 }
 
 .fl-nav__ext {

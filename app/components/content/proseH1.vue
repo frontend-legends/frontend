@@ -3,7 +3,7 @@ import type { Ref } from "vue";
 
 // Provided by AppContent — gives us access to the page frontmatter (order + date).
 const page = inject<
-  Ref<{ date?: string | Date; reviewed?: string | Date; order?: number } | null> | null
+  Ref<{ date?: string | Date; order?: number } | null> | null
 >("contentPage", null);
 
 // order 0 is the root/landing page — it gets a tagline instead of a number watermark.
@@ -14,23 +14,7 @@ const order = computed(() => {
   return typeof o === "number" && o > 0 ? o.toFixed(2) : null;
 });
 
-function formatDate(raw?: string | Date) {
-  if (!raw) return null;
-
-  const date = new Date(raw);
-  if (Number.isNaN(date.getTime())) return null;
-
-  // e.g. "02 Nov 2025"
-  return date.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-const updated = computed(() => formatDate(page?.value?.date));
-
-const reviewed = computed(() => formatDate(page?.value?.reviewed));
+const updated = computed(() => formatRuDate(page?.value?.date));
 </script>
 
 <template>
@@ -43,16 +27,17 @@ const reviewed = computed(() => formatDate(page?.value?.reviewed));
       class="absolute left-0 bottom-[-40px] z-0 select-none pointer-events-none whitespace-nowrap font-main font-bold leading-none tracking-[-0.03em] text-[130px] md:text-[164px] op-8 blur-[3px]"
     >{{ isRoot ? "FL" : order }}</span>
 
-    <!-- title block in the bottom-left, with last updated above it -->
+    <!-- title block in the bottom-left, with the update date above it -->
     <div class="relative z-1 flex flex-col gap-0.5">
       <span
         v-if="isRoot"
         class="font-sans text-[10px] uppercase tracking-tight op-80"
       >справочник для фронтенд-собеседований</span>
+      <!-- font-sans: Space Grotesk (font-main) has no Cyrillic -->
       <span
         v-if="updated && !isRoot"
-        class="font-main text-[10px] uppercase tracking-tight op-80"
-      >last updated {{ updated }}<template v-if="reviewed"> · fact-checked {{ reviewed }}</template></span>
+        class="font-sans text-[10px] uppercase tracking-tight op-80"
+      >обновлено {{ updated }}</span>
 
       <h1
         class="m-0 font-main font-bold uppercase leading-tight"
