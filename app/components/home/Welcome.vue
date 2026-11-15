@@ -543,6 +543,9 @@ const formattedCreatedAt = computed(() => {
             </li>
           </ul>
         </div>
+
+        <!-- aitishka.com: the hero's little sibling -->
+        <HomeAitishka />
       </aside>
     </div>
     <AppNotFound v-else />
