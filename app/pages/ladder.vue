@@ -53,7 +53,9 @@ const { result: globalRes, loading: globalLoading } = useQuery(usersGql.GLOBAL_L
 const { result: hallRes, loading: hallLoading, error: hallError } = useQuery(usersGql.HALL_OF_LEGENDS);
 const legends = computed<Legend[]>(() => hallRes.value?.hall_of_legends?.legends || []);
 const meLegend = computed(() => legends.value.some((l) => l.user.id === meId.value));
-const legendIds = computed(() => new Set(legends.value.map((l) => l.user.id)));
+const legendRank = computed(() => new Map(legends.value.map((l) => [l.user.id, l.rank])));
+// the hovered or focused row: its LEGEND chip lights up
+const hot = ref<string | null>(null);
 
 const tabs = computed(() =>
   [
@@ -169,12 +171,13 @@ v-for="t in tabs" :key="t.id" type="button" class="fl-ld__btn" :class="{ 'is-pri
         <template v-else-if="tab === 'legends'">
           <div
 v-for="l in legends" :key="l.user.id" class="fl-ld__row" :class="{ 'is-me': l.user.id === meId }"
-            role="row">
+            role="row" @mouseenter="hot = l.user.id" @mouseleave="hot = null">
             <span class="fl-ld__rank" role="cell">{{ p2(l.rank) }}</span>
             <span class="fl-ld__who" role="cell">
               <span class="fl-ld__avatar" aria-hidden="true">{{ initials(l.user.name) }}</span>
               <span class="fl-ld__name">{{ l.user.name || "anon" }}</span>
               <span v-if="l.user.id === meId" class="fl-ld__you">вы</span>
+              <AppLegendChip :seed="l.user.id" :num="l.rank" :active="hot === l.user.id" />
             </span>
             <span class="fl-ld__col-mid fl-ld__muted" role="cell">{{ formatRuDate(l.legend_at) }}</span>
             <span class="fl-ld__col-end" role="cell">
@@ -204,13 +207,16 @@ v-for="l in legends" :key="l.user.id" class="fl-ld__row" :class="{ 'is-me': l.us
         <template v-else>
           <div
 v-for="e in entries" :key="e.user.id" class="fl-ld__row" :class="{ 'is-me': e.user.id === meId }"
-            role="row" :style="{ '--share': share(e.stories_finished) }">
+            role="row" :style="{ '--share': share(e.stories_finished) }" @mouseenter="hot = e.user.id"
+            @mouseleave="hot = null">
             <span class="fl-ld__rank" role="cell">{{ p2(e.rank) }}</span>
             <span class="fl-ld__who" role="cell">
               <span class="fl-ld__avatar" aria-hidden="true">{{ initials(e.user.name) }}</span>
               <span class="fl-ld__name">{{ e.user.name || "anon" }}</span>
               <span v-if="e.user.id === meId" class="fl-ld__you">вы</span>
-              <span v-if="legendIds.has(e.user.id)" class="fl-ld__legend"><span class="fl-ld__legend-mark" aria-hidden="true"><Icon name="ph:crown-simple-fill" /></span><span class="fl-ld__legend-text">legend</span></span>
+              <AppLegendChip
+v-if="legendRank.has(e.user.id)" :seed="e.user.id" :num="legendRank.get(e.user.id)"
+                :active="hot === e.user.id" />
             </span>
             <span class="fl-ld__col-mid fl-ld__share" role="cell">
               <span class="fl-ld__bar" aria-hidden="true" />
@@ -563,76 +569,6 @@ a.fl-ld__row:focus-visible {
   text-transform: uppercase;
   color: #fff;
   background-color: var(--primary);
-}
-
-/* Hall of Legends, next to the name: a two-part tile in the header cells' language —
-   a solid square with the crown, the word in a hairline frame; a sheen crosses it once on row hover */
-.fl-ld .fl-ld__legend {
-  position: relative;
-  display: inline-flex;
-  flex-shrink: 0;
-  align-items: stretch;
-  height: 20px;
-  overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--on-light) 38%, transparent);
-
-  font-family: var(--font-main);
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 18px;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--on-light);
-}
-
-.fl-ld .fl-ld__legend-mark {
-  display: grid;
-  place-items: center;
-  width: 18px;
-
-  color: var(--on-dark);
-  background-color: var(--on-light);
-}
-
-.fl-ld__legend-mark :deep(.iconify) {
-  font-size: 11px;
-}
-
-.fl-ld .fl-ld__legend-text {
-  padding: 0 6px 0 7px;
-  font-family: var(--font-main);
-}
-
-.fl-ld__legend::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    105deg,
-    transparent 35%,
-    color-mix(in srgb, var(--on-light) 28%, transparent) 50%,
-    transparent 65%
-  );
-  transform: translateX(-110%);
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .fl-ld__row:hover .fl-ld__legend::after {
-    transform: translateX(110%);
-    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-}
-
-/* phones: only the crown square, the name keeps the room */
-@media (max-width: 639.98px) {
-  .fl-ld .fl-ld__legend-text {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-  }
 }
 
 .fl-ld .fl-ld__muted {
